@@ -9,16 +9,19 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
         author = request.form['author']
         book_id = request.form['book_id']
         year = request.form['year']
         publisher = request.form['publisher']
-        print(f'Title: {title}\nAuthor: {author}\nID: {book_id}\nYear: {year}')
         db.create_book('Shelf 1', '123 Main St', 'Room 101', book_id, author, year,
                        title, publisher, None)
         return redirect("/")
+
+    elif request.method == 'POST' and request.form.get('button_class') == 'auto':
+        print("test")
+        return redirect(f"/?{request.form['id_type']}={request.form['search_id']}")
 
     # Drawn from ScanApp/other
     elif 'isbn' in request.args:

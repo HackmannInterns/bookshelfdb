@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,37 +12,52 @@
             text-align: center;
             padding: 70px 0;
         }
+
         .search {
             padding: 20px 0;
         }
+
         .label {
             padding-right: 5px;
             margin-right: auto;
         }
+
         .bar {
             padding-left: 5px;
             margin-left: auto;
         }
     </style>
 </head>
+
 <body>
-    <div class = "manual">
+    <div class="manual">
         <form method="post">
-            <label class = "label">Title:</label>
-            <input class = "bar" type="text" name="title" value="{{ title }}"><br>
-            <label class = "label">Author:</label>
-            <input class = "bar" type="text" name="author" value="{{ author }}"><br>
-            <label class = "label">ID:</label>
-            <input class = "bar"  type="text" name="book_id" value="{{ book_id }}"><br>
-            <label class = "label">Year:</label>
-            <input class = "bar"  type="text" name="year" value="{{ year }}"><br>
-            <label class = "label">Publisher:</label>
-            <input class = "bar"  type="text" name="publisher" value="{{ publisher }}"><br>
+            <label class="label">Title:</label>
+            <input class="bar" type="text" name="title" value="{{ title }}"><br>
+            <label class="label">Author:</label>
+            <input class="bar" type="text" name="author" value="{{ author }}"><br>
+            <label class="label">ID:</label>
+            <input class="bar" type="text" name="book_id" value="{{ book_id }}"><br>
+            <label class="label">Year:</label>
+            <input class="bar" type="text" name="year" value="{{ year }}"><br>
+            <label class="label">Publisher:</label>
+            <input class="bar" type="text" name="publisher" value="{{ publisher }}"><br>
             <input type="submit" value="Submit">
+            <input type="hidden" name="button_class" value="manual">
+
         </form>
-        <div class = "search">
-            <input type="submit" value="Search">
-        </div> 
+        <div class="search">
+            <form method="post">
+                <select name="id_type" id="id_type">
+                    <option value="isbn">ISBN</option>
+                    <option value="lccn">Library of Congress</option>
+                </select>
+                <input class="bar" type="text" name="search_id" value="{{ search_id }}"><br>
+                <input type="submit" name="action" value="Search">
+                <input type="hidden" name="button_class" value="auto">
+            </form>
+        </div>
     </div>
 </body>
+
 </html>
