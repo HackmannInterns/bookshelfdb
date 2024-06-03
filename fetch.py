@@ -92,5 +92,5 @@ def lookup_book_isbn(isbn):
     return title, authors, publish_date, publisher
 
 
-lookup_book_info(96154704, 'isbn')
-lookup_book_info(9781778041310, 'isbn')
+lookup_book_info('96154704', 'isbn')
+lookup_book_info('9781778041310', 'isbn')
