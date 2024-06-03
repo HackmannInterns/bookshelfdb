@@ -20,16 +20,22 @@ def index():
         return redirect("/")
 
     elif request.method == 'POST' and request.form.get('button_class') == 'auto':
-        print("test")
         return redirect(f"/?{request.form['id_type']}={request.form['search_id']}")
 
     # Drawn from ScanApp/other
-    elif 'isbn' in request.args:
-        book_id = request.args['isbn']
-
-        #
+    elif 'lccn' in request.args or 'isbn' in request.args:
+        if 'isbn' in request.args:
+            book_id = request.args['isbn']
+            id_type = 'isbn'
+        elif 'lccn' in request.args:
+            book_id = request.args['lccn']
+            id_type = 'lccn'
+        else:
+            id_type = None
+            book_id = None
         title, author, publish_date, publisher = fetch.lookup_book_info(
-            book_id)
+            book_id, id_type)
+        # print(title, author, publish_date, publisher)
         return render_template('form.html', title=title, author=author, book_id=book_id, year=publish_date, publisher=publisher)
 
     else:
