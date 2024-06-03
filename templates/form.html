@@ -4,20 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Form</title>
+    <style>
+        /* CSS for center-aligning text */
+        .manual {
+            margin: auto;
+            text-align: center;
+            padding: 70px 0;
+        }
+        .search {
+            padding: 20px 0;
+        }
+        .label {
+            padding-right: 5px;
+            margin-right: auto;
+        }
+        .bar {
+            padding-left: 5px;
+            margin-left: auto;
+        }
+    </style>
 </head>
 <body>
-    <form method="post">
-        <label>Title:</label>
-        <input type="text" name="title" value="{{ title }}"><br>
-        <label>Author:</label>
-        <input type="text" name="author" value="{{ author }}"><br>
-        <label>ID:</label>
-        <input type="text" name="book_id" value="{{ book_id }}"><br>
-        <label>Year:</label>
-        <input type="text" name="year" value="{{ year }}"><br>
-        <label>Publisher:</label>
-        <input type="text" name="publisher" value="{{ publisher }}"><br>
-        <input type="submit" value="Submit">
-    </form>
+    <div class = "manual">
+        <form method="post">
+            <label class = "label">Title:</label>
+            <input class = "bar" type="text" name="title" value="{{ title }}"><br>
+            <label class = "label">Author:</label>
+            <input class = "bar" type="text" name="author" value="{{ author }}"><br>
+            <label class = "label">ID:</label>
+            <input class = "bar"  type="text" name="book_id" value="{{ book_id }}"><br>
+            <label class = "label">Year:</label>
+            <input class = "bar"  type="text" name="year" value="{{ year }}"><br>
+            <label class = "label">Publisher:</label>
+            <input class = "bar"  type="text" name="publisher" value="{{ publisher }}"><br>
+            <input type="submit" value="Submit">
+        </form>
+        <div class = "search">
+            <input type="submit" value="Search">
+        </div> 
+    </div>
 </body>
 </html>
