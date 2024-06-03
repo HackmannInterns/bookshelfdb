@@ -32,8 +32,6 @@ def index():
     else:
         return render_template('form.html', title='', author='', book_id='', year='', publisher='')
 
-# Init DB
-
 
 if __name__ == '__main__':
     db.init_db()

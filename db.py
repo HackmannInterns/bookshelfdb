@@ -3,7 +3,7 @@ import sqlite3
 
 DB_LOCATION = "testing.db"
 
-
+# Init DB if it doesn't exist
 def init_db():
     if not isfile(DB_LOCATION):
         sql_create = '''
