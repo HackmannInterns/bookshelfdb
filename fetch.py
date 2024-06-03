@@ -3,7 +3,7 @@ import requests
 # title, author, publisher
 
 def lookup_book_info(og_id, identifier):
-    id = og_id.replace("-", "")
+    id = og_id.replace("-", "0")
     if len(id) == 9 and identifier == "isbn":
         id = "0" + isbn
 
@@ -28,13 +28,13 @@ def lookup_book_info(og_id, identifier):
     return title, authors, publish_date, publisher
 
 
-if __name__ == '__main__':
-    data = lookup_book_info('9781778041303', 'isbn')
-    for i in data:
-        print(i)
-    data = lookup_book_info('96154704', 'lccn')  # has ISBN
-    for i in data:
-        print(i)
-    data = lookup_book_info('63019392', 'lccn')  # has no ISBN
-    for i in data:
-        print(i)
+# if __name__ == '__main__':
+    # data = lookup_book_info('9781778041303', 'isbn')
+    # for i in data:
+    #     print(i)
+    # data = lookup_book_info('96154704', 'lccn')  # has ISBN
+    # for i in data:
+    #     print(i)
+    # data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
+    # for i in data:
+    #     print(i)
