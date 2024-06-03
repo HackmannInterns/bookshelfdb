@@ -15,14 +15,20 @@ def index():
         book_id = request.form['book_id']
         year = request.form['year']
         publisher = request.form['publisher']
-        db.create_book('Shelf 1', '123 Main St', 'Room 101', book_id, author, year,
+        if 'isbn' in request.args:
+            id_type = 'isbn'
+        elif 'lccn' in request.args:
+            id_type = 'lccn'
+        else:
+            id_type = None
+        db.create_book('Shelf 1', '123 Main St', 'Room 101', book_id, id_type, author, year,
                        title, publisher, None)
         return redirect("/")
 
     elif request.method == 'POST' and request.form.get('button_class') == 'auto':
         return redirect(f"/?{request.form['id_type']}={request.form['search_id']}")
 
-    # Drawn from ScanApp/other
+    # Drawn from ScanApp/other/manual entry
     elif 'lccn' in request.args or 'isbn' in request.args:
         if 'isbn' in request.args:
             book_id = request.args['isbn']
@@ -36,7 +42,7 @@ def index():
         title, author, publish_date, publisher = fetch.lookup_book_info(
             book_id, id_type)
         # print(title, author, publish_date, publisher)
-        return render_template('form.html', title=title, author=author, book_id=book_id, year=publish_date, publisher=publisher)
+        return render_template('form.html', title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
         return render_template('form.html', title='', author='', book_id='', year='', publisher='')

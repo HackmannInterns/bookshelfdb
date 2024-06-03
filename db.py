@@ -15,6 +15,7 @@ def init_db():
         address TEXT NULL,
         room TEXT NULL,
         identifier TEXT NULL DEFAULT 'manual entry',
+        identifier_type TEXT NULL DEFAULT 'manual entry',
         author TEXT NULL,
         year INT NULL,
         title TEXT NULL,
@@ -37,13 +38,13 @@ def init_db():
 # Function to create a new record
 
 
-def create_book(bookshelf_location, address, room, identifier, author, year, title, publisher, description):
+def create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description):
     con = sqlite3.connect(DB_LOCATION)
     cur = con.cursor()
     cur.execute('''
-        INSERT INTO books (bookshelf_location, address, room, identifier, author, year, title, publisher, description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (bookshelf_location, address, room, identifier, author, year, title, publisher, description))
+        INSERT INTO books (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description))
     con.commit()
     con.close()
 
@@ -61,7 +62,7 @@ def read_books():
 # Function to update a record
 
 
-def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, author=None, year=None, title=None, publisher=None, description=None):
+def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, identifier_type=None, author=None, year=None, title=None, publisher=None, description=None):
     con = sqlite3.connect(DB_LOCATION)
     cur = con.cursor()
     update_query = 'UPDATE books SET '
