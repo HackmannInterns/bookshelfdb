@@ -5,7 +5,7 @@ import requests
 def lookup_book_info(og_id, identifier):
     id = og_id.replace("-", "0")
     if len(id) == 9 and identifier == "isbn":
-        id = "0" + isbn
+        id = "0" + og_id
 
     url = f"https://openlibrary.org/api/books?bibkeys={identifier.upper()}:{id}&format=json&jscmd=data"
     # print(url)
