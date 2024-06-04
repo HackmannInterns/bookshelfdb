@@ -7,6 +7,22 @@ from db import DB_LOCATION
 app = Flask(__name__)
 
 
+@app.route('/view')
+def view():
+    rows = db.read_books()
+    Books = [dict(bookshelf_location=row[1],
+                  address=row[2],
+                  room=row[3],
+                  identifier=row[4],
+                  identifier_type=row[5],
+                  author=row[6],
+                  year=row[7],
+                  title=row[8],
+                  publisher=row[9],
+                  description=row[10],) for row in rows]
+    return render_template('rows.html', Books=Books)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
