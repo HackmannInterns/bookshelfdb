@@ -52,7 +52,7 @@ def index():
             return redirect('/view')
         else:
             book = db.read_book(request.args['edit'])
-            return render_template('form.html', SessionDict=session, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf_location=book[1], room=book[3])
+            return render_template('form.html', SessionDict=session, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
             # return render_template('form.html', SessionDict=session)
 
     if request.method == 'POST' and request.form.get('button_class') == 'manual':

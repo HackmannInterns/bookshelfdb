@@ -1,6 +1,7 @@
 import time
 import requests
-# title, author, publisher
+import re
+
 
 def lookup_book_info(og_id, identifier):
     id = og_id.replace("-", "0")
@@ -23,8 +24,11 @@ def lookup_book_info(og_id, identifier):
                                 for author in book_info.get('authors', []))
             publish_date = book_info.get(
                 'publish_date', 'Publish date not found')
-            publisher = ', '.join(publisher.get('name', 'Unknown Author')
-                                  for publisher in book_info.get('publishers', []))
+            match = re.search(r'\b\d{4}\b', publish_date)
+            if match:
+                publish_date = match.group()
+    publisher = ', '.join(publisher.get('name', 'Unknown Author')
+                          for publisher in book_info.get('publishers', []))
     return title, authors, publish_date, publisher
 
 
