@@ -1,11 +1,11 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session
 from time import sleep
 import fetch
 import db
 from db import DB_LOCATION
 
 app = Flask(__name__)
-
+app.secret_key = 'TESTING KEY'
 
 @app.route('/view')
 def view():
@@ -29,45 +29,33 @@ def index():
         title = request.form['title']
         author = request.form['author']
         book_id = request.form['book_id']
+        id_type = request.form['id_type']
         year = request.form['year']
         publisher = request.form['publisher']
         address = request.form['address']
         room = request.form['room']
         bookshelf = request.form['bookshelf']
-        resp.set_cookie('address', address)
-        resp.set_cookie('room', room)
-        resp.set_cookie('bookshelf', bookshelf)
-        if 'isbn' in request.args:
-            id_type = 'isbn'
-        elif 'lccn' in request.args:
-            id_type = 'lccn'
-        else:
-            id_type = None
-        db.create_book(bookshelf,address, room, book_id, id_type, author, year,
+        session['address'] = address
+        session['room'] = room
+        session['bookshelf'] = bookshelf
+        db.create_book(bookshelf, address, room, book_id, id_type, author, year,
                        title, publisher, None)
-        return redirect("/", Cookies=Cookies)
+        return render_template('form.html', SessionDict=session)
 
-    elif request.method == 'POST' and request.form.get('button_class') == 'auto':
-        return redirect(f"/?{request.form['id_type']}={request.form['search_id']}")
-
-    # Drawn from ScanApp/other/manual entry
-    elif 'lccn' in request.args or 'isbn' in request.args:
+    elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args:
         if 'isbn' in request.args:
-            book_id = request.args['isbn']
             id_type = 'isbn'
-        elif 'lccn' in request.args:
-            book_id = request.args['lccn']
-            id_type = 'lccn'
+            book_id = request.args['isbn']
         else:
-            id_type = None
-            book_id = None
+            id_type = request.form['id_type']
+            book_id = request.form['search_id']
         title, author, publish_date, publisher = fetch.lookup_book_info(
             book_id, id_type)
         # print(title, author, publish_date, publisher)
-        return render_template('form.html', title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
+        return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
-        return render_template('form.html', title='', author='', book_id='', year='', publisher='')
+        return render_template('form.html', SessionDict=session, title='', author='', book_id='', year='', publisher='')
 
 
 if __name__ == '__main__':

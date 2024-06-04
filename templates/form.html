@@ -13,6 +13,11 @@
             padding: 70px 0;
         }
 
+        .hidden {
+            display: none;
+        }
+
+
         .search {
             padding: 20px 0;
         }
@@ -119,6 +124,7 @@
                         <input class="bar" type="text" name="title" value="{{ title }}"><br>
                         <input class="bar" type="text" name="author" value="{{ author }}"><br>
                         <input class="bar" type="text" name="book_id" value="{{ book_id }}"><br>
+                        <input class="hidden" type="text" name="id_type" value="{{ id_type }}">
                         <input class="bar" type="text" name="year" value="{{ year }}"><br>
                         <input class="bar" type="text" name="publisher" value="{{ publisher }}"><br>
                     </div>
@@ -131,9 +137,9 @@
                         <label class="label">Bookshelf:</label>
                     </div>
                     <div class="grid-locations-bar">
-                        <input class="bar" type="text" name="address" value="{{ address }}"><br>
-                        <input class="bar" type="text" name="room" value="{{ room }}"><br>
-                        <input class="bar" type="text" name="Bookshelf" value="{{ bookshelf }}"><br>
+                        <input class="bar" type="text" name="address" value="{{ SessionDict.address }}"><br>
+                        <input class="bar" type="text" name="room" value="{{ SessionDict.room }}"><br>
+                        <input class="bar" type="text" name="bookshelf" value="{{ SessionDict.bookshelf }}"><br>
                     </div>
                 </div>
                 <div class="empty_space">
