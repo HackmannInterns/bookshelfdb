@@ -2,37 +2,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Table</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
 
     </style>
 </head>
 {% include "header.html" %}
-
-<h1>books</h1>
-<table>
-    <tr>
-        <th>Address</th>
-        <th>Room</th>
-        <th>Location</th>
-        <th>Identifier</th>
-        <th>Type</th>
-        <th>Author</th>
-        <th>Year</th>
-        <th>Title</th>
-        <th>Publisher</th>
-    </tr>
-    {% for book in Books %}
-    <tr>
-        <td>{{ book.address }}</td>
-        <td>{{ book.room }}</td>
-        <td>{{ book.bookshelf_location }}</td>
-        <td>{{ book.identifier }}</td>
-        <td>{{ book.identifier_type }}</td>
-        <td>{{ book.author }}</td>
-        <td>{{ book.year }}</td>
-        <td>{{ book.title }}</td>
-        <td>{{ book.publisher }}</td>
-    </tr>
-    {% endfor %}
-</table>
 <br>
+<br>
+<br>
+<br>
+
+<body>
+    <table id="books" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Room</th>
+                <th>Location</th>
+                <th>Identifier</th>
+                <th>Type</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Title</th>
+                <th>Publisher</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in Books %}
+        <tr>
+            <td>{{ book.address }}</td>
+            <td>{{ book.room }}</td>
+            <td>{{ book.bookshelf_location }}</td>
+            <td>{{ book.identifier }}</td>
+            <td>{{ book.identifier_type }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.year }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.publisher }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#books').DataTable();
+        });
+    </script>
+</body>
