@@ -1,25 +1,25 @@
 <style>
-    .header {
+    .tabs {
         width: 100%;
-        height: 60px;
+        margin-top: 60px;
         background-color: #333;
         color: #fff;
         display: flex;
         align-items: center;
-        padding: 0 20px;
+        padding: 0 10px;
         position: fixed;
         top: 0;
         left: 0;
         z-index: 1000;
     }
 
-    .header nav a {
+    .tabs nav a {
         color: #fff;
         text-decoration: none;
         margin: 0 10px;
     }
 
-    .header nav a:hover {
+    .tabs nav a:hover {
         text-decoration: underline;
     }
 
@@ -30,11 +30,10 @@
         width: 50px;
     }
 </style>
-<header class="header">
-    <h1>Hackmann Library</h1>
-    <!-- <nav am-layout="horizontal">
+<div class="tabs">
+    <nav am-layout="horizontal">
         <a href="/">Submit</a>
         <a href="/view">Library</a>
         <a href="https://scanapp.org/">Scan</a>
-    </nav> -->
-</header>
+    </nav>
+</div>
