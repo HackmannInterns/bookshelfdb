@@ -7,10 +7,14 @@ from db import DB_LOCATION
 app = Flask(__name__)
 app.secret_key = 'TESTING KEY'
 
+
 @app.route('/view')
 def view():
+    if 'delete' in request.args:
+        db.delete_book(request.args['delete'])
     rows = db.read_books()
-    Books = [dict(bookshelf_location=row[1],
+    Books = [dict(b_id=row[0],
+                  bookshelf_location=row[1],
                   address=row[2],
                   room=row[3],
                   identifier=row[4],
@@ -25,6 +29,28 @@ def view():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    if 'edit' in request.args:
+        if request.form.get('button_class') == 'manual':
+            title = request.form['title']
+            author = request.form['author']
+            book_id = request.form['book_id']
+            id_type = request.form['id_type']
+            year = request.form['year']
+            publisher = request.form['publisher']
+            address = request.form['address']
+            room = request.form['room']
+            bookshelf = request.form['bookshelf']
+            session['address'] = address
+            session['room'] = room
+            session['bookshelf'] = bookshelf
+            db.update_book(id=request.args['edit'],bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
+                       title=title, publisher=publisher)
+            return redirect('/view')
+        else:
+            book = db.read_book(request.args['edit'])
+            return render_template('form.html', SessionDict=session, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf_location=book[1], room=book[3])
+            # return render_template('form.html', SessionDict=session)
+
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
         author = request.form['author']
@@ -64,3 +90,4 @@ if __name__ == '__main__':
     # books = read_books()
     # for book in books:
     #     print(book)
+    # print(db.read_book(9))

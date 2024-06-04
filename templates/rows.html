@@ -5,7 +5,33 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
+        body {
+            padding: 10px;
+        }
 
+        .kebab-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .kebab-menu a {
+            display: block;
+            padding: 8px 12px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .kebab-menu a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .kebab-menu-icon {
+            cursor: pointer;
+        }
     </style>
 </head>
 {% include "header.html" %}
@@ -27,22 +53,34 @@
                 <th>Year</th>
                 <th>Title</th>
                 <th>Publisher</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for book in Books %}
-        <tr>
-            <td>{{ book.address }}</td>
-            <td>{{ book.room }}</td>
-            <td>{{ book.bookshelf_location }}</td>
-            <td>{{ book.identifier }}</td>
-            <td>{{ book.identifier_type }}</td>
-            <td>{{ book.author }}</td>
-            <td>{{ book.year }}</td>
-            <td>{{ book.title }}</td>
-            <td>{{ book.publisher }}</td>
-        </tr>
-        {% endfor %}
+            <tr>
+                <td>{{ book.address }}</td>
+                <td>{{ book.room }}</td>
+                <td>{{ book.bookshelf_location }}</td>
+                <td>{{ book.identifier }}</td>
+                <td>{{ book.identifier_type }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.year }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.publisher }}</td>
+                <td>
+                    <div class="kebab-menu-container">
+                        <div class="kebab-menu-icon" onclick="toggleMenu( {{ book.b_id }}, this)">
+                            ⠇
+                        </div>
+                        <div class="kebab-menu" id={{ book.b_id }}>
+                            <a href="/?edit={{ book.b_id }}">Edit</a>
+                            <a href="/view?delete={{ book.b_id }}">Remove</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
     <br>
@@ -50,8 +88,42 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#books').DataTable();
+        $(document).ready(function () {
+            $('#books').DataTable({
+                "columnDefs": [
+                    { "orderable": false, "targets": -1 } // Disables sorting on the last column
+                ]
+            });
         });
+
+        function toggleMenu(menuId, event) {
+            // Close all menus first
+            var menus = document.getElementsByClassName("kebab-menu");
+            for (var i = 0; i < menus.length; i++) {
+                menus[i].style.display = "none"
+            }
+
+            var menu = document.getElementById(menuId);
+            menu.style.display = "block";
+
+            if (menu.style.display === "block") {
+                menu.style.top = (event.clientY + window.scrollY) + "px";
+                menu.style.left = (event.clientX + window.scrollX) + "px";
+            }
+        }
+
+        // Close the menu if the user clicks outside of it
+        window.onclick = function (event) {
+            var menus = document.getElementsByClassName("kebab-menu");
+            for (var i = 0; i < menus.length; i++) {
+                var menu = menus[i];
+                if (!event.target.matches('.kebab-menu-icon, .kebab-menu-icon *') &&
+                    !event.target.matches('.kebab-menu, .kebab-menu *')) {
+                    if (menu.style.display === "block") {
+                        menu.style.display = "none";
+                    }
+                }
+            }
+        }
     </script>
 </body>

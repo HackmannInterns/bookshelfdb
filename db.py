@@ -59,6 +59,17 @@ def read_books():
     con.close()
     return rows
 
+# Function to read specific record
+
+
+def read_book(id):
+    con = sqlite3.connect(DB_LOCATION)
+    cur = con.cursor()
+    cur.execute('SELECT * FROM books WHERE id = ?', (id,))
+    row = cur.fetchone()
+    con.close()
+    return row
+
 # Function to update a record
 
 
@@ -86,7 +97,7 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
         values.append(author)
     if year is not None:
         update_fields.append('year = ?')
-        values.append(author)
+        values.append(year)
     if title is not None:
         update_fields.append('title = ?')
         values.append(title)
