@@ -139,16 +139,18 @@
                         <label class="label">Bookshelf:</label>
                     </div>
                     <div class="grid-locations-bar">
-                        <input class="bar" type="text" name="address" value="{{ address|default(SessionDict.address) }}"><br>
+                        <input class="bar" type="text" name="address"
+                            value="{{ address|default(SessionDict.address) }}"><br>
                         <input class="bar" type="text" name="room" value="{{ room|default(SessionDict.room) }}"><br>
-                        <input class="bar" type="text" name="bookshelf" value="{{ bookshelf|default(SessionDict.bookshelf) }}"><br>
+                        <input class="bar" type="text" name="bookshelf"
+                            value="{{ bookshelf|default(SessionDict.bookshelf) }}"><br>
                     </div>
                 </div>
                 <div class="empty_space">
                 </div>
             </div>
 
-            <div class="submit_button">
+            <div onclick="clearID()" class="submit_button">
                 <input type="submit" value="Submit">
                 <input type="hidden" name="button_class" value="manual">
             </div>
@@ -160,8 +162,10 @@
                     <option value="lccn">Library of Congress</option>
                 </select>
                 <input class="bar" type="text" name="search_id" value="{{ search_id }}"><br>
-                <input type="submit" name="action" value="Search">
-                <input type="hidden" name="button_class" value="auto">
+                <div onclick="clearID()">
+                    <input type="submit" name="action" value="Search">
+                    <input type="hidden" name="button_class" value="auto">    
+                </div>
             </form>
         </div>
     </div>
@@ -173,6 +177,10 @@
                 searchDiv.style.display = 'none';
             }
         };
+
+        function clearID() {
+            history.pushState({}, document.title, window.location.pathname);
+        }
     </script>
 </body>
 

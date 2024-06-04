@@ -27,15 +27,15 @@ def lookup_book_info(og_id, identifier):
             match = re.search(r'\b\d{4}\b', publish_date)
             if match:
                 publish_date = match.group()
-    publisher = ', '.join(publisher.get('name', 'Unknown Author')
-                          for publisher in book_info.get('publishers', []))
+            publisher = ', '.join(publisher.get('name', 'Unknown Author')
+                                  for publisher in book_info.get('publishers', []))
     return title, authors, publish_date, publisher
 
 
 # if __name__ == '__main__':
-    # data = lookup_book_info('9781778041303', 'isbn')
-    # for i in data:
-    #     print(i)
+#     data = lookup_book_info('978050023686', 'isbn')
+#     for i in data:
+#         print(i)
     # data = lookup_book_info('96154704', 'lccn')  # has ISBN
     # for i in data:
     #     print(i)
