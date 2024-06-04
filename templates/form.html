@@ -28,7 +28,17 @@
             margin-left: auto;
         }
 
-        .block {
+
+        .grid-overall {
+            display: flex;
+            margin: auto;
+            padding: auto;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: flex-start;
+        }
+
+        .grid {
             display: grid;
             padding: inherit;
             grid-template-columns: auto auto;
@@ -51,11 +61,40 @@
             grid-auto-rows: 5;
         }
 
+        .grid-locations-name {
+            float: left;
+            display: grid;
+            grid-auto-columns: 1;
+            grid-auto-rows: 3;
+            grid-row-gap: 5px;
+            text-align: right;
+            height: 40px;
+        }
+
+        .grid-locations-bar {
+            float: right;
+            display: grid;
+            grid-auto-columns: 1;
+            grid-auto-rows: 3;
+            height: 40px;
+        }
+
+        .grid-2 {
+            display: grid;
+            padding: inherit;
+            grid-template-columns: auto auto;
+            justify-content: center;
+        }
 
         .submit_button {
             width: 90px;
             height: 40px;
             margin: auto;
+            padding-top: 5px;
+        }
+
+        .empty_space {
+            width: 16%;
         }
     </style>
 </head>
@@ -63,22 +102,44 @@
 <body>
     <div class="manual">
         <form method="post">
-            <div class="block">
-                <div class="grid-label">
-                    <label class="label">Title:</label>
-                    <label class="label">Author:</label>
-                    <label class="label">ID:</label>
-                    <label class="label">Year:</label>
-                    <label class="label">Publisher:</label>
+            <div class="grid-overall">
+                <div class="empty_space">
                 </div>
-                <div class="grid-bar">
-                    <input class="bar" type="text" name="title" value="{{ title }}"><br>
-                    <input class="bar" type="text" name="author" value="{{ author }}"><br>
-                    <input class="bar" type="text" name="book_id" value="{{ book_id }}"><br>
-                    <input class="bar" type="text" name="year" value="{{ year }}"><br>
-                    <input class="bar" type="text" name="publisher" value="{{ publisher }}"><br>
+                <div class="empty_space">
+                </div>
+                <div class="grid">
+                    <div class="grid-label">
+                        <label class="label">Title:</label>
+                        <label class="label">Author:</label>
+                        <label class="label">ID:</label>
+                        <label class="label">Year:</label>
+                        <label class="label">Publisher:</label>
+                    </div>
+                    <div class="grid-bar">
+                        <input class="bar" type="text" name="title" value="{{ title }}"><br>
+                        <input class="bar" type="text" name="author" value="{{ author }}"><br>
+                        <input class="bar" type="text" name="book_id" value="{{ book_id }}"><br>
+                        <input class="bar" type="text" name="year" value="{{ year }}"><br>
+                        <input class="bar" type="text" name="publisher" value="{{ publisher }}"><br>
+                    </div>
+
+                </div>
+                <div class="grid-2">
+                    <div class="grid-locations-name">
+                        <label class="label">Address:</label>
+                        <label class="label">Room:</label>
+                        <label class="label">Bookshelf:</label>
+                    </div>
+                    <div class="grid-locations-bar">
+                        <input class="bar" type="text" name="address" value="{{ address }}"><br>
+                        <input class="bar" type="text" name="room" value="{{ room }}"><br>
+                        <input class="bar" type="text" name="Bookshelf" value="{{ bookshelf }}"><br>
+                    </div>
+                </div>
+                <div class="empty_space">
                 </div>
             </div>
+
             <div class="submit_button">
                 <input type="submit" value="Submit">
                 <input type="hidden" name="button_class" value="manual">
