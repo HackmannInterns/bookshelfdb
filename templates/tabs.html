@@ -4,19 +4,19 @@
         margin-top: 60px;
         background-color: #333;
         color: #fff;
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-template-columns: auto auto auto;
         padding: 0 10px;
-        position: fixed;
+        position: absolute;
         top: 0;
         left: 0;
-        z-index: 1000;
+
     }
 
     .tabs nav a {
         color: #fff;
         text-decoration: none;
-        margin: 0 10px;
+        margin: 10px;
     }
 
     .tabs nav a:hover {
@@ -24,16 +24,45 @@
     }
 
     .nav {
-        justify-content: right;
+        position: relative;
+        z-index: 1;
     }
-    .empty_space {
-        width: 50px;
-    }
+
+
 </style>
-<div class="tabs">
-    <nav am-layout="horizontal">
-        <a href="/">Submit</a>
-        <a href="/view">Library</a>
-        <a href="https://scanapp.org/">Scan</a>
-    </nav>
-</div>
+
+<body>
+    <div class="tabs" id="tabs">
+        <nav>
+            <a id="submit" href="/">Submit</a>
+            <a id="library" href="/view">Library</a>
+            <a href="https://scanapp.org/">Scan</a>
+        </nav>
+    </div>
+    <script>
+        function tabChecker() {
+            var currentHref = window.location.href;
+
+            if (currentHref === "http://localhost:5000/") {
+                var currentSite = document.getElementById("submit");
+
+                currentSite.style.color = "#333";
+                currentSite.style.backgroundColor = "#fff";
+                currentSite.style.textDecoration = "none";
+                
+                
+            }
+            else if (currentHref === "http://localhost:5000/view") {
+                var currentSite = document.getElementById("library");
+
+                currentSite.style.color = "#333";
+                currentSite.style.backgroundColor = "#fff";
+                currentSite.style.textDecoration = "none";
+            }
+        }
+
+        window.onload = function (){
+            tabChecker();
+        };
+    </script>
+</body>
