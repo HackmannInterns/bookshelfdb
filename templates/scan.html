@@ -1,0 +1,86 @@
+{% include "header.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
+    <style>
+        #scanner-container {
+            text-align: center;
+        }
+
+        #scanner-video {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Barcode Scanner</h1>
+    <div id="scanner-container">
+        <video id="scanner-video" autoplay playsinline></video>
+    </div>
+    <div id="result"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quagga/dist/quagga.min.js"></script>
+    <script>
+        const video = document.getElementById('scanner-video');
+        const resultDiv = document.getElementById('result');
+        let lastBarcode = null;
+        let updateTimer = null;
+
+        // Access the camera and display preview
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (error) {
+                console.error('Error accessing camera:', error);
+            });
+
+        // Initialize QuaggaJS
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: video
+            },
+            decoder: {
+                readers: ["ean_reader", "ean_8_reader", "code_128_reader", "code_39_reader", "codabar_reader", "upc_reader"]
+            }
+        }, function (err) {
+            if (err) {
+                console.error('Error initializing Quagga:', err);
+                return;
+            }
+            Quagga.start();
+        });
+
+        // Listen for barcode detection
+        Quagga.onDetected(function (result) {
+            const code = result.codeResult.code;
+            if (code !== lastBarcode) {
+                lastBarcode = code;
+                console.log(code);
+                clearTimeout(updateTimer); // Reset the timer
+                updateTimer = setTimeout(function () {
+                    resultDiv.innerText = `Detected barcode: ${code}`;
+                    window.location.replace(`/?isbn=${code}`)
+                }, 500); // Delay in milliseconds
+            }
+        });
+    </script>
+</body>
+
+</html>

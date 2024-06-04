@@ -27,8 +27,6 @@
         position: relative;
         z-index: 1;
     }
-
-
 </style>
 
 <body>
@@ -36,33 +34,28 @@
         <nav>
             <a id="submit" href="/">Submit</a>
             <a id="library" href="/view">Library</a>
+            <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
         </nav>
     </div>
     <script>
         function tabChecker() {
-            var currentHref = window.location.href;
-
-            if (currentHref === "http://localhost:5000/") {
+            if (window.location.pathname === "/") {
                 var currentSite = document.getElementById("submit");
-
-                currentSite.style.color = "#333";
-                currentSite.style.backgroundColor = "#fff";
-                currentSite.style.textDecoration = "none";
-                
-                
             }
-            else if (currentHref === "http://localhost:5000/view") {
+            else if (window.location.pathname === "/view") {
                 var currentSite = document.getElementById("library");
-
-                currentSite.style.color = "#333";
-                currentSite.style.backgroundColor = "#fff";
-                currentSite.style.textDecoration = "none";
             }
+            else if (window.location.pathname === "/scan") {
+                var currentSite = document.getElementById("scan");
+            }
+            currentSite.style.color = "#333";
+            currentSite.style.backgroundColor = "#fff";
+            currentSite.style.textDecoration = "none";
         }
 
-        window.onload = function (){
+        document.addEventListener('DOMContentLoaded', function () {
             tabChecker();
-        };
+        });
     </script>
 </body>

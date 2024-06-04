@@ -8,6 +8,10 @@ app = Flask(__name__)
 app.secret_key = 'TESTING KEY'
 
 
+@app.route('/scan')
+def scan():
+    return render_template('scan.html')
+
 @app.route('/view')
 def view():
     if 'delete' in request.args:
