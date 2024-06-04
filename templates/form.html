@@ -33,15 +33,27 @@
             margin-left: auto;
         }
 
+        @media only screen and (min-width: 40em) {
+            .grid-overall {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        @media only screen and (max-width: 40em) {
+            .grid-overall {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
 
         .grid-overall {
             display: flex;
             margin: auto;
             padding: auto;
-            flex-direction: row;
             justify-content: space-around;
-            align-items: flex-start;
         }
+
 
         .grid {
             display: grid;
@@ -164,7 +176,7 @@
                 <input class="bar" type="text" name="search_id" value="{{ search_id }}"><br>
                 <div onclick="clearID()">
                     <input type="submit" name="action" value="Search">
-                    <input type="hidden" name="button_class" value="auto">    
+                    <input type="hidden" name="button_class" value="auto">
                 </div>
             </form>
         </div>
