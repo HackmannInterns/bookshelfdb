@@ -31,15 +31,21 @@ def index():
         book_id = request.form['book_id']
         year = request.form['year']
         publisher = request.form['publisher']
+        address = request.form['address']
+        room = request.form['room']
+        bookshelf = request.form['bookshelf']
+        resp.set_cookie('address', address)
+        resp.set_cookie('room', room)
+        resp.set_cookie('bookshelf', bookshelf)
         if 'isbn' in request.args:
             id_type = 'isbn'
         elif 'lccn' in request.args:
             id_type = 'lccn'
         else:
             id_type = None
-        db.create_book('Shelf 1', '123 Main St', 'Room 101', book_id, id_type, author, year,
+        db.create_book(bookshelf,address, room, book_id, id_type, author, year,
                        title, publisher, None)
-        return redirect("/")
+        return redirect("/", Cookies=Cookies)
 
     elif request.method == 'POST' and request.form.get('button_class') == 'auto':
         return redirect(f"/?{request.form['id_type']}={request.form['search_id']}")
