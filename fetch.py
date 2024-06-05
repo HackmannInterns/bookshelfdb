@@ -11,7 +11,7 @@ def lookup_book_info(og_id, identifier):
     url = f"https://openlibrary.org/api/books?bibkeys={identifier.upper()}:{id}&format=json&jscmd=data"
     # print(url)
     response = requests.get(url)
-    book_info = title = authors = publish_date = publisher = None
+    book_info = title = authors = publish_date = publisher = ""
     # print(response)
     if response.status_code == 200:
         data = response.json()
