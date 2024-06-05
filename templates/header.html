@@ -6,14 +6,14 @@
         color: #fff;
         display: flex;
         align-items: center;
-        padding: 0 20px;
+        padding: 0 10px;
         position: fixed;
         top: 0;
         left: 0;
         z-index: 1000;
     }
 
-    .header nav a {
+    .header a {
         color: #fff;
         text-decoration: none;
         margin: 0 10px;
@@ -29,9 +29,12 @@
     .empty_space {
         width: 50px;
     }
+
 </style>
 <header class="header">
-    <h1>Hackmann Library</h1>
+    <h1>
+        <a href="/">Hackmann Library</a>
+    </h1>
 </header>
 
 {% include "tabs.html" %}
