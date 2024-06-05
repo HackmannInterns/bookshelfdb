@@ -157,8 +157,10 @@
             const dataTableContainer = document.querySelector('.dataTables_wrapper');
             const scrollContainer = dataTableContainer.querySelector('.dataTables_scrollBody');
 
+            // This seems fine with no changes
             // menu.style.top = 0;
-            console.log(menu.style.right)
+            
+            // To move it right enough 
             menu.style.right = 0 - scrollContainer.scrollLeft;
         }
 
