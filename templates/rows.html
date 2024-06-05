@@ -91,7 +91,8 @@
         $(document).ready(function () {
             $('#books').DataTable({
                 scrollX: true,
-                scrollY: true,
+                scrollCollapse: true,
+                scrollY: '50vh',
                 "columnDefs": [
                     { "orderable": false, "targets": -1 } // Disables sorting on the last column
                 ]
