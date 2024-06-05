@@ -135,12 +135,12 @@
                         <label class="label">Publisher:</label>
                     </div>
                     <div class="grid-bar">
-                        <input class="bar" type="text" name="title" value="{{ title }}"><br>
-                        <input class="bar" type="text" name="author" value="{{ author }}"><br>
-                        <input class="bar" type="text" name="book_id" value="{{ book_id }}"><br>
-                        <input class="hidden" type="text" name="id_type" value="{{ id_type }}">
-                        <input class="bar" type="text" name="year" value="{{ year }}"><br>
-                        <input class="bar" type="text" name="publisher" value="{{ publisher }}"><br>
+                        <input class="bar book_title" type="text" name="title" value="{{ title }}"><br>
+                        <input class="bar book_author" type="text" name="author" value="{{ author }}"><br>
+                        <input class="bar book_id" type="text" name="book_id" value="{{ book_id }}"><br>
+                        <input class="hidden book_id_type" type="text" name="id_type" value="{{ id_type }}">
+                        <input class="bar book_year" type="text" name="year" value="{{ year }}"><br>
+                        <input class="bar book_publisher" type="text" name="publisher" value="{{ publisher }}"><br>
                     </div>
 
                 </div>
@@ -161,12 +161,15 @@
                 <div class="empty_space">
                 </div>
             </div>
-
             <div onclick="clearID()" class="submit_button">
                 <input type="submit" value="Submit">
                 <input type="hidden" name="button_class" value="manual">
             </div>
         </form>
+        <div class="submitting" style="display: none;">
+            <p>Submitting... (3)</p>
+            <button onclick="cancel_submit()">Cancel</button>
+        </div>
         <div class="search">
             <form method="post">
                 <select name="id_type" id="id_type">
@@ -182,6 +185,7 @@
         </div>
     </div>
     <script>
+        var cancel = false;
         window.onload = function () {
             var urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('edit')) {
@@ -193,6 +197,43 @@
         function clearID() {
             history.pushState({}, document.title, window.location.pathname);
         }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function cancel_submit(){
+            cancel = true
+            submit_div = document.querySelector("body > div.manual > div.submitting")
+            submit_div.style.display = "none"
+        }
+
+        async function countdown() {
+            console.log("yes")
+            submit_p = document.querySelector("body > div.manual > div.submitting > p")
+            submit_div = document.querySelector("body > div.manual > div.submitting")
+            submit_div.style.display = "block"
+            for (var i = 3; i > -1; i--) {
+                console.log(i);
+                submit_p.innerText = `Submitting... (${i})`;
+                await sleep(1 * 1000);
+            }
+            if (!cancel) {
+                button = document.querySelector("body > div.manual > form > div.submit_button > input[type=submit]:nth-child(1)");
+                button.click()
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // if autosubmit
+            // if isbn and title
+            // if it was autofilled (DO we need?)
+            b_title = document.querySelector("body > div.manual > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
+            b_id = document.querySelector("body > div.manual > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_id").value;
+            if (('{{ SessionDict.autosubmit }}' == "True") && ('{{ SessionDict.autofilled }}' == "True") && b_title != "" && b_id != "") {
+                countdown();
+            }
+        });
     </script>
 </body>
 

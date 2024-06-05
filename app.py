@@ -6,7 +6,7 @@ from db import DB_LOCATION
 
 app = Flask(__name__)
 app.secret_key = 'TESTING KEY'
-
+AUTO = True
 
 @app.route('/scan')
 def scan():
@@ -33,6 +33,8 @@ def view():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    session['autosubmit'] = AUTO
+    session['autofilled'] = False
     if 'edit' in request.args:
         if request.form.get('button_class') == 'manual':
             title = request.form['title']
@@ -81,7 +83,9 @@ def index():
             book_id = request.form['search_id']
         title, author, publish_date, publisher = fetch.lookup_book_info(
             book_id, id_type)
+        session['autofilled'] = True
         # print(title, author, publish_date, publisher)
+        # TODO: If SessionDict.autosubmit == true, autosubmit when title and isbn are filled
         return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
