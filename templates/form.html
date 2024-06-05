@@ -7,7 +7,7 @@
     <title>Book Form</title>
     <style>
         /* CSS for center-aligning text */
-        .manual {
+        .form1 {
             margin: auto;
             text-align: center;
             padding: 100px 0;
@@ -120,15 +120,15 @@
         }
 
         .body {
-             overflow-y: auto;
+            overflow-y: auto;
         }
     </style>
 </head>
 
 {% include "header.html" %}
 
-<body class= "body">
-    <div class="manual">
+<body class="body">
+    <div class="form1">
         <form method="post">
             <div class="grid-overall">
                 <div class="empty_space">
@@ -148,6 +148,7 @@
                         <input class="bar book_author" type="text" name="author" value="{{ author }}"><br>
                         <input class="bar book_id" type="text" name="book_id" value="{{ book_id }}"><br>
                         <input class="hidden book_id_type" type="text" name="id_type" value="{{ id_type }}">
+                        <input class="hidden book_id_type" type="text" name="db_id" value="{{ db_id }}">
                         <input class="bar book_year" type="text" name="year" value="{{ year }}"><br>
                         <input class="bar book_publisher" type="text" name="publisher" value="{{ publisher }}"><br>
                     </div>
@@ -219,27 +220,36 @@
         }
 
         async function countdown() {
-            console.log("yes")
-            submit_p = document.querySelector("body > div.manual > div.submitting > p")
-            submit_div = document.querySelector("body > div.manual > div.submitting")
+            // console.log("yes")
+            submit_p = document.querySelector("body > div > div.submitting > p")
+            submit_div = document.querySelector("body > div > div.submitting")
             submit_div.style.display = "block"
             for (var i = 3; i > -1; i--) {
-                console.log(i);
+                // console.log(i);
                 submit_p.innerText = `Submitting... (${i})`;
                 await sleep(1 * 1000);
             }
             if (!cancel) {
-                button = document.querySelector("body > div.manual > form > div.submit_button > input[type=submit]:nth-child(1)");
+                button = document.querySelector("body > div > form > div.submit_button > input[type=submit]:nth-child(1)");
                 button.click()
             }
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var isEdit = urlParams.has('edit');
+            // console.log(isEdit)
+            if (isEdit) {
+                submitbtn = document.querySelector("body > div > form > div.submit_button > input[type=submit]:nth-child(1)")
+                submitbtn.value = "Save Edit";
+                hidden_id = document.querySelector("body > div > form > div.submit_button > input[type=hidden]:nth-child(2)")
+                hidden_id.value = "edit"
+            }
             // if autosubmit
             // if isbn and title
             // if it was autofilled (DO we need?)
-            b_title = document.querySelector("body > div.manual > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
-            b_id = document.querySelector("body > div.manual > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_id").value;
+            b_title = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
+            b_id = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input:nth-child(7)").value;
             if (('{{ SessionDict.autosubmit }}' == "True") && ('{{ SessionDict.autofilled }}' == "True") && b_title != "" && b_id != "") {
                 countdown();
             }
