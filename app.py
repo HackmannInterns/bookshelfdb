@@ -35,7 +35,7 @@ def view():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(request.form.get('button_class'))
+    # print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
     session['autofilled'] = False
     if 'edit' in request.args:
@@ -70,12 +70,12 @@ def index():
         address = request.form['address']
         room = request.form['room']
         bookshelf = request.form['bookshelf']
-        print(session)
+        # print(session)
         if ('edit' not in session):
-            print("edit not in session")
+            # print("edit not in session")
             session['edit'] = False
         if (not session['edit']):
-            print(f'edit is {session["edit"]}')
+            # print(f'edit is {session["edit"]}')
             session['address'] = address
             session['room'] = room
             session['bookshelf'] = bookshelf
