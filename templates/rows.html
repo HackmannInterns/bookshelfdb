@@ -126,11 +126,14 @@
 
             var menu = document.getElementById(menuId);
             menu.style.display = "block";
+            const dataTableContainer = document.querySelector('.dataTables_wrapper');
+            const scrollContainer = dataTableContainer.querySelector('.dataTables_scrollBody');
 
-            if (menu.style.display === "block") {
-                menu.style.top = (event.clientY + window.scrollY) + "px";
-                menu.style.left = (event.clientX + window.scrollX) + "px";
-            }
+            // This seems fine with no changes
+            // menu.style.top = 0;
+            
+            // To move it right enough 
+            menu.style.right = 0 - scrollContainer.scrollLeft;
         }
 
         // Close the menu if the user clicks outside of it

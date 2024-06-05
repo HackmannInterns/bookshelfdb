@@ -113,6 +113,11 @@
         .empty_space {
             width: 16%;
         }
+
+        .required {
+            color: red;
+            margin-left: 5px;
+        }
     </style>
 </head>
 
@@ -128,14 +133,14 @@
                 </div>
                 <div class="grid">
                     <div class="grid-label">
-                        <label class="label">Title:</label>
-                        <label class="label">Author:</label>
-                        <label class="label">ID:</label>
-                        <label class="label">Year:</label>
-                        <label class="label">Publisher:</label>
+                        <label class="label"><span class="required">*</span>Title</label>
+                        <label class="label">Author</label>
+                        <label class="label">ID</label>
+                        <label class="label">Year</label>
+                        <label class="label">Publisher</label>
                     </div>
                     <div class="grid-bar">
-                        <input class="bar book_title" type="text" name="title" value="{{ title }}"><br>
+                        <input class="bar book_title" type="text" name="title" value="{{ title }}" required><br>
                         <input class="bar book_author" type="text" name="author" value="{{ author }}"><br>
                         <input class="bar book_id" type="text" name="book_id" value="{{ book_id }}"><br>
                         <input class="hidden book_id_type" type="text" name="id_type" value="{{ id_type }}">
@@ -173,10 +178,11 @@
         <div class="search">
             <form method="post">
                 <select name="id_type" id="id_type">
+                    <option disabled selected value> -- Identifier Type -- </option>
                     <option value="isbn">ISBN</option>
                     <option value="lccn">Library of Congress</option>
                 </select>
-                <input class="bar" type="text" name="search_id" value="{{ search_id }}"><br>
+                <input class="bar" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                 <div onclick="clearID()">
                     <input type="submit" name="action" value="Search">
                     <input type="hidden" name="button_class" value="auto">
@@ -202,7 +208,7 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        function cancel_submit(){
+        function cancel_submit() {
             cancel = true
             submit_div = document.querySelector("body > div.manual > div.submitting")
             submit_div.style.display = "none"

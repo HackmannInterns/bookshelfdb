@@ -8,9 +8,11 @@ app = Flask(__name__)
 app.secret_key = 'TESTING KEY'
 AUTO = True
 
+
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
+
 
 @app.route('/view')
 def view():
@@ -46,13 +48,12 @@ def index():
             address = request.form['address']
             room = request.form['room']
             bookshelf = request.form['bookshelf']
-            session['address'] = address
-            session['room'] = room
-            session['bookshelf'] = bookshelf
-            db.update_book(id=request.args['edit'],bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
-                       title=title, publisher=publisher)
+            session['edit'] = True
+            db.update_book(id=request.args['edit'], bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
+                           title=title, publisher=publisher)
             return redirect('/view')
         else:
+            session['edit'] = True
             book = db.read_book(request.args['edit'])
             return render_template('form.html', SessionDict=session, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
             # return render_template('form.html', SessionDict=session)
@@ -67,9 +68,16 @@ def index():
         address = request.form['address']
         room = request.form['room']
         bookshelf = request.form['bookshelf']
-        session['address'] = address
-        session['room'] = room
-        session['bookshelf'] = bookshelf
+        print(session)
+        if ('edit' not in session):
+            print("edit not in session")
+            session['edit'] = False
+        if (not session['edit']):
+            print(f'edit is {session["edit"]}')
+            session['address'] = address
+            session['room'] = room
+            session['bookshelf'] = bookshelf
+        session['edit'] = False
         db.create_book(bookshelf, address, room, book_id, id_type, author, year,
                        title, publisher, None)
         return render_template('form.html', SessionDict=session)
@@ -85,7 +93,6 @@ def index():
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)
-        # TODO: If SessionDict.autosubmit == true, autosubmit when title and isbn are filled
         return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
