@@ -32,6 +32,23 @@
         .kebab-menu-icon {
             cursor: pointer;
         }
+
+        /* .dataTables_wrapper {
+            position: relative;
+        }
+
+        .dataTables_paginate {
+            position: sticky;
+            bottom: 0;
+            background-color: #f1f1f1;
+            z-index: 100;
+        }
+
+        .dataTables_paginate .paginate_button {
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            margin: 0 2px;
+        } */
     </style>
 </head>
 {% include "header.html" %}
@@ -92,11 +109,40 @@
             $('#books').DataTable({
                 scrollX: true,
                 scrollCollapse: true,
-                scrollY: '50vh',
+                scrollY: '60vh',
+
                 "columnDefs": [
                     { "orderable": false, "targets": -1 } // Disables sorting on the last column
                 ]
+
             });
+            adjustDataTableSize(); // Initial adjustment
+
+            // Call the adjustment function on window resize
+            $(window).on('resize', adjustDataTableSize);
+
+            function adjustDataTableSize() {
+                var screenWidth = $(window).width();
+                var tableConfig = {};
+
+                // Define different configuration options for different screen sizes
+                if (screenWidth < 768) { // Adjust the threshold according to your needs
+                    tableConfig.paging = true; // Disable pagination for small screens
+                    tableConfig.scrollX = '200px',
+                    tableConfig.scrollY = '300px'; // Set a fixed height for vertical scrolling
+                } else {
+                    // Restore default configuration for larger screens
+                    tableConfig.paging = true; // Enable pagination
+                    tableConfig.scrollX = true,
+                    tableConfig.scrollY = '60vh'; // Remove fixed height
+                }
+
+                // Destroy existing DataTable and re-initialize with the new configuration
+                if ($.fn.DataTable.isDataTable('#books')) {
+                    $('#books').DataTable().destroy();
+                }
+                $('#books').DataTable(tableConfig);
+            }
         });
 
         function toggleMenu(menuId, event) {
