@@ -85,7 +85,6 @@ def index():
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)
-        # TODO: If SessionDict.autosubmit == true, autosubmit when title and isbn are filled
         return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
