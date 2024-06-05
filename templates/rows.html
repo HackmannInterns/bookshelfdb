@@ -11,11 +11,11 @@
 
         .kebab-menu {
             display: none;
-            position: absolute;
-            right: 0;
+            position: fixed;
             background-color: white;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
             border-radius: 4px;
+            z-index: 9999;
         }
 
         .kebab-menu a {
@@ -47,6 +47,10 @@
             }
         }
 
+        .kebab-menu-container {
+            position: relative;
+            padding: 0 5px;
+        }
     </style>
 </head>
 {% include "header.html" %}
@@ -85,7 +89,7 @@
                 <td>{{ book.publisher }}</td>
                 <td>
                     <div class="kebab-menu-container">
-                        <div class="kebab-menu-icon" onclick="toggleMenu( {{ book.b_id }}, this)">
+                        <div class="kebab-menu-icon" onclick="toggleMenu( {{ book.b_id }}, this) ">
                             ⠇
                         </div>
                         <div class="kebab-menu" id={{ book.b_id }}>
@@ -114,8 +118,9 @@
                 ]
 
             });
-            
+
         });
+
 
         function toggleMenu(menuId, event) {
             // Close all menus first
@@ -131,9 +136,10 @@
 
             // This seems fine with no changes
             // menu.style.top = 0;
-            
+
             // To move it right enough 
-            menu.style.right = 0 - scrollContainer.scrollLeft;
+            menu.style.right = 0;
+
         }
 
         // Close the menu if the user clicks outside of it
