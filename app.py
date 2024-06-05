@@ -35,28 +35,30 @@ def view():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
     session['autofilled'] = False
     if 'edit' in request.args:
-        if request.form.get('button_class') == 'manual':
-            title = request.form['title']
-            author = request.form['author']
-            book_id = request.form['book_id']
-            id_type = request.form['id_type']
-            year = request.form['year']
-            publisher = request.form['publisher']
-            address = request.form['address']
-            room = request.form['room']
-            bookshelf = request.form['bookshelf']
-            session['edit'] = True
-            db.update_book(id=request.args['edit'], bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
-                           title=title, publisher=publisher)
-            return redirect('/view')
-        else:
-            session['edit'] = True
-            book = db.read_book(request.args['edit'])
-            return render_template('form.html', SessionDict=session, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
-            # return render_template('form.html', SessionDict=session)
+        session['edit'] = True
+        db_id = request.args['edit']
+        book = db.read_book(db_id)
+        return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
+        # return render_template('form.html', SessionDict=session)
+
+    if request.method == 'POST' and request.form.get('button_class') == 'edit':
+        id = request.form['db_id']
+        title = request.form['title']
+        author = request.form['author']
+        book_id = request.form['book_id']
+        id_type = request.form['id_type']
+        year = request.form['year']
+        publisher = request.form['publisher']
+        address = request.form['address']
+        room = request.form['room']
+        bookshelf = request.form['bookshelf']
+        db.update_book(id=id, bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
+                       title=title, publisher=publisher)
+        return redirect('/view')
 
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
@@ -96,7 +98,7 @@ def index():
         return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
 
     else:
-        return render_template('form.html', SessionDict=session, title='', author='', book_id='', year='', publisher='')
+        return render_template('form.html', SessionDict=session)
 
 
 if __name__ == '__main__':
