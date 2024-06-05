@@ -1,50 +1,54 @@
-<style>
-    .tabs {
-        width: 100%;
-        margin-top: 60px;
-        background-color: #333;
-        color: #fff;
-        display: grid;
-        grid-template-columns: auto auto auto;
-        padding: 0 10px;
-        position: absolute;
-        top: 0;
-        left: 0;
-
-    }
-
-    body {
-        overflow: hidden;
-    }
-
-
-    @media only screen and (max-width: 40em) {
-        /* Hide scrollbar for the entire page on mobile */
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <style>
+        .tabs {
+            width: 500%;
+            margin-top: 60px;
+            background-color: #333;
+            color: #fff;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            padding: 0 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+    
+        }
+    
         body {
             overflow: hidden;
         }
-    }
+    
+    
+        @media only screen and (max-width: 40em) {
+            /* Hide scrollbar for the entire page on mobile */
+            body {
+                overflow: hidden;
+            }
+        }
+    
+        .tabs nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 10px;
+            float: none;
+            overflow: hidden;
+        }
+    
+        .tabs nav a:hover {
+            text-decoration: underline;
+        }
+    
+        .nav {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+    
+    
+    </style>
+</head>
 
-    .tabs nav a {
-        color: #fff;
-        text-decoration: none;
-        margin: 10px;
-        float: none;
-        overflow: hidden;
-    }
-
-    .tabs nav a:hover {
-        text-decoration: underline;
-    }
-
-    .nav {
-        position: relative;
-        z-index: 1;
-        overflow: hidden;
-    }
-
-
-</style>
 
 <body>
     <div class="tabs" id="tabs">
