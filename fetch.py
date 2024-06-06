@@ -3,14 +3,17 @@ import requests
 import re
 import shelve
 
+
 def save_to_cache(key, value):
     # print("Writing to Cache")
     with shelve.open('cache.db') as db:
         db[key] = value
 
+
 def load_from_cache(key):
     with shelve.open('cache.db') as db:
         return db.get(key)
+
 
 def api(id, identifier, use_cache):
     # Cache
@@ -36,7 +39,7 @@ def api(id, identifier, use_cache):
     return (data)
 
 
-def lookup_book_info(og_id, identifier, use_cache=True):
+def correct_id(og_id, identifier):
     if identifier == "isbn":
         og_id = og_id.replace("-", "")
     id = og_id.replace("-", "0")
@@ -44,12 +47,14 @@ def lookup_book_info(og_id, identifier, use_cache=True):
         id = "0" + og_id
     identifier = identifier.upper()
 
-    data = api(id, identifier, use_cache)
-    # print(data)
-    title = authors = publish_date = publisher = "" 
+    return id, identifier
+
+
+def prarse_data(data, identifier, book_id):
+    title = authors = publish_date = publisher = ""
     if len(data) > 0:
         # print("here")
-        book_info = data[f"{identifier}:{id}"]
+        book_info = data[f"{identifier}:{book_id}"]
         title = book_info.get('title', 'Title not found')
         authors = ', '.join(author.get('name', 'Unknown Author')
                             for author in book_info.get('authors', []))
@@ -63,10 +68,20 @@ def lookup_book_info(og_id, identifier, use_cache=True):
     return title, authors, publish_date, publisher
 
 
-if __name__ == '__main__':
-    data = lookup_book_info('9781778041303', 'isbn')
-    for i in data:
-        print(i)
-    data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
-    for i in data:
-        print(i)
+def lookup_book_info(og_id, identifier, use_cache=True):
+    book_id, identifier = correct_id(og_id, identifier)
+    data = api(book_id, identifier, use_cache)
+    # print(data)
+    # print(type(data))
+    title, authors, publish_date, publisher = prarse_data(
+        data, identifier, book_id)
+    return title, authors, publish_date, publisher
+
+
+# if __name__ == '__main__':
+#     data = lookup_book_info('9781778041303', 'isbn', False)
+#     for i in data:
+#         print(i)
+#     data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
+#     for i in data:
+#         print(i)
