@@ -21,24 +21,40 @@ publisher = "John Hackmann"
 
 @pytest.fixture
 def set_up():
+
     init_db(db)
 
     #create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description)
 
+def table_exists(table_name, cursor):
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+    return cursor.fetchone() is not None
+
 def test_database_creation():
-    directory = Path.cwd()
-    database = Path(db)
-    directory = os.path.join(directory, database)
+    init_db(db)
 
-    file_path = Path(directory)
-    if file_path.exists():
-        result = True
+    # Connect to the SQLite database
+    conn = sqlite3.connect('fake.db')
+
+    # Create a cursor object
+    cursor = conn.cursor()
+
+    results = False
+    # Check if a table named 'users' exists
+    if table_exists('books', cursor):
+        results = True
     else:
-        result = False
-    assert result is True
+        results = False
+    
 
+    # Close the cursor and connection
+    cursor.close()
+    conn.close()
+
+    yield db
     os.remove(db)
 
+    assert results is True
 
 
 def test_create_book():
@@ -56,9 +72,12 @@ def test_create_book():
     cur.execute('SELECT * FROM books')
     rows = cur.fetchall()
 
+    # Close the cursor and connection
+    cur.close()
+    con.close()
 
+    yield db
     os.remove(db)
-    print("Suck my nuts")
 
 
 
