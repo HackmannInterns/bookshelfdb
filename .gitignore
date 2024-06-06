@@ -3,8 +3,7 @@
 .vscode/
 
 # Our dbs
-*.db
-*.db-journal
+*.db*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
