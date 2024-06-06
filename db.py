@@ -1,3 +1,4 @@
+import os
 from os.path import isfile
 import sqlite3
 
@@ -117,6 +118,8 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
 
 # Function to delete a record
 
+def delete_db(db=DB_LOCATION):
+    os.remove(db)
 
 def delete_book(id, db=DB_LOCATION):
     con = sqlite3.connect(db)
