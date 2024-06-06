@@ -8,12 +8,17 @@ app = Flask(__name__)
 app.secret_key = 'TESTING KEY'
 AUTO = True
 
-
+# WHen you hit the /scan page, under all circumstances, it renders scan.html
+# nothing is passed in, scan.html works off JS 
+# scan.html is currently unreachable in the header unless hit directly as scanapp.org is better
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
 
 
+# When you hit the /view page, rows.html is rendered
+# It creates and passes in a dictionary containing all the row data for a Book
+# rows.html then processes this and creates a table, 1 row per DB entry
 @app.route('/view')
 def view():
     if 'delete' in request.args:
@@ -32,12 +37,19 @@ def view():
                   description=row[10],) for row in rows]
     return render_template('rows.html', Books=Books)
 
-
+# When / is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
+# When edit is in the url (/?edit=1 (where 1 is the DB id)), the form is filled with DB info.  JS disables the search
+# When this is submitted, the button is set to edit.  This allows the form to submit (DB edit) and /view to come back
+# When data is entered manually, a button is valued at edit manual and the form submits. It renders the page with SessionDict
+# When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
+# When the page is first met, it is rendered with nothing else happening
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
     session['autofilled'] = False
+    
+    # Start Editting
     if 'edit' in request.args:
         session['edit'] = True
         db_id = request.args['edit']
@@ -59,7 +71,9 @@ def index():
         db.update_book(id=id, bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
                        title=title, publisher=publisher)
         return redirect('/view')
+    # End Editting
 
+    # Manual entry
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
         author = request.form['author']
@@ -84,6 +98,7 @@ def index():
                        title, publisher, None)
         return render_template('form.html', SessionDict=session)
 
+    # isbn/lccn given
     elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args:
         if 'isbn' in request.args:
             id_type = 'isbn'
