@@ -4,6 +4,7 @@ import re
 import shelve
 
 def save_to_cache(key, value):
+    # print("Writing to Cache")
     with shelve.open('cache.db') as db:
         db[key] = value
 
@@ -11,36 +12,41 @@ def load_from_cache(key):
     with shelve.open('cache.db') as db:
         return db.get(key)
 
-def api(id, identifier):
+def api(id, identifier, use_cache):
     # Cache
     cached = load_from_cache(f"{identifier}:{id}")
-    if cached:
+    if use_cache and cached:
         # print("Hit cache")
         return cached
     # print("Miss cache")
 
-    url = f"https://openlibrary.org/api/books?bibkeys={identifier}:{id}&format=json&jscmd=data"
-    # print(url)
-    response = requests.get(url)
-    book_info = title = authors = publish_date = publisher = ""
-    # print(response)
-    if response.status_code == 200:
-        data = response.json()
-    else:
-        # TODO: Error Checking
-        pass
-    save_to_cache(f"{identifier}:{id}", data)
+    try:
+        url = f"https://openlibrary.org/api/books?bibkeys={identifier}:{id}&format=json&jscmd=data"
+        # print(url)
+        response = requests.get(url)
+        book_info = title = authors = publish_date = publisher = ""
+        # print(response)
+        if response.status_code == 200:
+            data = response.json()
+            save_to_cache(f"{identifier}:{id}", data)
+        else:
+            data = ""
+    except:
+        data = ""
     return (data)
 
 
-def lookup_book_info(og_id, identifier):
+def lookup_book_info(og_id, identifier, use_cache=True):
+    if identifier == "isbn":
+        og_id = og_id.replace("-", "")
     id = og_id.replace("-", "0")
     if len(id) == 9 and identifier == "isbn":
         id = "0" + og_id
     identifier = identifier.upper()
 
-    data = api(id, identifier)
+    data = api(id, identifier, use_cache)
     # print(data)
+    title = authors = publish_date = publisher = "" 
     if len(data) > 0:
         # print("here")
         book_info = data[f"{identifier}:{id}"]
@@ -57,13 +63,10 @@ def lookup_book_info(og_id, identifier):
     return title, authors, publish_date, publisher
 
 
-# if __name__ == '__main__':
-#     data = lookup_book_info('978050023686', 'isbn')
-#     for i in data:
-#         print(i)
-    # data = lookup_book_info('96154704', 'lccn')  # has ISBN
-    # for i in data:
-    #     print(i)
-    # data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
-    # for i in data:
-    #     print(i)
+if __name__ == '__main__':
+    data = lookup_book_info('9781778041303', 'isbn')
+    for i in data:
+        print(i)
+    data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
+    for i in data:
+        print(i)
