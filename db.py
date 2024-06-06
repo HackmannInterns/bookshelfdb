@@ -1,13 +1,13 @@
 from os.path import isfile
 import sqlite3
 
-DB_LOCATION = "testing.db"
+DB_LOCATION = "bookshelf.db"
 
 # Init DB if it doesn't exist
 
 
-def init_db():
-    if not isfile(DB_LOCATION):
+def init_db(db=DB_LOCATION):
+    if not isfile(db):
         sql_create = '''
         CREATE TABLE IF NOT EXISTS books (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +25,7 @@ def init_db():
         );
         '''
 
-        con = sqlite3.connect(DB_LOCATION)
+        con = sqlite3.connect(db)
         cur = con.cursor()
         cur.execute(sql_create)
         con.commit()
@@ -38,8 +38,8 @@ def init_db():
 # Function to create a new record
 
 
-def create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description):
-    con = sqlite3.connect(DB_LOCATION)
+def create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, db=DB_LOCATION):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     cur.execute('''
         INSERT INTO books (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description)
@@ -51,8 +51,8 @@ def create_book(bookshelf_location, address, room, identifier, identifier_type, 
 # Function to read all records
 
 
-def read_books():
-    con = sqlite3.connect(DB_LOCATION)
+def read_books(db=DB_LOCATION):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     cur.execute('SELECT * FROM books')
     rows = cur.fetchall()
@@ -62,8 +62,8 @@ def read_books():
 # Function to read specific record
 
 
-def read_book(id):
-    con = sqlite3.connect(DB_LOCATION)
+def read_book(id, db=DB_LOCATION):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     cur.execute('SELECT * FROM books WHERE id = ?', (id,))
     row = cur.fetchone()
@@ -73,8 +73,8 @@ def read_book(id):
 # Function to update a record
 
 
-def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, identifier_type=None, author=None, year=None, title=None, publisher=None, description=None):
-    con = sqlite3.connect(DB_LOCATION)
+def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, identifier_type=None, author=None, year=None, title=None, publisher=None, description=None, db=DB_LOCATION):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     update_query = 'UPDATE books SET '
     update_fields = []
@@ -118,8 +118,8 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
 # Function to delete a record
 
 
-def delete_book(id):
-    con = sqlite3.connect("testing.db")
+def delete_book(id, db=DB_LOCATION):
+    con = sqlite3.connect(db)
     cur = con.cursor()
     cur.execute('DELETE FROM books WHERE id = ?', (id,))
     con.commit()
