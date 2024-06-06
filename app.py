@@ -54,8 +54,9 @@ def index():
         session['edit'] = True
         db_id = request.args['edit']
         book = db.read_book(db_id)
+        if book is None:
+            return redirect('/')
         return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
-        # return render_template('form.html', SessionDict=session)
 
     if request.method == 'POST' and request.form.get('button_class') == 'edit':
         id = request.form['db_id']
