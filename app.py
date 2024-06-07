@@ -117,9 +117,13 @@ def index():
         return render_template('form.html', SessionDict=session)
 
 
+def run_flask(p=5000):
+    app.run(port=p, host='0.0.0.0', debug=True)
+
+
 if __name__ == '__main__':
     db.init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    run_flask()
     # books = read_books()
     # for book in books:
     #     print(book)

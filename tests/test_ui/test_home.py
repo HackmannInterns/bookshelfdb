@@ -3,20 +3,38 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from webdriver_manager.firefox import GeckoDriverManager
 from flask import Flask
-import app
+import db
+import time
+import requests
+from multiprocessing import Process
+from app import run_flask
 
 
-@pytest.fixture(scope="module")
-def flask_app():
-    # Run the app in a separate thread
-    thread = threading.Thread(target=app.app.run, kwargs={
-                              "host": "127.0.0.1", "port": 5000})
-    thread.start()
-    # time.sleep(1)  # Give the server some time to start
-    yield app.app
+@pytest.fixture(scope="session", autouse=True)
+def create_testing_db():
+    testing_db = "tmp.db"
+    db.init_db(testing_db)
+    db.create_book("bookshelf", "address", "room", "book_id", "id_type", "author", "year",
+                   "title", "publisher", None, db=testing_db)
+    yield db
+    # db.delete_db()
 
-    # Teardown - stop the app after the tests
-    thread.join()
+
+@pytest.fixture(scope='session')
+def flask_init():
+    # Start the Flask app in a separate process
+    port = 5000  # Change the port number here if needed
+    app_process = Process(target=run_flask, args=(port,))
+    app_process.start()
+
+    # Wait for the server to start
+    time.sleep(3)
+
+    yield
+
+    # Teardown
+    app_process.terminate()
+    app_process.join()
 
 
 @pytest.fixture
