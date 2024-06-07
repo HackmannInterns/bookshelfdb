@@ -54,8 +54,9 @@ def index():
         session['edit'] = True
         db_id = request.args['edit']
         book = db.read_book(db_id)
+        if book is None:
+            return redirect('/')
         return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3])
-        # return render_template('form.html', SessionDict=session)
 
     if request.method == 'POST' and request.form.get('button_class') == 'edit':
         id = request.form['db_id']
@@ -116,9 +117,13 @@ def index():
         return render_template('form.html', SessionDict=session)
 
 
+def run_flask(p=5000):
+    app.run(port=p, host='0.0.0.0', debug=True)
+
+
 if __name__ == '__main__':
     db.init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    run_flask()
     # books = read_books()
     # for book in books:
     #     print(book)

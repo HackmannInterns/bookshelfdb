@@ -148,7 +148,7 @@
                         <input class="bar book_author" type="text" name="author" value="{{ author }}"><br>
                         <input class="bar book_id" type="text" name="book_id" value="{{ book_id }}"><br>
                         <input class="hidden book_id_type" type="text" name="id_type" value="{{ id_type }}">
-                        <input class="hidden book_id_type" type="text" name="db_id" value="{{ db_id }}">
+                        <input class="hidden book_id_db" type="text" name="db_id" value="{{ db_id }}">
                         <input class="bar book_year" type="text" name="year" value="{{ year }}"><br>
                         <input class="bar book_publisher" type="text" name="publisher" value="{{ publisher }}"><br>
                     </div>
@@ -161,10 +161,10 @@
                         <label class="label">Bookshelf:</label>
                     </div>
                     <div class="grid-locations-bar">
-                        <input class="bar" type="text" name="address"
+                        <input class="bar address" type="text" name="address"
                             value="{{ address|default(SessionDict.address) }}"><br>
-                        <input class="bar" type="text" name="room" value="{{ room|default(SessionDict.room) }}"><br>
-                        <input class="bar" type="text" name="bookshelf"
+                        <input class="bar room" type="text" name="room" value="{{ room|default(SessionDict.room) }}"><br>
+                        <input class="bar bookshelf" type="text" name="bookshelf"
                             value="{{ bookshelf|default(SessionDict.bookshelf) }}"><br>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                     <option value="isbn">ISBN</option>
                     <option value="lccn">Library of Congress</option>
                 </select>
-                <input class="bar" type="text" name="search_id" value="{{ search_id }}" required><br><br>
+                <input class="bar search_id" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                 <div onclick="clearID()">
                     <input type="submit" name="action" value="Search">
                     <input type="hidden" name="button_class" value="auto">
