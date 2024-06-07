@@ -28,7 +28,7 @@ def view():
                   bookshelf_location=row[1],
                   address=row[2],
                   room=row[3],
-                  identifier=row[4],
+                  identifier=fetch.correct_id(row[4], row[5])[0],
                   identifier_type=row[5],
                   author=row[6],
                   year=row[7],
