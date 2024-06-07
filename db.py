@@ -116,11 +116,10 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
     con.commit()
     con.close()
 
-# Function to delete a record
-
 def delete_db(db=DB_LOCATION):
     os.remove(db)
 
+# Function to delete a record
 def delete_book(id, db=DB_LOCATION):
     con = sqlite3.connect(db)
     cur = con.cursor()
