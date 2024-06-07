@@ -1,6 +1,7 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+# Mozzila import using geecko, pip does this for you
 from webdriver_manager.firefox import GeckoDriverManager
 from flask import Flask
 import time
