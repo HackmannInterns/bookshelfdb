@@ -8,8 +8,6 @@ DB_LOCATION = "bookshelf.db"
 
 
 def init_db(db=DB_LOCATION):
-    global DB_LOCATION
-    DB_LOCATION = db
     if not isfile(db):
         sql_create = '''
         CREATE TABLE IF NOT EXISTS books (
