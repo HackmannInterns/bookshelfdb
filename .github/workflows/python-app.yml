@@ -36,10 +36,10 @@ jobs:
     - name: Test with pytest
       run: |
         pip install -r requirements-dev.txt;
-        pytest test_crud.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_api.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_cache.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_pages.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_home.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest test_crud.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_api.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_cache.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_pages.py --doctest-modules --junitxml=junit/test-results.xml
+        pytest test_home.py --doctest-modules --junitxml=junit/test-results.xml
