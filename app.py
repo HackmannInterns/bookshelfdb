@@ -45,7 +45,7 @@ def scan():
 @app.route('/view')
 def view():
     rows = db.read_books()
-    Books = [dict(b_id=row[0],
+    books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
                   address=row[2],
                   room=row[3],
@@ -56,7 +56,7 @@ def view():
                   title=row[8],
                   publisher=row[9],
                   description=row[10],) for row in rows]
-    return render_template('rows.html', SessionDict=session, Books=Books)
+    return render_template('rows.html', SessionDict=session, Books=books)
 
 
 @app.route('/delete')
@@ -124,10 +124,10 @@ def index():
         room = request.form['room']
         bookshelf = request.form['bookshelf']
         # print(session)
-        if ('edit' not in session):
+        if 'edit' not in session:
             # print("edit not in session")
             session['edit'] = False
-        if (not session['edit']):
+        if not session['edit']:
             # print(f'edit is {session["edit"]}')
             session['address'] = address
             session['room'] = room

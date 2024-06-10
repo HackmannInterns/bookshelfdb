@@ -1,4 +1,3 @@
-import pytest
 import responses
 import json
 from fetch import api

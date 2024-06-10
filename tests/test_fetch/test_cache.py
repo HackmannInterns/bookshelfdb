@@ -35,7 +35,6 @@ def test_load_from_cache(mock_shelve):
     mock_shelve.__enter__.return_value.get.assert_called_once_with(key)
 
 def test_load_empty_from_cache(mock_shelve):
-    key = 'test_key'
     value = 'true_value'
     false_key = 'false_key'
 

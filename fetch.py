@@ -35,7 +35,7 @@ def api(id, identifier, use_cache):
             data = ""
     except:
         data = ""
-    return (data)
+    return data
 
 
 def correct_id(og_id, identifier):

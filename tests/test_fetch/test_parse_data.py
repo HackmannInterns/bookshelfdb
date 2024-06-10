@@ -1,4 +1,3 @@
-import pytest
 import json
 from fetch import parse_data
 

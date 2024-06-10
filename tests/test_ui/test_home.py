@@ -1,11 +1,7 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-# Mozzila import using geecko, pip does this for you
-from webdriver_manager.firefox import GeckoDriverManager
-from flask import Flask
 import time
-import requests
 from multiprocessing import Process
 from app import run_flask
 
@@ -44,7 +40,7 @@ def test_header_present(browser, flask_init):
 
     header = browser.find_element(By.CLASS_NAME, "header")
     assert header
-    header_h1 = header.find_element(By.TAG_NAME, "h1")
+    header.find_element(By.TAG_NAME, "h1")
     tabs = browser.find_element(By.CLASS_NAME, "tabs")
     assert tabs
     assert header.text == 'Hackmann Library\nSubmit Library Scan\nLogin'

@@ -1,4 +1,3 @@
-import pytest
 from fetch import correct_id
 
 
