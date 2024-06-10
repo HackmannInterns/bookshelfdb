@@ -44,12 +44,12 @@ def test_scan_page(flask_init, browser):
 
 def test_edit_page(flask_init, browser):
     browser.get("localhost:5000/edit")
-    assert browser.title == "Book Table"
+    assert browser.title == "Login Required"
 
 
 def test_delete_page(flask_init, browser):
     browser.get("localhost:5000/delete")
-    assert browser.title == "Book Table"
+    assert browser.title == "Login Required"
 
 def test_none_page(flask_init, browser):
     browser.get("localhost:5000/jared")
