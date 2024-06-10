@@ -112,6 +112,7 @@ def index():
     session['autofilled'] = False
 
     # Manual entry
+    # TODO: implement subjects
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
         author = request.form['author']
@@ -144,7 +145,7 @@ def index():
         else:
             id_type = request.form['id_type']
             book_id = request.form['search_id']
-        title, author, publish_date, publisher = fetch.lookup_book_info(
+        title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)

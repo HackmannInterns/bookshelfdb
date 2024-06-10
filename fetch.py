@@ -64,15 +64,12 @@ def parse_data(data, identifier, book_id):
             publish_date = match.group()
         publisher = ', '.join(publisher.get('name', '')
                               for publisher in book_info.get('publishers', []))
-        subjects = " "
         subjects = book_info.get('subjects', '')
         subjects += book_info.get('subject_places', '')
         subjects += book_info.get('subject_people', '')
         subjects += book_info.get('subject_times', '')
-        if len(subjects) < 2:
-            subjects = 'No subjects found'
 
-    return title, authors, publish_date, publisher
+    return title, authors, publish_date, publisher, subjects
 
 
 def lookup_book_info(og_id, identifier, use_cache=True):
@@ -80,9 +77,9 @@ def lookup_book_info(og_id, identifier, use_cache=True):
     data = api(book_id, identifier, use_cache)
     # print(data)
     # print(type(data))
-    title, authors, publish_date, publisher = parse_data(
+    title, authors, publish_date, publisher, subjects = parse_data(
         data, identifier, book_id)
-    return title, authors, publish_date, publisher
+    return title, authors, publish_date, publisher, subjects
 
 
 if __name__ == '__main__':
