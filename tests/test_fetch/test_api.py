@@ -15,7 +15,7 @@ def test_fetch_book_metadata_success_isbn():
     result = api(book_id, id_type, False)
 
     assert result is not None
-    assert result is not ""
+    assert result != ""
     assert result is not {}
     assert f"{id_type}:{book_id}" in result
     book_data = result[f"{id_type}:{book_id}"]
@@ -34,7 +34,7 @@ def test_fetch_book_metadata_success_lccn():
     result = api(book_id, id_type, False)
 
     assert result is not None
-    assert result is not ""
+    assert result != ""
     assert result is not {}
     assert f"{id_type}:{book_id}" in result
     book_data = result[f"{id_type}:{book_id}"]

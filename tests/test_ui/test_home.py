@@ -52,7 +52,7 @@ def test_input_fields_empty(browser, flask_init):
     inputs = browser.find_elements(By.TAG_NAME, "input")
     for i in inputs:
         if i.get_attribute("type") != "submit" and i.get_attribute("type") != "hidden":
-            name = i.get_attribute("class").split(" ")[1]
+            #name = i.get_attribute("class").split(" ")[1]
             assert i.get_attribute("value") == ""
 
 
