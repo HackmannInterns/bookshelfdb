@@ -22,6 +22,7 @@ def init_db(db=DB_LOCATION):
         title TEXT NULL,
         publisher TEXT NULL,
         description TEXT NULL,
+        subjects TEXT NULL,
         UNIQUE (id)
         );
         '''

@@ -50,7 +50,7 @@ def correct_id(og_id, identifier):
     return id, identifier
 
 
-def prarse_data(data, identifier, book_id):
+def parse_data(data, identifier, book_id):
     title = authors = publish_date = publisher = ""
     if len(data) > 0:
         # print("here")
@@ -65,6 +65,14 @@ def prarse_data(data, identifier, book_id):
             publish_date = match.group()
         publisher = ', '.join(publisher.get('name', 'Unknown Author')
                               for publisher in book_info.get('publishers', []))
+        subjects = " "
+        subjects = book_info.get('subjects', '')
+        subjects += book_info.get('subject_places', '')
+        subjects += book_info.get('subject_people', '')
+        subjects += book_info.get('subject_times', '')
+        if len(subjects) < 2:
+            subjects = 'No subjects found'
+
     return title, authors, publish_date, publisher
 
 
@@ -73,15 +81,15 @@ def lookup_book_info(og_id, identifier, use_cache=True):
     data = api(book_id, identifier, use_cache)
     # print(data)
     # print(type(data))
-    title, authors, publish_date, publisher = prarse_data(
+    title, authors, publish_date, publisher = parse_data(
         data, identifier, book_id)
     return title, authors, publish_date, publisher
 
 
-# if __name__ == '__main__':
-#     data = lookup_book_info('9781778041303', 'isbn', False)
-#     for i in data:
-#         print(i)
-#     data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
-#     for i in data:
-#         print(i)
+if __name__ == '__main__':
+    data = lookup_book_info('0684872870', 'isbn', False)
+    for i in data:
+        print(i)
+    data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
+    for i in data:
+        print(i)
