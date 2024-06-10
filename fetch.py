@@ -50,7 +50,7 @@ def correct_id(og_id, identifier):
 
 
 def parse_data(data, identifier, book_id):
-    title = authors = publish_date = publisher = ""
+    title = authors = publish_date = publisher = subjects = ""
     if len(data) > 0:
         # print("here")
         book_info = data[f"{identifier}:{book_id}"]
@@ -64,7 +64,7 @@ def parse_data(data, identifier, book_id):
             publish_date = match.group()
         publisher = ', '.join(publisher.get('name', '')
                               for publisher in book_info.get('publishers', []))
-        subjects = book_info.get('subjects', '')
+        subjects += book_info.get('subjects', '')
         subjects += book_info.get('subject_places', '')
         subjects += book_info.get('subject_people', '')
         subjects += book_info.get('subject_times', '')
