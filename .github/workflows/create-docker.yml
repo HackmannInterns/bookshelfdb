@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "areynen-docker" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "areynen-docker" ]
+    branches: [ "main" ]
 
 jobs:
   docker:
