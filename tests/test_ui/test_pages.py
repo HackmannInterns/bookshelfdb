@@ -37,11 +37,20 @@ def test_view_page(flask_init, browser):
     assert browser.title == "Book Table"
 
 
-def test_view_page(flask_init, browser):
+def test_scan_page(flask_init, browser):
     browser.get("localhost:5000/scan")
     assert browser.title == "Barcode Scanner"
 
 
-def test_view_page(flask_init, browser):
+def test_edit_page(flask_init, browser):
     browser.get("localhost:5000/edit")
-    assert browser.title == "Barcode Scanner"
+    assert browser.title == "Book Table"
+
+
+def test_delete_page(flask_init, browser):
+    browser.get("localhost:5000/delete")
+    assert browser.title == "Book Table"
+
+def test_none_page(flask_init, browser):
+    browser.get("localhost:5000/jared")
+    assert browser.title == "404 Not Found"

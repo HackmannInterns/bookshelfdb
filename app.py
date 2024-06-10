@@ -23,8 +23,6 @@ def scan():
 # rows.html then processes this and creates a table, 1 row per DB entry
 @app.route('/view')
 def view():
-    if 'delete' in request.args:
-        db.delete_book(request.args['delete'])
     rows = db.read_books()
     Books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
@@ -39,6 +37,12 @@ def view():
                   description=row[10],) for row in rows]
     return render_template('rows.html', Books=Books)
 
+
+@app.route('/delete')
+def delete():
+    if 'q' in request.args:
+        db.delete_book(request.args['q'])
+    return redirect('/view')
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
