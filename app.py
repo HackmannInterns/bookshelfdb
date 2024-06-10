@@ -1,8 +1,6 @@
 from flask import Flask, request, redirect, render_template, session
-from time import sleep
 import fetch
 import db
-from db import DB_LOCATION
 
 app = Flask(__name__)
 

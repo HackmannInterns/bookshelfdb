@@ -1,4 +1,3 @@
-import time
 import requests
 import re
 import shelve
@@ -28,7 +27,6 @@ def api(id, identifier, use_cache):
         url = f"https://openlibrary.org/api/books?bibkeys={identifier}:{id}&format=json&jscmd=data"
         # print(url)
         response = requests.get(url)
-        book_info = title = authors = publish_date = publisher = ""
         # print(response)
         if response.status_code == 200:
             data = response.json()
