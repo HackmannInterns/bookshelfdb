@@ -93,8 +93,14 @@
                             ⠇
                         </div>
                         <div class="kebab-menu" id={{ book.b_id }}>
-                            <a href="/?edit={{ book.b_id }}">Edit</a>
-                            <a href="/view?delete={{ book.b_id }}">Remove</a>
+                            <a href="/edit?q={{ book.b_id }}">Edit</a>
+                            <a href="/delete?q={{ book.b_id }}">Remove</a>
+                            {% if book.identifier_type != "" %}
+                            <a href="https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}">More
+                                Info</a>
+                            {% else %}
+                            <a href="https://openlibrary.org/search?q={{ book.title }}">More Info</a>
+                            {% endif %}
                         </div>
                     </div>
                 </td>
@@ -108,17 +114,48 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
+
+
             $('#books').DataTable({
                 "order": [[7, 'asc']],
                 scrollX: true,
                 scrollCollapse: true,
                 scrollY: '',
+                fixedColumns: true,
 
                 "columnDefs": [
                     { "orderable": false, "targets": -1 } // Disables sorting on the last column
-                ]
+                ],
+                initComplete: function () {
+                    this.api()
+                        .columns()
+                        .every(function () {
+                            let column = this;
+                            let title = column.header().textContent;
+                            console.log(title)
+
+                            if (title != "") {
+
+                                // Create input element
+                                let input = document.createElement('input');
+                                input.placeholder = title;
+                                column.header().replaceChildren(input);
+
+                                // Event listener for user input
+                                input.addEventListener('keyup', () => {
+                                    if (column.search() !== this.value) {
+                                        column.search(input.value).draw();
+                                    }
+                                });
+                            }
+
+                        });
+                }
 
             });
+
+
+
 
         });
 

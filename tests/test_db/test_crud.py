@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import pytest
 import sqlite3
 import os
@@ -7,7 +5,7 @@ import os
 # consider putting everything in a temp file and nuking it after
 from db import init_db, create_book, read_books, read_book, update_book, delete_book, delete_db
 
-db = "fake.db"
+db = "data/fake.db"
 table_name = "books"
 
 bookshelf = "shelf_location"
@@ -76,7 +74,7 @@ def test_database_creation():
 
     if db_exists: 
         # Connect to the SQLite database
-        conn = sqlite3.connect('fake.db')
+        conn = sqlite3.connect(db)
 
         # Create a cursor object
         cursor = conn.cursor()

@@ -156,14 +156,15 @@
                 </div>
                 <div class="grid-2">
                     <div class="grid-locations-name">
-                        <label class="label">Address:</label>
-                        <label class="label">Room:</label>
-                        <label class="label">Bookshelf:</label>
+                        <label class="label">Address</label>
+                        <label class="label">Room</label>
+                        <label class="label">Bookshelf</label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
                             value="{{ address|default(SessionDict.address) }}"><br>
-                        <input class="bar room" type="text" name="room" value="{{ room|default(SessionDict.room) }}"><br>
+                        <input class="bar room" type="text" name="room"
+                            value="{{ room|default(SessionDict.room) }}"><br>
                         <input class="bar bookshelf" type="text" name="bookshelf"
                             value="{{ bookshelf|default(SessionDict.bookshelf) }}"><br>
                     </div>
@@ -180,6 +181,7 @@
             <p>Submitting... (3)</p>
             <button onclick="cancel_submit()">Cancel</button>
         </div>
+        {% if edit is not defined or edit == False %}
         <div class="search">
             <form method="post">
                 <select required name="id_type" id="id_type">
@@ -194,6 +196,7 @@
                 </div>
             </form>
         </div>
+        {% endif %}
     </div>
     <script>
         var cancel = false;
@@ -236,15 +239,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            var isEdit = urlParams.has('edit');
-            // console.log(isEdit)
-            if (isEdit) {
-                submitbtn = document.querySelector("body > div > form > div.submit_button > input[type=submit]:nth-child(1)")
-                submitbtn.value = "Save Edit";
-                hidden_id = document.querySelector("body > div > form > div.submit_button > input[type=hidden]:nth-child(2)")
-                hidden_id.value = "edit"
-            }
             // if autosubmit
             // if isbn and title
             // if it was autofilled (DO we need?)
