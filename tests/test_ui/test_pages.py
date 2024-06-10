@@ -1,8 +1,5 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from webdriver_manager.firefox import GeckoDriverManager
-from flask import Flask
 import time
 from multiprocessing import Process
 from app import run_flask

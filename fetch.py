@@ -1,6 +1,7 @@
 import requests
 import re
 import shelve
+from requests.exceptions import ConnectionError
 
 CACHE_DB_LOCATION = 'data/cache.db'
 
@@ -33,7 +34,8 @@ def api(id, identifier, use_cache):
             save_to_cache(f"{identifier}:{id}", data)
         else:
             data = ""
-    except:
+    except ConnectionError as e:
+        print(e)
         data = ""
     return data
 
