@@ -20,8 +20,10 @@
             overflow: hidden;
         }
 
-        .login {
-            margin-left: auto;
+        .account {
+            position: fixed;
+            top: 20px;
+            right: 0;
         }
     </style>
 </head>
@@ -35,9 +37,9 @@
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
             {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
-                <a class="logout" href="/logout">Logout</a>
+                <a class="account" href="/logout">Logout</a>
             {% else %}
-                <a class="login" href="/login">Login</a>
+                <a class="account" href="/login">Login</a>
             {% endif %}
         </nav>
     </div>

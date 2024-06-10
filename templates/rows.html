@@ -107,19 +107,6 @@
             </tr>
             {% endfor %}
         </tbody>
-        <tfoot>
-            <tr>
-                <th>Address</th>
-                <th>Room</th>
-                <th>Location</th>
-                <th>Identifier</th>
-                <th>Type</th>
-                <th>Author</th>
-                <th>Year</th>
-                <th>Title</th>
-                <th>Publisher</th>
-            </tr>
-        </tfoot>
     </table>
     <br>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -128,14 +115,6 @@
     <script>
         $(document).ready(function () {
 
-            $('#books tfoot th').each(function (i) {
-                var title = $('#books thead th')
-                    .eq($(this).index())
-                    .text();
-                $(this).html(
-                    '<input type="text" placeholder="' + title + '" data-index="' + i + '" />'
-                );
-            });
 
             $('#books').DataTable({
                 "order": [[7, 'asc']],
@@ -152,19 +131,24 @@
                         .columns()
                         .every(function () {
                             let column = this;
-                            let title = column.footer().textContent;
+                            let title = column.header().textContent;
+                            console.log(title)
 
-                            // Create input element
-                            let input = document.createElement('input');
-                            input.placeholder = title;
-                            column.footer().replaceChildren(input);
+                            if (title != "") {
 
-                            // Event listener for user input
-                            input.addEventListener('keyup', () => {
-                                if (column.search() !== this.value) {
-                                    column.search(input.value).draw();
-                                }
-                            });
+                                // Create input element
+                                let input = document.createElement('input');
+                                input.placeholder = title;
+                                column.header().replaceChildren(input);
+
+                                // Event listener for user input
+                                input.addEventListener('keyup', () => {
+                                    if (column.search() !== this.value) {
+                                        column.search(input.value).draw();
+                                    }
+                                });
+                            }
+
                         });
                 }
 
@@ -172,12 +156,6 @@
 
 
 
-            $(table.table().container()).on('keyup', 'tfoot input', function () {
-                table
-                    .column($(this).data('index'))
-                    .search(this.value)
-                    .draw();
-            });
 
         });
 
