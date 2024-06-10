@@ -45,8 +45,6 @@
             z-index: 1;
             overflow: hidden;
         }
-
-
     </style>
 </head>
 
@@ -62,6 +60,7 @@
     </div>
     <script>
         function tabChecker() {
+            var currentSite = null
             if (window.location.pathname === "/") {
                 var currentSite = document.getElementById("submit");
             }
@@ -71,9 +70,11 @@
             else if (window.location.pathname === "/scan") {
                 var currentSite = document.getElementById("scan");
             }
-            currentSite.style.color = "#333";
-            currentSite.style.backgroundColor = "#fff";
-            currentSite.style.textDecoration = "none";
+            if (currentSite !== null) {
+                currentSite.style.color = "#333";
+                currentSite.style.backgroundColor = "#fff";
+                currentSite.style.textDecoration = "none";
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function () {

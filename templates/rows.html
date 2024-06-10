@@ -93,7 +93,7 @@
                             ⠇
                         </div>
                         <div class="kebab-menu" id={{ book.b_id }}>
-                            <a href="/?edit={{ book.b_id }}">Edit</a>
+                            <a href="/edit?q={{ book.b_id }}">Edit</a>
                             <a href="/view?delete={{ book.b_id }}">Remove</a>
                             {% if book.identifier_type != "" %}
                             <a href="https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}">More Info</a>
