@@ -5,4 +5,4 @@ services:
     volumes:
       - ./data:/app/data
     ports:
-      - "5001:5000"
+      - "8008:5000"

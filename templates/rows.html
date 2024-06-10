@@ -121,7 +121,7 @@
                 scrollX: true,
                 scrollCollapse: true,
                 scrollY: '',
-                fixedColumns: true,
+
 
                 "columnDefs": [
                     { "orderable": false, "targets": -1 } // Disables sorting on the last column
@@ -152,12 +152,14 @@
                         });
                 }
 
+
             });
-
-
-
+            $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust();
 
         });
+
+
 
 
         function toggleMenu(menuId, event) {
