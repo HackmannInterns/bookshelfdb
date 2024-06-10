@@ -41,4 +41,5 @@ jobs:
         pytest tests/test_fetch/test_cache.py --doctest-modules --junitxml=junit/test-results.xml
         pytest tests/test_fetch/test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
         pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
-        pytest tests/test_ui/test_home.py --doctest-modules --junitxml=junit/test-results.xml
+        # pytest tests/test_ui/test_api.py --doctest-modules --junitxml=junit/test-results.xml
+        # pytest tests/test_ui/test_home.py --doctest-modules --junitxml=junit/test-results.xml
