@@ -2,12 +2,14 @@ import os
 from os.path import isfile
 import sqlite3
 
-DB_LOCATION = "bookshelf.db"
+DB_LOCATION = "data/bookshelf.db"
 
 # Init DB if it doesn't exist
 
 
 def init_db(db=DB_LOCATION):
+    filename = DB_LOCATION
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     if not isfile(db):
         sql_create = '''
         CREATE TABLE IF NOT EXISTS books (
@@ -116,10 +118,12 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
     con.commit()
     con.close()
 
+
 def delete_db(db=DB_LOCATION):
     os.remove(db)
 
 # Function to delete a record
+
 def delete_book(id, db=DB_LOCATION):
     con = sqlite3.connect(db)
     cur = con.cursor()
