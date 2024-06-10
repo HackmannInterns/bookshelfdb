@@ -2,48 +2,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
     <style>
         .tabs {
-            width: 500%;
             margin-top: 60px;
             background-color: #333;
             color: #fff;
-            display: grid;
-            grid-template-columns: auto auto auto;
+            display: flex;
             padding: 0 10px;
             position: absolute;
             top: 0;
             left: 0;
-
-        }
-
-        body {
-            overflow: hidden;
-        }
-
-
-        @media only screen and (max-width: 40em) {
-
-            /* Hide scrollbar for the entire page on mobile */
-            body {
-                overflow: hidden;
-            }
+            width: 100%;
         }
 
         .tabs nav a {
             color: #fff;
             text-decoration: none;
             margin: 10px;
-            float: none;
             overflow: hidden;
         }
 
-        .tabs nav a:hover {
-            text-decoration: underline;
-        }
-
-        .nav {
-            position: relative;
-            z-index: 1;
-            overflow: hidden;
+        .login {
+            margin-left: auto;
         }
     </style>
 </head>
@@ -56,6 +34,11 @@
             <a id="library" href="/view">Library</a>
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
+            {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
+                <a class="logout" href="/logout">Logout</a>
+            {% else %}
+                <a class="login" href="/login">Login</a>
+            {% endif %}
         </nav>
     </div>
     <script>
