@@ -8,7 +8,7 @@ DB_LOCATION = "data/bookshelf.db"
 
 
 def init_db(db=DB_LOCATION):
-    filename = DB_LOCATION
+    filename = db
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     if not isfile(db):
         sql_create = '''
