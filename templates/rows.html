@@ -96,7 +96,8 @@
                             <a href="/edit?q={{ book.b_id }}">Edit</a>
                             <a href="/delete?q={{ book.b_id }}">Remove</a>
                             {% if book.identifier_type != "" %}
-                            <a href="https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}">More Info</a>
+                            <a href="https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}">More
+                                Info</a>
                             {% else %}
                             <a href="https://openlibrary.org/search?q={{ book.title }}">More Info</a>
                             {% endif %}
@@ -106,6 +107,19 @@
             </tr>
             {% endfor %}
         </tbody>
+        <tfoot>
+            <tr>
+                <th>Address</th>
+                <th>Room</th>
+                <th>Location</th>
+                <th>Identifier</th>
+                <th>Type</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Title</th>
+                <th>Publisher</th>
+            </tr>
+        </tfoot>
     </table>
     <br>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -113,16 +127,36 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
+
+            $('#books tfoot th').each(function (i) {
+                var title = $('#books thead th')
+                    .eq($(this).index())
+                    .text();
+                $(this).html(
+                    '<input type="text" placeholder="' + title + '" data-index="' + i + '" />'
+                );
+            });
+
             $('#books').DataTable({
                 "order": [[7, 'asc']],
                 scrollX: true,
                 scrollCollapse: true,
                 scrollY: '',
+                fixedColumns: true,
 
                 "columnDefs": [
                     { "orderable": false, "targets": -1 } // Disables sorting on the last column
                 ]
 
+            });
+
+           
+
+            $(table.table().container()).on('keyup', 'tfoot input', function () {
+                table
+                    .column($(this).data('index'))
+                    .search(this.value)
+                    .draw();
             });
 
         });
