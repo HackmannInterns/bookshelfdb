@@ -64,7 +64,7 @@ def parse_data(data, identifier, book_id):
             publish_date = match.group()
         publisher = ', '.join(publisher.get('name', '')
                               for publisher in book_info.get('publishers', []))
-        subjects += book_info.get('subjects', '')
+        subjects = book_info.get('subjects', '')
         subjects += book_info.get('subject_places', '')
         subjects += book_info.get('subject_people', '')
         subjects += book_info.get('subject_times', '')
