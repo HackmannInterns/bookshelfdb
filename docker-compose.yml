@@ -4,5 +4,8 @@ services:
     container_name: bookshelfdb
     volumes:
       - ./data:/app/data
+    environment:
+      - BOOKSHELFDB_PASSWORD=changeme  # Change this to a secure password
+      - BOOKSHELFDB_SECRET_KEY=changeme  # Change this to a secure key
     ports:
       - "5000:5000"

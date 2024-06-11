@@ -1,14 +1,17 @@
 from flask import Flask, request, redirect, render_template, session
 import fetch
 import db
+from dotenv import load_dotenv
+from os import getenv
+
 
 app = Flask(__name__)
 
 AUTO = True
 
-# Change these to .env probably
-PASSWORD = 'password'
-app.secret_key = 'TESTING KEY'
+load_dotenv()
+PASSWORD = getenv('BOOKSHELFDB_PASSWORD','changeme')
+app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY','changeme')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -16,8 +19,8 @@ def login():
     if session.get('authenticated'):
         return redirect('/')
     if request.method == 'POST':
-        password = request.form['password']
-        if password == PASSWORD:
+        entered_password = request.form['password']
+        if entered_password == PASSWORD:
             session['authenticated'] = True
             return redirect('/')
         return 'Invalid password', 401
