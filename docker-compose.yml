@@ -1,8 +1,8 @@
 services:
   flask-app:
+    image: "alexreynen/bookshelfdb:latest"  # Currently Private
     container_name: bookshelfdb
-    build: .
     volumes:
       - ./data:/app/data
     ports:
-      - "8008:5000"
+      - "5000:5000"
