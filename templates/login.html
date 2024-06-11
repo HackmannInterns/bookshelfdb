@@ -5,13 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Required</title>
+    <style>
+        .main{
+            margin: auto;
+            text-align: center;
+            padding: 100px 0;
+        }
+    </style>
 </head>
-
+{% include "header.html" %}
 <body>
-    <div>
+    <div class="main">
         <form action="/login" method="post">
-            <label>Enter Password</label>
-            <input required type="password" id="password" name="password"><br>
+            <label>Enter Password:</label>
+            <input required type="password" id="password" name="password">
+            <br>
+            <br>
             <input type="submit" value="Login">
         </form>
     </div>
