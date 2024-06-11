@@ -5,6 +5,7 @@ from requests.exceptions import ConnectionError
 
 CACHE_DB_LOCATION = 'data/cache.db'
 
+
 def save_to_cache(key, value):
     # print("Writing to Cache")
     with shelve.open(CACHE_DB_LOCATION) as db:
@@ -66,10 +67,14 @@ def parse_data(data, identifier, book_id):
             publish_date = match.group()
         publisher = ', '.join(publisher.get('name', '')
                               for publisher in book_info.get('publishers', []))
-        subjects = book_info.get('subjects', '')
-        subjects += book_info.get('subject_places', '')
-        subjects += book_info.get('subject_people', '')
-        subjects += book_info.get('subject_times', '')
+        all_subjects = book_info.get('subjects', '')
+        all_subjects += book_info.get('subject_places', '')
+        all_subjects += book_info.get('subject_people', '')
+        all_subjects += book_info.get('subject_times', '')
+        # print(all_subjects)
+        subjects = list(subject.get('name', '')
+                    for subject in all_subjects)
+        subjects = ', '.join(subjects)
 
     return title, authors, publish_date, publisher, subjects
 
@@ -84,10 +89,10 @@ def lookup_book_info(og_id, identifier, use_cache=True):
     return title, authors, publish_date, publisher, subjects
 
 
-if __name__ == '__main__':
-    data = lookup_book_info('0684872870', 'isbn', False)
-    for i in data:
-        print(i)
-    data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
-    for i in data:
-        print(i)
+# if __name__ == '__main__':
+#     data = lookup_book_info('9781778041303', 'isbn', False)
+#     for i in data:
+#         print(i)
+#     data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
+#     for i in data:
+#         print(i)

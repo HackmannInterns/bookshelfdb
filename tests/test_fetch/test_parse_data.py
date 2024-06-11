@@ -11,7 +11,7 @@ def test_fetch_book_parse_data_lccn():
     assert authors == "Ruth Grossman"
     assert publish_date == "1963"
     assert publisher == "P.S. Eriksson"
-    assert subjects == [{'name': 'Chinese Cookery', 'url': 'https://openlibrary.org/subjects/chinese_cookery'}, {'name': 'Jewish Cookery', 'url': 'https://openlibrary.org/subjects/jewish_cookery'}, {'name': 'Jewish cooking', 'url': 'https://openlibrary.org/subjects/jewish_cooking'}, {'name': 'Chinese Cooking', 'url': 'https://openlibrary.org/subjects/chinese_cooking'}]
+    assert subjects == "Chinese Cookery, Jewish Cookery, Jewish cooking, Chinese Cooking"
 
 def test_fetch_book_parse_data_isbn():
     mock_data = """{"ISBN:9781778041303": {"url": "https://openlibrary.org/books/OL49098336M/Plague_of_Models", "key": "/books/OL49098336M", "title": "Plague of Models", "subtitle": "How Computer Modeling Corrupted Environmental, Health, and Safety Regulations", "authors": [{"url": "https://openlibrary.org/authors/OL12308828A/Kenneth_P._Green", "name": "Kenneth P. Green"}, {"url": "https://openlibrary.org/authors/OL765044A/Benjamin_Zycher", "name": "Benjamin Zycher"}, {"url": "https://openlibrary.org/authors/OL49490A/Steven_F._Hayward", "name": "Steven F. Hayward"}], "pagination": "242", "weight": "0.327", "identifiers": {"isbn_13": ["9781778041303"], "openlibrary": ["OL49098336M"]}, "publishers": [{"name": "Matos, Melissa"}], "publish_date": "2023"}}"""
