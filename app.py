@@ -10,8 +10,8 @@ app = Flask(__name__)
 AUTO = True
 
 load_dotenv()
-PASSWORD = getenv('BOOKSHELFDB_PASSWORD','changeme')
-app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY','changeme')
+PASSWORD = getenv('BOOKSHELFDB_PASSWORD', 'changeme')
+app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -159,13 +159,14 @@ def index():
 
 
 def run_flask(p=5000):
+    db.init_db()
     app.run(port=p, host='0.0.0.0', debug=True)
 
 
+def create_app():
+    db.init_db()
+    return app
+
 if __name__ == '__main__':
     db.init_db()
-    run_flask()
-    # books = read_books()
-    # for book in books:
-    #     print(book)
-    # print(db.read_book(9))
+    app.run(port=5000, host='0.0.0.0', debug=True)
