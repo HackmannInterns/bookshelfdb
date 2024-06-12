@@ -38,9 +38,9 @@
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
             {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
-                <a class="account" href="/logout">Logout</a>
+                <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
             {% else %}
-                <a class="account" href="/login">Login</a>
+                <div class="account"><a href="/login">Login</a></div>
             {% endif %}
         </nav>
     </div>
