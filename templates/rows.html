@@ -5,6 +5,22 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 200px;
+            /* Ensure this matches the td max-width */
+        }
+
+        .truncate::after {
+            content: attr(data-original-text);
+            visibility: hidden;
+            position: absolute;
+            white-space: nowrap;
+        }
+
         body {
             padding: 10px;
         }
@@ -81,7 +97,7 @@
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.year }}</td>
-                <td title="{{ book.subjects | e }}">{{ book.subjects }}</td>
+                <td class="truncate" title="{{ book.subjects | e }}">{{ book.subjects }}</td>
                 {% if book.identifier_type != "" %}
                 <td>{{ book.identifier_type ~ ": " ~ book.identifier }}</td>
                 {% else %}
@@ -184,21 +200,6 @@
             menu.style.right = 0;
 
         }
-
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     var table = document.getElementById("books");
-
-        //     // Loop through all the rows of the table (skipping the header row)
-        //     for (var i = 1; i < table.rows.length; i++) {
-        //         // Get the first cell of the current row
-        //         var subjectsCol = table.rows[i].cells[3];
-
-        //         // Log the text content of the first cell
-        //         console.log(subjectsCol.textContent);
-        //         subjectsCol.textContent = "test";
-        //         console.log(subjectsCol.textContent);
-        //     }
-        // });
 
         // Close the menu if the user clicks outside of it
         window.onclick = function (event) {
