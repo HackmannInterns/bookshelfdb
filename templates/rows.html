@@ -6,19 +6,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <style>
         .truncate {
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: inline-block;
-            max-width: 200px;
-            /* Ensure this matches the td max-width */
-        }
-
-        .truncate::after {
-            content: attr(data-original-text);
-            visibility: hidden;
-            position: absolute;
             white-space: nowrap;
+            max-width: 200px;
         }
 
         body {
