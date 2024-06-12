@@ -50,7 +50,9 @@ def create_book(bookshelf_location, address, room, identifier, identifier_type, 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, subjects))
     con.commit()
+    book_id = cur.lastrowid
     con.close()
+    return book_id
 
 # Function to read all records
 

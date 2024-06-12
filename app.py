@@ -6,7 +6,6 @@ from os import getenv
 
 
 app = Flask(__name__)
-
 AUTO = True
 
 load_dotenv()
@@ -63,27 +62,49 @@ def view():
     return render_template('rows.html', SessionDict=session, Books=books)
 
 
+@app.route('/view2')
+def view2():
+    if 'recent' not in session:
+        session['recent'] = []
+    rows = []
+    print(session["recent"])
+    for i in session["recent"]:
+        rows.append(db.read_book(i))
+    books = [dict(b_id=row[0],
+                  bookshelf_location=row[1],
+                  address=row[2],
+                  room=row[3],
+                  identifier=fetch.correct_id(row[4], row[5])[0],
+                  identifier_type=row[5],
+                  author=row[6],
+                  year=row[7],
+                  title=row[8],
+                  publisher=row[9],
+                  subjects=row[11],
+                  description=row[10],) for row in rows if row is not None]
+    return render_template('rows.html', SessionDict=session, Books=books)
+
+
 @app.route('/delete')
 def delete():
-    if not session.get('authenticated'):
-        return redirect('/login')
-    if 'q' in request.args:
+    if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
         db.delete_book(request.args['q'])
+    elif 'q' in request.args and not session.get('authenticated'):
+        return redirect('/login')
     return redirect('/view')
 
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
-    if not session.get('authenticated'):
-        return redirect('/login')
-    # Start Editting
-    if 'q' in request.args:
+    if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
         session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:
             return redirect('/view')
         return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
+    elif 'q' in request.args and not session.get('authenticated'):
+        return redirect("/login")
 
     if request.method == 'POST':
         id = request.form['db_id']
@@ -112,6 +133,8 @@ def edit():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    print(session["recent"])
+    # session["recent"] = []
     # print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
     session['autofilled'] = False
@@ -132,8 +155,12 @@ def index():
         session['room'] = room
         session['bookshelf'] = bookshelf
         session['edit'] = False
-        db.create_book(bookshelf, address, room, book_id, id_type, author, year,
+        b_id = db.create_book(bookshelf, address, room, book_id, id_type, author, year,
                        title, publisher, None, subjects)
+        
+        if 'recent' not in session:
+            session['recent'] = []
+        session['recent'].append(b_id)
         return render_template('form.html', SessionDict=session)
 
     # isbn/lccn given
