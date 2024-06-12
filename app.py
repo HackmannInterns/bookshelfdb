@@ -87,6 +87,8 @@ def view2():
 
 @app.route('/delete')
 def delete():
+    if 'recent' not in session:
+        session['recent'] = []
     if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
         db.delete_book(request.args['q'])
     elif 'q' in request.args and not session.get('authenticated'):
@@ -96,6 +98,8 @@ def delete():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    if 'recent' not in session:
+        session['recent'] = []
     if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
         session['q'] = True
         db_id = request.args['q']
