@@ -117,7 +117,6 @@ def index():
     session['autofilled'] = False
 
     # Manual entry
-    # TODO: implement subjects
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
         author = request.form['author']

@@ -78,7 +78,7 @@
                 <th>Publisher</th>
                 <th>Address</th>
                 <th>Room</th>
-                <th>Location</th>
+                <th>Shelf</th>
                 <th></th>
             </tr>
         </thead>
@@ -151,6 +151,17 @@
                                 input.placeholder = title;
                                 column.header().replaceChildren(input);
 
+                                // Set the width only of these
+                                if (title == "Year" || title == "Address" || title == "Room" || title == "Shelf") {
+                                    let width = title.length * 20; // maybe change???
+                                    input.style.width = width + 'px';
+                                }
+
+                                // Event listener for user input
+                                input.addEventListener('click', (e) => {
+                                    e.stopPropagation(); // Stop the click event from propagating
+                                });
+
                                 // Event listener for user input
                                 input.addEventListener('keyup', () => {
                                     if (column.search() !== this.value) {
@@ -161,16 +172,10 @@
 
                         });
                 }
-
-
             });
-            $($.fn.dataTable.tables(true)).DataTable()
-                .columns.adjust();
+            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 
         });
-
-
-
 
         function toggleMenu(menuId, event) {
             // Close all menus first
