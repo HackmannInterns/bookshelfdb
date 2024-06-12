@@ -9,8 +9,35 @@ app = Flask(__name__)
 AUTO = True
 
 load_dotenv()
-PASSWORD = getenv('BOOKSHELFDB_PASSWORD', 'changeme')
+ADMIN_PASSWORD = getenv('BOOKSHELFDB_PASSWORD', 'changeme')
+EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
+
+# Maybe goes in new class, idk
+def get_permissions(user_type='Viewer', is_recent=False):
+    class Permissions:
+        can_add = False
+        # TODO: get this from admin.yml
+        admin_viewer_add = False
+        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and admin_viewer_add):
+            can_add = True
+
+        can_remove = False
+        # TODO: get this from admin.yml
+        admin_editor_remove = True
+        if user_type == 'Admin' or (user_type == 'Editor' and admin_editor_remove) or (user_type == 'Editor' and is_recent) or (user_type == None and is_recent):
+            can_remove = True
+
+        can_edit = False
+        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and is_recent):
+            can_edit = True
+
+        can_view_admin = False
+        if user_type == 'Admin':
+            can_view_admin = True
+
+        can_view_views = True
+    return Permissions()
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -19,8 +46,11 @@ def login():
         return redirect('/')
     if request.method == 'POST':
         entered_password = request.form['password']
-        if entered_password == PASSWORD:
-            session['authenticated'] = True
+        if entered_password == ADMIN_PASSWORD:
+            session['authenticated'] = "Admin"
+            return redirect('/')
+        elif entered_password == EDITOR_PASSWORD:
+            session['authenticated'] = "Editor"
             return redirect('/')
         return 'Invalid password', 401
     return render_template('login.html')
@@ -44,6 +74,7 @@ def scan():
 # When you hit the /view page, rows.html is rendered
 # It creates and passes in a dictionary containing all the row data for a Book
 # rows.html then processes this and creates a table, 1 row per DB entry
+# TODO: implement permissions
 @app.route('/view')
 def view():
     rows = db.read_books()
@@ -63,6 +94,7 @@ def view():
 
 
 @app.route('/view-recent')
+# TODO: implement permissions
 def view2():
     if 'recent' not in session:
         session['recent'] = []
@@ -89,9 +121,11 @@ def view2():
 def delete():
     if 'recent' not in session:
         session['recent'] = []
-    if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
+    can_remove = get_permissions(user_type=session.get('authenticated'), is_recent=(
+        int(request.args.get('q', 0)) in session['recent'])).can_remove
+    if 'q' in request.args and can_remove:
         db.delete_book(request.args['q'])
-    elif 'q' in request.args and not session.get('authenticated'):
+    elif 'q' in request.args and not can_remove:
         return redirect('/login')
     return redirect('/view')
 
@@ -100,14 +134,17 @@ def delete():
 def edit():
     if 'recent' not in session:
         session['recent'] = []
-    if 'q' in request.args and (int(request.args['q']) in session['recent'] or session.get('authenticated')):
+
+    can_edit = get_permissions(user_type=session.get('authenticated'), is_recent=(int(
+        request.args.get('q', 0)) in session['recent'] or session.get('authenticated'))).can_edit
+    if 'q' in request.args and can_edit:
         session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:
             return redirect('/view')
         return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
-    elif 'q' in request.args and not session.get('authenticated'):
+    elif 'q' in request.args and not can_edit:
         return redirect("/login")
 
     if request.method == 'POST':
@@ -134,7 +171,7 @@ def edit():
 # When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
 # When the page is first met, it is rendered with nothing else happening
 
-
+# TODO: implement permissions & change page
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # print(session["recent"])
@@ -160,8 +197,8 @@ def index():
         session['bookshelf'] = bookshelf
         session['edit'] = False
         b_id = db.create_book(bookshelf, address, room, book_id, id_type, author, year,
-                       title, publisher, None, subjects)
-        
+                              title, publisher, None, subjects)
+
         if 'recent' not in session:
             session['recent'] = []
         session['recent'].append(b_id)
@@ -193,6 +230,7 @@ def run_flask(p=5000):
 def create_app():
     db.init_db()
     return app
+
 
 if __name__ == '__main__':
     db.init_db()
