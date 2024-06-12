@@ -67,7 +67,7 @@ def view2():
     if 'recent' not in session:
         session['recent'] = []
     rows = []
-    print(session["recent"])
+    # print(session["recent"])
     for i in session["recent"]:
         rows.append(db.read_book(i))
     books = [dict(b_id=row[0],
@@ -133,7 +133,7 @@ def edit():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(session["recent"])
+    # print(session["recent"])
     # session["recent"] = []
     # print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
