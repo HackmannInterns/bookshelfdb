@@ -63,30 +63,34 @@
     <table id="books" class="display" style="width:100%">
         <thead>
             <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Subjects</th>
+                <th>Identifier</th>
+                <th>Publisher</th>
                 <th>Address</th>
                 <th>Room</th>
                 <th>Location</th>
-                <th>Identifier</th>
-                <th>Type</th>
-                <th>Author</th>
-                <th>Year</th>
-                <th>Title</th>
-                <th>Publisher</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             {% for book in Books %}
             <tr>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.year }}</td>
+                <td title="{{ book.subjects | e }}">{{ book.subjects }}</td>
+                {% if book.identifier_type != "" %}
+                <td>{{ book.identifier_type ~ ": " ~ book.identifier }}</td>
+                {% else %}
+                <td>{{ book.identifier }}</td>
+                {% endif %}
+                <td>{{ book.publisher }}</td>
                 <td>{{ book.address }}</td>
                 <td>{{ book.room }}</td>
                 <td>{{ book.bookshelf_location }}</td>
-                <td>{{ book.identifier }}</td>
-                <td>{{ book.identifier_type }}</td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.year }}</td>
-                <td>{{ book.title }}</td>
-                <td>{{ book.publisher }}</td>
                 <td>
                     <div class="kebab-menu-container">
                         <div class="kebab-menu-icon" onclick="toggleMenu( {{ book.b_id }}, this) ">
@@ -117,7 +121,7 @@
 
 
             $('#books').DataTable({
-                "order": [[7, 'asc']],
+                // "order": [[7, 'asc']],
                 scrollX: true,
                 scrollCollapse: true,
                 scrollY: '',
@@ -132,7 +136,6 @@
                         .every(function () {
                             let column = this;
                             let title = column.header().textContent;
-                            console.log(title)
 
                             if (title != "") {
 
@@ -181,6 +184,21 @@
             menu.style.right = 0;
 
         }
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     var table = document.getElementById("books");
+
+        //     // Loop through all the rows of the table (skipping the header row)
+        //     for (var i = 1; i < table.rows.length; i++) {
+        //         // Get the first cell of the current row
+        //         var subjectsCol = table.rows[i].cells[3];
+
+        //         // Log the text content of the first cell
+        //         console.log(subjectsCol.textContent);
+        //         subjectsCol.textContent = "test";
+        //         console.log(subjectsCol.textContent);
+        //     }
+        // });
 
         // Close the menu if the user clicks outside of it
         window.onclick = function (event) {

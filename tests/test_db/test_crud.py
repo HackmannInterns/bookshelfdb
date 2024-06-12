@@ -17,6 +17,7 @@ author = "John Whitney"
 year = 2003
 title = "book title"
 publisher = "John Hackmann"
+subjects = "Biography, Horor"
 
 
 @pytest.fixture
@@ -96,8 +97,8 @@ def test_database_creation():
 def test_create_book():
     init_db(db)
 
-    create_book(None, None, None, None, None, None, None, title, None, None, db)
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, db)
+    create_book(None, None, None, None, None, None, None, title, None, None, None, db)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, subjects, None, db)
 
     con = sqlite3.connect(db)
     cur = con.cursor()
@@ -129,7 +130,8 @@ def test_read_books():
                   year=row[7],
                   title=row[8],
                   publisher=row[9],
-                  description=row[10], ) for row in rows]
+                  description=row[10],
+                  subjects=row[11], ) for row in rows]
 
     for book in books:
         assert bookshelf == book['bookshelf_location']
@@ -141,6 +143,7 @@ def test_read_books():
         assert year == book['year']
         assert title == book['title']
         assert publisher == book['publisher']
+        assert subjects == book['subjects']
         assert book['description'] is None
 
     clear_table("books", db)
@@ -149,7 +152,7 @@ def test_read_books():
 def test_read_book():
     init_db(db)
 
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, db)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects, db)
 
     rows = read_books(db)
     books = [dict(b_id=row[0],
@@ -162,7 +165,8 @@ def test_read_book():
                   year=row[7],
                   title=row[8],
                   publisher=row[9],
-                  description=row[10], ) for row in rows]
+                  description=row[10],
+                  subjects=row[11], ) for row in rows]
 
     for book in books:
         b_id = book['b_id']
@@ -179,6 +183,7 @@ def test_read_book():
     assert year == row[7]
     assert title == row[8]
     assert publisher == row[9]
+    assert subjects == row[11]
     assert row[10] is None
 
     clear_table("books", db)
@@ -187,7 +192,7 @@ def test_read_book():
 def test_update_book():
     init_db(db)
 
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, db)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects, db)
 
     rows = read_books(db)
     books = [dict(b_id=row[0],
@@ -200,22 +205,25 @@ def test_update_book():
                   year=row[7],
                   title=row[8],
                   publisher=row[9],
+                  subjects=row[11],
                   description=row[10], ) for row in rows]
 
     for book in books:
         b_id = book['b_id']
 
-    f_bookshelf = "k"
-    f_address = "k"
-    f_room = "f"
-    f_id = "f"
+    f_bookshelf = "BOOKSHELF"
+    f_address = "ADDRESS"
+    f_room = "ROOM"
+    f_id = "ID"
     f_numbers = "909090909090"
-    f_author = "f f"
+    f_author = "AUTHOR"
     f_year = 9999
-    f_title = "f f"
-    f_publisher = "f f"
+    f_title = "TITLE"
+    f_publisher = "PUBLISHER"
+    f_subjects = "SUBJECTS"
+    f_descriptor = "DESCRIPTOR"
 
-    update_book(b_id, f_bookshelf, f_address, f_room, f_id, f_numbers, f_author, f_year, f_title, f_publisher, None, db)
+    update_book(b_id, bookshelf_location=f_bookshelf, address=f_address, room=f_room, identifier=f_id, identifier_type=f_numbers, author=f_author, year=f_year, title=f_title, publisher=f_publisher, description=f_descriptor, subjects=f_subjects, db=db)
 
     row = read_book(b_id, db)
 
@@ -229,7 +237,8 @@ def test_update_book():
     assert f_year == row[7]
     assert f_title == row[8]
     assert f_publisher == row[9]
-    assert row[10] is None
+    assert f_descriptor == row[10]
+    assert f_subjects == row[11]
 
     clear_table("books", db)
 
@@ -237,7 +246,7 @@ def test_update_book():
 def test_delete_book():
     init_db(db)
 
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, db)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects, db)
 
     rows = read_books(db)
     books = [dict(b_id=row[0],
@@ -250,6 +259,7 @@ def test_delete_book():
                   year=row[7],
                   title=row[8],
                   publisher=row[9],
+                  subjects=row[11],
                   description=row[10], ) for row in rows]
 
     for book in books:

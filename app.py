@@ -58,6 +58,7 @@ def view():
                   year=row[7],
                   title=row[8],
                   publisher=row[9],
+                  subjects=row[11],
                   description=row[10],) for row in rows]
     return render_template('rows.html', SessionDict=session, Books=books)
 
@@ -82,7 +83,7 @@ def edit():
         book = db.read_book(db_id)
         if book is None:
             return redirect('/view')
-        return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], edit=True)
+        return render_template('form.html', SessionDict=session, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
 
     if request.method == 'POST':
         id = request.form['db_id']
@@ -95,8 +96,9 @@ def edit():
         address = request.form['address']
         room = request.form['room']
         bookshelf = request.form['bookshelf']
+        subjects = request.form['subjects']
         db.update_book(id=id, bookshelf_location=bookshelf, address=address, room=room, identifier=book_id, identifier_type=id_type, author=author, year=year,
-                       title=title, publisher=publisher)
+                       title=title, publisher=publisher, subjects=subjects)
         return redirect('/view')
 
     else:
@@ -126,18 +128,13 @@ def index():
         address = request.form['address']
         room = request.form['room']
         bookshelf = request.form['bookshelf']
-        # print(session)
-        if 'edit' not in session:
-            # print("edit not in session")
-            session['edit'] = False
-        if not session['edit']:
-            # print(f'edit is {session["edit"]}')
-            session['address'] = address
-            session['room'] = room
-            session['bookshelf'] = bookshelf
+        subjects = request.form['subjects']
+        session['address'] = address
+        session['room'] = room
+        session['bookshelf'] = bookshelf
         session['edit'] = False
         db.create_book(bookshelf, address, room, book_id, id_type, author, year,
-                       title, publisher, None)
+                       title, publisher, None, subjects)
         return render_template('form.html', SessionDict=session)
 
     # isbn/lccn given
@@ -152,7 +149,7 @@ def index():
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)
-        return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher)
+        return render_template('form.html', SessionDict=session, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 
     else:
         return render_template('form.html', SessionDict=session)

@@ -42,13 +42,13 @@ def init_db(db=DB_LOCATION):
 # Function to create a new record
 
 
-def create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, db=DB_LOCATION):
+def create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, subjects, db=DB_LOCATION):
     con = sqlite3.connect(db)
     cur = con.cursor()
     cur.execute('''
-        INSERT INTO books (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description))
+        INSERT INTO books (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, subjects)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description, subjects))
     con.commit()
     con.close()
 
@@ -77,7 +77,7 @@ def read_book(id, db=DB_LOCATION):
 # Function to update a record
 
 
-def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, identifier_type=None, author=None, year=None, title=None, publisher=None, description=None, db=DB_LOCATION):
+def update_book(id, bookshelf_location=None, address=None, room=None, identifier=None, identifier_type=None, author=None, year=None, title=None, publisher=None, description=None, subjects=None, db=DB_LOCATION):
     con = sqlite3.connect(db)
     cur = con.cursor()
     update_query = 'UPDATE books SET '
@@ -111,6 +111,9 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
     if description is not None:
         update_fields.append('description = ?')
         values.append(description)
+    if subjects is not None:
+        update_fields.append('subjects = ?')
+        values.append(subjects)
 
     update_query += ', '.join(update_fields) + ' WHERE id = ?'
     values.append(id)
