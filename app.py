@@ -62,7 +62,7 @@ def view():
     return render_template('rows.html', SessionDict=session, Books=books)
 
 
-@app.route('/view2')
+@app.route('/view-recent')
 def view2():
     if 'recent' not in session:
         session['recent'] = []

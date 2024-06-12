@@ -34,6 +34,7 @@
         <nav>
             <a id="submit" href="/">Submit</a>
             <a id="library" href="/view">Library</a>
+            <a id="recent" href="/view-recent">Recent Additions</a>
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
             {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
@@ -51,6 +52,9 @@
             }
             else if (window.location.pathname === "/view") {
                 var currentSite = document.getElementById("library");
+            }
+            else if (window.location.pathname === "/view-recent") {
+                var currentSite = document.getElementById("recent");
             }
             else if (window.location.pathname === "/scan") {
                 var currentSite = document.getElementById("scan");
