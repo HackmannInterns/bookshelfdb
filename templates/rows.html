@@ -58,6 +58,14 @@
             position: relative;
             padding: 0 5px;
         }
+
+        .show-subjects {
+            /* Add your styles for displaying full content */
+            /* For example: */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: initial;
+        }
     </style>
 </head>
 {% include "header.html" %}
@@ -88,7 +96,7 @@
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.year }}</td>
-                <td class="truncate" title="{{ book.subjects | e }}">{{ book.subjects }}</td>
+                <td class="truncate" id="bookSubjects" title="{{ book.subjects | e }}">{{ book.subjects }}</td>
                 {% if book.identifier_type != "" %}
                 <td>{{ book.identifier_type ~ ": " ~ book.identifier }}</td>
                 {% else %}
@@ -174,7 +182,9 @@
                 }
             });
             $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-
+            $('#books tbody').on('click', 'td', function () {
+                $(this).toggleClass('show-subjects');
+            });
         });
 
         function toggleMenu(menuId, event) {
