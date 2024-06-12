@@ -117,7 +117,7 @@ def test_create_book():
 def test_read_books():
     init_db(db)
 
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, db)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects, db)
 
     rows = read_books(db)
     books = [dict(b_id=row[0],
