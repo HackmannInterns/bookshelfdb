@@ -122,6 +122,12 @@
         .body {
             overflow-y: auto;
         }
+
+        .information {
+            /* vertical-align: super; */
+            font-size: small;
+            color: #888;
+        }
     </style>
 </head>
 
@@ -138,11 +144,13 @@
                 <div class="grid">
                     <div class="grid-label">
                         <label class="label"><span class="required">*</span>Title</label>
-                        <label class="label">Author</label>
-                        <label class="label">ID</label>
+                        <label class="label">Author(s)</label>
+                        <label class="label"><span title="An identifier, such as the LCCN or ISBN"
+                                class="information">🛈 </span>ID</label>
                         <label class="label">Year</label>
-                        <label class="label">Publisher</label>
-                        <label class="label">Subjects</label>
+                        <label class="label">Publisher(s)</label>
+                        <label class="label"><span title="A list of Subjects or Genres covered by said book"
+                                class="information">🛈 </span>Subject(s)</label>
                     </div>
                     <div class="grid-bar">
                         <input class="bar book_title" type="text" name="title" value="{{ title }}" required><br>
@@ -160,7 +168,8 @@
                     <div class="grid-locations-name">
                         <label class="label">Address</label>
                         <label class="label">Room</label>
-                        <label class="label">Bookshelf</label>
+                        <label class="label"><span title='An identifier that makes sense to you&#10;i.e. "3rd from the Right" or "Bookshelf #3"'
+                            class="information">🛈 </span>Bookshelf</label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
