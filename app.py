@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, session
 import fetch
 import db
+import admin as admin_settings
 from dotenv import load_dotenv
 from os import getenv
 
@@ -14,22 +15,16 @@ EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
 # Maybe goes in new class, idk
-
-
 def get_permissions(is_recent=False):
     user_type = session.get('authenticated', None)
-
+    yaml_settings = admin_settings.get_settings()
     class Permissions:
         can_add = False
-        # TODO: get this from admin.yml
-        admin_viewer_add = False
-        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and admin_viewer_add):
+        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and yaml_settings.visitor_can_add):
             can_add = True
 
         can_remove = False
-        # TODO: get this from admin.yml
-        admin_editor_remove = True
-        if user_type == 'Admin' or (user_type == 'Editor' and admin_editor_remove) or (user_type == 'Editor' and is_recent) or (user_type == None and is_recent):
+        if user_type == 'Admin' or (user_type == 'Editor' and yaml_settings.editor_can_remove) or (user_type == 'Editor' and is_recent) or (user_type == None and is_recent):
             can_remove = True
 
         can_edit = False
