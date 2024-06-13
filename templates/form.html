@@ -45,6 +45,9 @@
                 flex-direction: column;
                 align-items: center;
             }
+            .body {
+                padding: 25px;
+            }
         }
 
         .grid-overall {
@@ -146,11 +149,11 @@
                         <label class="label"><span class="required">*</span>Title</label>
                         <label class="label">Author(s)</label>
                         <label class="label"><span title="An identifier, such as the LCCN or ISBN"
-                                class="information">🛈 </span>ID</label>
+                                class="information">&#9432; </span>ID</label>
                         <label class="label">Year</label>
                         <label class="label">Publisher(s)</label>
                         <label class="label"><span title="A list of Subjects or Genres covered by said book"
-                                class="information">🛈 </span>Subject(s)</label>
+                                class="information">&#9432; </span>Subject(s)</label>
                     </div>
                     <div class="grid-bar">
                         <input class="bar book_title" type="text" name="title" value="{{ title }}" required><br>
@@ -169,7 +172,7 @@
                         <label class="label">Address</label>
                         <label class="label">Room</label>
                         <label class="label"><span title='An identifier that makes sense to you&#10;i.e. "3rd from the Right" or "Bookshelf #3"'
-                            class="information">🛈 </span>Bookshelf</label>
+                            class="information">&#9432; </span>Bookshelf</label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"

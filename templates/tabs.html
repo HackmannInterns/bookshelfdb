@@ -25,6 +25,14 @@
             top: 20px;
             right: 0;
         }
+        @media only screen and (max-width: 40em) {
+            .account{
+                position: relative;
+                top: 0%;
+                right: 0%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 
@@ -32,6 +40,11 @@
 <body>
     <div class="tabs" id="tabs">
         <nav>
+            {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
+                <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
+            {% else %}
+                <div class="account"><a href="/login">Login</a></div>
+            {% endif %}
             <a id="library" href="/view">Library</a>
             <a id="submit" href="/submit">Submit</a>
             {% if 'recent' in SessionDict and SessionDict.recent %}
@@ -42,11 +55,7 @@
             {% if 'authenticated' in SessionDict and SessionDict.authenticated == "Admin" %}
             <a id="admin" href="/admin">Settings</a>
             {% endif %}
-            {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
-                <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
-            {% else %}
-                <div class="account"><a href="/login">Login</a></div>
-            {% endif %}
+            
         </nav>
     </div>
     <script>
