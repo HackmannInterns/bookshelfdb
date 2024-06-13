@@ -1,1 +1,75 @@
-Hello Admin
+<!-- Hello Admin -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        .perm-block {
+            text-align: center;
+            margin: auto;
+            padding-top: 100px;
+        }
+
+        .address-block {
+            text-align: center;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .database-block {
+            display: grid;
+            grid-template-columns: 100px 100px;
+            grid-gap: 10px;
+            justify-content: center;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .session {
+            text-align: center;
+            margin: auto;
+            padding: 20px;
+        }
+        .separator{
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+{% include "header.html" %}
+
+<body>
+    <form>
+        <div class="perm-block">
+            <label for="viewer">Viewer add perms</label>
+            <input type="checkbox" id="viewer" name="viewer" value="value1"><br>
+
+            <label for="editor">Editor remove perms</label>
+            <input type="checkbox" id="editor" name="editor" value="value2" checked><br>
+        </div>
+        <div class="address-block">
+            <label for="address">Default Address:</label>
+            <input class="address" id="address" type="text" name="address" value="{{ address }}">
+        </div>
+        <div class="database-block">
+            <div class="separator">
+                <button class="button">Export Databse</button><br>
+            </div>
+            <div class="separator">
+                <button class="button">Import Databse</button><br>
+            </div>
+            <div class="separator">
+                <button class="button">Clear Cache</button><br>
+            </div>
+            <div class="separator">
+                <button class="button">Delete Databse</button>
+            </div>
+        </div>
+        <div class="session">
+            <button>Clear Session</button><br>
+        </div>
+    </form>
+</body>
