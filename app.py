@@ -39,6 +39,10 @@ def get_permissions(user_type='Viewer', is_recent=False):
         can_view_views = True
     return Permissions()
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
