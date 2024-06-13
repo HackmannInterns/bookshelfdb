@@ -32,11 +32,16 @@
 <body>
     <div class="tabs" id="tabs">
         <nav>
-            <a id="submit" href="/">Submit</a>
             <a id="library" href="/view">Library</a>
+            <a id="submit" href="/submit">Submit</a>
+            {% if 'recent' in SessionDict and SessionDict.recent %}
             <a id="recent" href="/view-recent">Recent Additions</a>
+            {% endif %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
+            {% if 'authenticated' in SessionDict and SessionDict.authenticated == "Admin" %}
+            <a id="admin" href="/admin">Settings</a>
+            {% endif %}
             {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
                 <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
             {% else %}
@@ -47,7 +52,7 @@
     <script>
         function tabChecker() {
             var currentSite = null
-            if (window.location.pathname === "/") {
+            if (window.location.pathname === "/submit") {
                 var currentSite = document.getElementById("submit");
             }
             else if (window.location.pathname === "/view") {
@@ -58,6 +63,9 @@
             }
             else if (window.location.pathname === "/scan") {
                 var currentSite = document.getElementById("scan");
+            }
+            else if (window.location.pathname === "/admin") {
+                var currentSite = document.getElementById("admin");
             }
             if (currentSite !== null) {
                 currentSite.style.color = "#333";

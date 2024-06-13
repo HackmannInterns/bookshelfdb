@@ -6,6 +6,7 @@ services:
       - ./data:/app/data
     environment:
       - BOOKSHELFDB_PASSWORD=changeme  # Change this to a secure password
+      - BOOKSHELFDB_PASSWORD_EDITOR=changeme2  # Change this to a secure password
       - BOOKSHELFDB_SECRET_KEY=changeme  # Change this to a secure key
     ports:
       - "5000:5000"

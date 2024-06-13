@@ -14,7 +14,11 @@ EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
 # Maybe goes in new class, idk
-def get_permissions(user_type='Viewer', is_recent=False):
+
+
+def get_permissions(is_recent=False):
+    user_type = session.get('authenticated', None)
+
     class Permissions:
         can_add = False
         # TODO: get this from admin.yml
@@ -39,31 +43,46 @@ def get_permissions(user_type='Viewer', is_recent=False):
         can_view_views = True
     return Permissions()
 
+
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    if not get_permissions().can_view_admin:
+        return redirect('/login')
+    return render_template('admin.html', SessionDict=session)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if session.get('authenticated'):
-        return redirect('/')
+    referer = request.headers.get('Referer')
+    if referer is None:
+        referer='/'
+    page = referer.split('/')[-1]
+    if page == 'login' or page == 'logout':
+        referer = '/'
     if request.method == 'POST':
         entered_password = request.form['password']
         if entered_password == ADMIN_PASSWORD:
             session['authenticated'] = "Admin"
-            return redirect('/')
+            return redirect(referer)
         elif entered_password == EDITOR_PASSWORD:
             session['authenticated'] = "Editor"
-            return redirect('/')
+            return redirect(referer)
         return 'Invalid password', 401
-    return render_template('login.html')
+    return render_template('login.html', SessionDict=session)
 
 
 @app.route('/logout')
 def logout():
+    referer = request.headers.get('Referer')
+    if referer is None:
+        referer='/'
+    page = referer.split('/')[-1]
+    if page == 'login' or page == 'logout':
+        referer = '/'
     session.pop('authenticated', None)
-    return redirect('/')
+    session.pop('recent', None)
+    print(session.get('recent'))
+    return redirect(referer)
 
 # When you hit the /scan page, under all circumstances, it renders scan.html
 # nothing is passed in, scan.html works off JS
@@ -81,6 +100,8 @@ def scan():
 # TODO: implement permissions
 @app.route('/view')
 def view():
+    if not get_permissions().can_view_views:
+        return redirect('/login')
     rows = db.read_books()
     books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
@@ -125,7 +146,7 @@ def view2():
 def delete():
     if 'recent' not in session:
         session['recent'] = []
-    can_remove = get_permissions(user_type=session.get('authenticated'), is_recent=(
+    can_remove = get_permissions(is_recent=(
         int(request.args.get('q', 0)) in session['recent'])).can_remove
     if 'q' in request.args and can_remove:
         db.delete_book(request.args['q'])
@@ -139,7 +160,7 @@ def edit():
     if 'recent' not in session:
         session['recent'] = []
 
-    can_edit = get_permissions(user_type=session.get('authenticated'), is_recent=(int(
+    can_edit = get_permissions(is_recent=(int(
         request.args.get('q', 0)) in session['recent'] or session.get('authenticated'))).can_edit
     if 'q' in request.args and can_edit:
         session['q'] = True
@@ -171,13 +192,17 @@ def edit():
         return redirect('/view')
     # End Editting
 
-# When / is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
+# When /submit is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
 # When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
 # When the page is first met, it is rendered with nothing else happening
 
 # TODO: implement permissions & change page
-@app.route('/', methods=['GET', 'POST'])
-def index():
+
+
+@app.route('/submit', methods=['GET', 'POST'])
+def submit():
+    if not get_permissions().can_add:
+        return redirect('/login')
     # print(session["recent"])
     # session["recent"] = []
     # print(request.form.get('button_class'))
@@ -224,6 +249,11 @@ def index():
 
     else:
         return render_template('form.html', SessionDict=session)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return redirect('/view')
 
 
 def run_flask(p=5000):
