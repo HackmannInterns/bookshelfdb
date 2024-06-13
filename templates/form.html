@@ -45,6 +45,7 @@
                 flex-direction: column;
                 align-items: center;
             }
+
             .body {
                 padding: 25px;
             }
@@ -148,12 +149,17 @@
                     <div class="grid-label">
                         <label class="label"><span class="required">*</span>Title</label>
                         <label class="label">Author(s)</label>
-                        <label class="label"><span title="An identifier, such as the LCCN or ISBN"
-                                class="information">&#9432; </span>ID</label>
+                        <label class="label" title="An identifier, such as the LCCN or ISBN">
+                            <span class="information">&#9432;</span>
+                            ID
+                        </label>
                         <label class="label">Year</label>
                         <label class="label">Publisher(s)</label>
-                        <label class="label"><span title="A list of Subjects or Genres covered by said book"
-                                class="information">&#9432; </span>Subject(s)</label>
+                        <label class="label" title="A list of Subjects or Genres covered by said book">
+                            <span class="information">&#9432;
+                            </span>
+                            Subject(s)
+                        </label>
                     </div>
                     <div class="grid-bar">
                         <input class="bar book_title" type="text" name="title" value="{{ title }}" required><br>
@@ -171,8 +177,11 @@
                     <div class="grid-locations-name">
                         <label class="label">Address</label>
                         <label class="label">Room</label>
-                        <label class="label"><span title='An identifier that makes sense to you&#10;i.e. "3rd from the Right" or "Bookshelf #3"'
-                            class="information">&#9432; </span>Bookshelf</label>
+                        <label class="info"
+                            title='An identifier that makes sense to you&#10;i.e. "3rd from the Right" or "Bookshelf #3"'>
+                            <span class="information">&#9432; </span>
+                            Bookshelf
+                        </label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
@@ -261,6 +270,16 @@
             if (('{{ SessionDict.autosubmit }}' == "True") && ('{{ SessionDict.autofilled }}' == "True") && b_title != "" && b_id != "") {
                 countdown();
             }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var icons = document.querySelectorAll('.information');
+            icons.forEach(function (icon) {
+                icon.addEventListener('click', function () {
+                    var tooltipText = this.parentElement.getAttribute('title');
+                    alert(tooltipText); // You can replace this with your preferred way of displaying the tooltip text on mobile
+                });
+            });
         });
     </script>
 </body>
