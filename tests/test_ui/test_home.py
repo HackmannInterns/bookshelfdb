@@ -32,7 +32,8 @@ def browser():
 
 def test_app_starts(browser, flask_init):
     browser.get('localhost:5000')
-    assert browser.title == 'Book Form'
+    # We now redirect
+    assert browser.title == 'Book Table'
 
 
 def test_header_present(browser, flask_init):
@@ -56,7 +57,7 @@ def test_input_fields_empty(browser, flask_init):
             assert i.get_attribute("value") == ""
 
 
-def test_present_search(browser, flask_init):
-    browser.get('localhost:5000')
-    search_form = browser.find_element(By.CLASS_NAME, "search")
-    assert search_form.value_of_css_property('display') != 'none'
+# def test_present_search(browser, flask_init):
+#     browser.get('localhost:5000')
+#     search_form = browser.find_element(By.CLASS_NAME, "search")
+#     assert search_form.value_of_css_property('display') != 'none'

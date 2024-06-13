@@ -40,12 +40,12 @@ def test_scan_page(flask_init, browser):
 
 
 def test_edit_page(flask_init, browser):
-    browser.get("localhost:5000/edit")
+    browser.get("localhost:5000/edit?q=1")
     assert browser.title == "Login Required"
 
 
 def test_delete_page(flask_init, browser):
-    browser.get("localhost:5000/delete")
+    browser.get("localhost:5000/delete?q=1")
     assert browser.title == "Login Required"
 
 def test_none_page(flask_init, browser):
