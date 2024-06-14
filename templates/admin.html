@@ -7,15 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
     <style>
-        .perm-block {
+        form {
             text-align: center;
             margin: auto;
+        }
+
+        .perm-block {
             padding-top: 100px;
         }
 
         .address-block {
-            text-align: center;
-            margin: auto;
             padding: 20px;
         }
 
@@ -25,51 +26,137 @@
             grid-gap: 10px;
             justify-content: center;
             margin: auto;
-            padding: 20px;
         }
 
-        .session {
-            text-align: center;
-            margin: auto;
-            padding: 20px;
-        }
-        .separator{
+        .separator {
             text-align: center;
             padding: 10px;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .popup-content {
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
 {% include "header.html" %}
 
 <body>
-    <form>
+    <form class="">
         <div class="perm-block">
+            <!-- TODO: Hookup changes, should be easy -->
+            <h3 style="text-align: center;">Admin.yml Changes:</h3>
             <label for="viewer">Viewer add perms</label>
-            <input type="checkbox" id="viewer" name="viewer" value="value1"><br>
+            <input type="checkbox" id="viewer" name="viewer" value="value1" {% if Admin.visitor_can_add %}checked{%
+                endif %}><br>
 
             <label for="editor">Editor remove perms</label>
-            <input type="checkbox" id="editor" name="editor" value="value2" checked><br>
+            <input type="checkbox" id="editor" name="editor" value="value2" {% if Admin.editor_can_remove %}checked{%
+                endif %}><br>
         </div>
         <div class="address-block">
             <label for="address">Default Address:</label>
-            <input class="address" id="address" type="text" name="address" value="{{ address }}">
+            <input class="address" id="address" type="text" name="address" value="{{ Admin.default_address }}">
         </div>
-        <div class="database-block">
-            <div class="separator">
-                <button class="button">Export Database</button><br>
-            </div>
-            <div class="separator">
-                <button class="button">Clear Cache</button><br>
-            </div>
-            <div class="separator">
-                <button class="button">Import Database</button><br>
-            </div>
-            <div class="separator">
-                <button class="button">Delete Database</button>
-            </div>
-        </div>
-        <div class="session">
-            <button>Clear Session</button><br>
-        </div>
+        <input type="submit" value="Save Changes">
     </form>
+    <h3 style="text-align: center;">Database Changes:</h3>
+    <div class="database-block">
+        <div class="separator">
+            <button class="button" onclick="location.href='/admin?q=export';">Export Database</button>
+        </div>
+        <div class="separator">
+            <button class="button" onclick="openPopup('clear')">Clear Cache</button><br>
+        </div>
+        <div class="separator">
+            <button class="button" onclick="openPopup('import')">Import Database</button><br>
+        </div>
+        <div class="separator">
+            <button class="button" onclick="openPopup('delete')">Delete Database</button>
+        </div>
+    </div>
+    <div class="popup-overlay" id="popup-overlay"></div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Preform Action?</h2>
+            <p></p>
+            <button class="button" onclick="">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        function openPopup(ref) {
+            document.getElementById("popup-overlay").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+            button_href = "/admin"
+            info_text = ""
+            // TODO: Write better info_texts
+            switch (ref) {
+                case "clear":
+                    button_href += "?q=clear"
+                    info_text = "This action will clear the cache.  Only do so if you believe the metadata shown is wrong."
+                    break;
+                case "import":
+                    // TODO: code block to have a file upload
+                    break;
+                case "delete":
+                    button_href += "?q=delete"
+                    info_text = "This action will delete all your data.  There is no way to recover from this, your data will be gone."
+                    break;
+                case "export":
+                    // TODO: code block to have a export downloaded, function exists to create it in admin.py
+                    break;
+                default:
+                // code block
+            }
+            par = document.querySelector("#popup > div > p");
+            if (par) {
+                par.innerText = info_text;
+            };
+            button = document.querySelector("#popup > div > button");
+            if (button) {
+                button.onclick = function () {
+                    window.location.href = button_href;
+                };
+            }
+
+            function closePopup() {
+                document.getElementById("popup-overlay").style.display = "none";
+                document.getElementById("popup").style.display = "none";
+
+            }
+        }
+    </script>
 </body>

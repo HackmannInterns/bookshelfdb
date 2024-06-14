@@ -32,15 +32,30 @@ def init_yaml():
         yaml.safe_dump(data, file)
 
 
+def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=None):
+    init_yaml()
+    with open(ADMIN_YAML_LOCATION, 'r') as file:
+        data = yaml.safe_load(file)
+
+    data['visitor_can_add'] = visitor_can_add if visitor_can_add is not None else data['visitor_can_add']
+    data['editor_can_remove'] = editor_can_remove if editor_can_remove is not None else data['editor_can_remove']
+    data['default_address'] = default_address if default_address is not None else data['default_address']
+
+    with open(ADMIN_YAML_LOCATION, 'w') as file:
+        yaml.safe_dump(data, file)
+
+
 def get_settings():
     init_yaml()
     with open(ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
+
     class Yaml_Settings():
         visitor_can_add = data['visitor_can_add']
         editor_can_remove = data['editor_can_remove']
         default_address = data['default_address']
     return Yaml_Settings()
+
 
 def export_to_json():
     rows = db.read_books()
@@ -62,6 +77,7 @@ def clear_cache_db():
 
 def delete_main_db():
     db.delete_db()
+    db.init_db()
 
 
 def change_address():
@@ -69,8 +85,9 @@ def change_address():
         data = yaml.safe_load(file)
 
 
-# if __name__ == '__main__':
-    # pass
+if __name__ == '__main__':
+    pass
+    update_yaml(visitor_can_add=True, editor_can_remove=True, default_address="Hackmann House")
     # export_to_json()
     # import_from_json('export.json')
     # clear_cache()

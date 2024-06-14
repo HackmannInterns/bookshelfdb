@@ -15,9 +15,12 @@ EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
 # Maybe goes in new class, idk
+
+
 def get_permissions(is_recent=False):
     user_type = session.get('authenticated', None)
     yaml_settings = admin_settings.get_settings()
+
     class Permissions:
         can_add = False
         if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and yaml_settings.visitor_can_add):
@@ -41,16 +44,23 @@ def get_permissions(is_recent=False):
 
 @app.route('/admin')
 def admin():
+    # TODO: Hook up export and import
     if not get_permissions().can_view_admin:
         return redirect('/login')
-    return render_template('admin.html', SessionDict=session)
+
+    if 'q' in request.args and request.args['q'] == "clear":
+        admin_settings.clear_cache_db()
+    elif 'q' in request.args and request.args['q'] == "delete":
+        admin_settings.delete_main_db()
+
+    return render_template('admin.html', SessionDict=session, Admin=admin_settings.get_settings())
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     referer = request.headers.get('Referer')
     if referer is None:
-        referer='/'
+        referer = '/'
     page = referer.split('/')[-1]
     if page == 'login' or page == 'logout':
         referer = '/'
@@ -70,7 +80,7 @@ def login():
 def logout():
     referer = request.headers.get('Referer')
     if referer is None:
-        referer='/'
+        referer = '/'
     page = referer.split('/')[-1]
     if page == 'login' or page == 'logout':
         referer = '/'

@@ -126,10 +126,13 @@ def update_book(id, bookshelf_location=None, address=None, room=None, identifier
 
 
 def delete_db(db=DB_LOCATION):
-    os.remove(db)
+    if os.path.exists(db):
+        os.remove(db)
+    else:
+        pass
+
 
 # Function to delete a record
-
 def delete_book(id, db=DB_LOCATION):
     con = sqlite3.connect(db)
     cur = con.cursor()
