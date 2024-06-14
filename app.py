@@ -260,6 +260,9 @@ def submit():
 def index():
     return redirect('/view')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 def run_flask(p=5000):
     db.init_db()

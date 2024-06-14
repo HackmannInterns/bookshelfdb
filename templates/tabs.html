@@ -52,6 +52,7 @@
             {% endif %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
+            <a id="about" href="/about">About</a>
             {% if 'authenticated' in SessionDict and SessionDict.authenticated == "Admin" %}
             <a id="admin" href="/admin">Settings</a>
             {% endif %}
@@ -75,6 +76,9 @@
             }
             else if (window.location.pathname === "/admin") {
                 var currentSite = document.getElementById("admin");
+            }
+            else if (window.location.pathname === "/about") {
+                var currentSite = document.getElementById("about");
             }
             if (currentSite !== null) {
                 currentSite.style.color = "#333";
