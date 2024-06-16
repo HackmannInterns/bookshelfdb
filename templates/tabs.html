@@ -25,8 +25,9 @@
             top: 20px;
             right: 0;
         }
+
         @media only screen and (max-width: 40em) {
-            .account{
+            .account {
                 position: relative;
                 top: 0%;
                 right: 0%;
@@ -41,22 +42,24 @@
     <div class="tabs" id="tabs">
         <nav>
             {% if 'authenticated' in SessionDict and SessionDict.authenticated %}
-                <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
+            <div class="account">Logged in as {{ SessionDict.authenticated }} <a href="/logout">Logout</a></div>
             {% else %}
-                <div class="account"><a href="/login">Login</a></div>
+            <div class="account"><a href="/login">Login</a></div>
             {% endif %}
             <a id="library" href="/view">Library</a>
             <a id="submit" href="/submit">Submit</a>
+            <a id="about" href="/about">About</a>
             {% if 'recent' in SessionDict and SessionDict.recent %}
             <a id="recent" href="/view-recent">Recent Additions</a>
+
             {% endif %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
-            <a id="about" href="/about">About</a>
+
             {% if 'authenticated' in SessionDict and SessionDict.authenticated == "Admin" %}
             <a id="admin" href="/admin">Settings</a>
             {% endif %}
-            
+
         </nav>
     </div>
     <script>

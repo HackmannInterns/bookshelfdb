@@ -262,7 +262,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', SessionDict=session)
 
 def run_flask(p=5000):
     db.init_db()
