@@ -65,9 +65,12 @@ def admin():
             return send_file(file_location, as_attachment=True)
         elif 'q' in request.args and request.args['q'] == "import":
             if request.method == 'POST':
-                f = request.files['file']
-                admin_settings.import_from_json(f)
-                return redirect('/admin')
+                try:
+                    f = request.files['file']
+                    admin_settings.import_from_json(f)
+                    return redirect('/admin')
+                except:
+                    return "File upload failed, ensure the file is a .json and exported from our application"
 
     return render_template('admin.html', Admin=admin_settings.get_settings())
 
