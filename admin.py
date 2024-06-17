@@ -83,10 +83,6 @@ def delete_main_db():
     db.init_db()
 
 
-def change_address():
-    with open('example.yaml', 'r') as file:
-        data = yaml.safe_load(file)
-
 
 # if __name__ == '__main__':
     # pass
