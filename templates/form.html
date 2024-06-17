@@ -185,7 +185,7 @@
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
-                            value="{{ address|default(session['address']) }}"><br>
+                            value="{{ session['address']|default(address) }}"><br>
                         <input class="bar room" type="text" name="room"
                             value="{{ room|default(session['room']) }}"><br>
                         <input class="bar bookshelf" type="text" name="bookshelf"

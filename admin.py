@@ -6,6 +6,7 @@ import db
 from fetch import CACHE_DB_LOCATION
 
 ADMIN_YAML_LOCATION = "data/admin.yml"
+EXPORT_FILE_LOCATION = "data/export.json"
 
 DEFAULT_DATA = {
     'visitor_can_add': False,
@@ -60,15 +61,17 @@ def get_settings():
 def export_to_json():
     rows = db.read_books()
     rows_json = json.dumps(rows, indent=4)
-    print(rows_json)
+    with open(EXPORT_FILE_LOCATION, 'w') as file:
+        file.writelines(rows_json)
+    return EXPORT_FILE_LOCATION
 
 
-def import_from_json(json_path):
-    with open(json_path, 'r') as json_file:
-        data = json.load(json_file)
-        for i in data:
-            db.create_book(i[1], i[2], i[3], i[4], i[5], i[6],
-                           i[7], i[8], i[9], i[10], i[11])
+def import_from_json(file_storage):
+    file_content = file_storage.read().decode('utf-8')
+    data = json.loads(file_content)
+    for i in data:
+        db.create_book(i[1], i[2], i[3], i[4], i[5], i[6],
+                       i[7], i[8], i[9], i[10], i[11])
 
 
 def clear_cache_db():
@@ -85,11 +88,10 @@ def change_address():
         data = yaml.safe_load(file)
 
 
-if __name__ == '__main__':
-    pass
-    update_yaml(visitor_can_add=True, editor_can_remove=True, default_address="Hackmann House")
+# if __name__ == '__main__':
+    # pass
+    # update_yaml(visitor_can_add=True, editor_can_remove=True, default_address="Hackmann House")
     # export_to_json()
-    # import_from_json('export.json')
     # clear_cache()
     # delete_main_db()
     # init_yaml()

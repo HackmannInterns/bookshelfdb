@@ -72,16 +72,16 @@
 {% include "header.html" %}
 
 <body>
-    <form class="">
+    <form class="" method="POST">
         <div class="perm-block">
             <!-- TODO: Hookup changes, should be easy -->
             <h3 style="text-align: center;">Admin.yml Changes:</h3>
             <label for="viewer">Viewer add perms</label>
-            <input type="checkbox" id="viewer" name="viewer" value="value1" {% if Admin.visitor_can_add %}checked{%
+            <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.visitor_can_add %}checked{%
                 endif %}><br>
 
             <label for="editor">Editor remove perms</label>
-            <input type="checkbox" id="editor" name="editor" value="value2" {% if Admin.editor_can_remove %}checked{%
+            <input type="checkbox" id="editor" name="editor" value=true {% if Admin.editor_can_remove %}checked{%
                 endif %}><br>
         </div>
         <div class="address-block">
@@ -112,6 +112,12 @@
             <span class="close-btn" onclick="closePopup()">&times;</span>
             <h2>Preform Action?</h2>
             <p></p>
+            <form style="display: none;" action="/admin?q=import" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" />
+                <br>
+                <input type="submit" />
+                <br>
+            </form>
             <button class="button" onclick="">Confirm</button>
         </div>
     </div>
@@ -122,6 +128,12 @@
             document.getElementById("popup").style.display = "block";
             button_href = "/admin"
             info_text = ""
+            par = document.querySelector("#popup > div > p");
+            button = document.querySelector("#popup > div > button");
+            import_form = document.querySelector("#popup > div > form");
+            par.style.display = "block"
+            button.style.display = "inline-block"
+            import_form.style.display = "none"
             // TODO: Write better info_texts
             switch (ref) {
                 case "clear":
@@ -129,34 +141,32 @@
                     info_text = "This action will clear the cache.  Only do so if you believe the metadata shown is wrong."
                     break;
                 case "import":
+                    par.style.display = "none"
+                    button.style.display = "none"
+                    import_form.style.display = "block"
                     // TODO: code block to have a file upload
                     break;
                 case "delete":
                     button_href += "?q=delete"
                     info_text = "This action will delete all your data.  There is no way to recover from this, your data will be gone."
                     break;
-                case "export":
-                    // TODO: code block to have a export downloaded, function exists to create it in admin.py
-                    break;
                 default:
                 // code block
             }
-            par = document.querySelector("#popup > div > p");
             if (par) {
                 par.innerText = info_text;
             };
-            button = document.querySelector("#popup > div > button");
             if (button) {
                 button.onclick = function () {
                     window.location.href = button_href;
                 };
             }
 
-            function closePopup() {
-                document.getElementById("popup-overlay").style.display = "none";
-                document.getElementById("popup").style.display = "none";
+        }
+        function closePopup() {
+            document.getElementById("popup-overlay").style.display = "none";
+            document.getElementById("popup").style.display = "none";
 
-            }
         }
     </script>
 </body>

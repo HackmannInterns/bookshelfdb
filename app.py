@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session
+from flask import Flask, request, redirect, render_template, session, send_file
 import fetch
 import db
 import admin as admin_settings
@@ -42,16 +42,32 @@ def get_permissions(is_recent=False):
     return Permissions()
 
 
-@app.route('/admin')
+@app.route('/admin', methods=["GET", "POST"])
 def admin():
-    # TODO: Hook up export and import
     if not get_permissions().can_view_admin:
         return redirect('/login')
+    print(request.form)
+    if 'address' in request.form and request.method == 'POST':
+        new_add = str(request.form.get("address", ""))
+        new_view = bool(request.form.get("viewer", False))
+        new_edit = bool(request.form.get("editor", False))
+        # print(f"New Add: {new_add}\nNew View: {new_view}\nNew Edit: {new_edit}\n")
+        admin_settings.update_yaml(visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add)
 
-    if 'q' in request.args and request.args['q'] == "clear":
-        admin_settings.clear_cache_db()
-    elif 'q' in request.args and request.args['q'] == "delete":
-        admin_settings.delete_main_db()
+    else:
+        if 'q' in request.args and request.args['q'] == "clear":
+            admin_settings.clear_cache_db()
+        elif 'q' in request.args and request.args['q'] == "delete":
+            admin_settings.delete_main_db()
+            session['recent'] = []
+        elif 'q' in request.args and request.args['q'] == "export":
+            file_location = admin_settings.export_to_json()
+            return send_file(file_location, as_attachment=True)
+        elif 'q' in request.args and request.args['q'] == "import":
+            if request.method == 'POST':
+                f = request.files['file']
+                admin_settings.import_from_json(f)
+                return redirect('/admin')
 
     return render_template('admin.html', Admin=admin_settings.get_settings())
 
@@ -236,7 +252,7 @@ def submit():
         if 'recent' not in session:
             session['recent'] = []
         session['recent'].append(b_id)
-        return render_template('form.html')
+        return render_template('form.html', address=admin_settings.get_settings().default_address)
 
     # isbn/lccn given
     elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args:
@@ -250,19 +266,21 @@ def submit():
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)
-        return render_template('form.html', title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
+        return render_template('form.html', address=admin_settings.get_settings().default_address, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 
     else:
-        return render_template('form.html')
+        return render_template('form.html', address=admin_settings.get_settings().default_address)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return redirect('/view')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 def run_flask(p=5000):
     db.init_db()
