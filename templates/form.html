@@ -185,11 +185,11 @@
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
-                            value="{{ address|default(SessionDict.address) }}"><br>
+                            value="{{ address|default(session['address']) }}"><br>
                         <input class="bar room" type="text" name="room"
-                            value="{{ room|default(SessionDict.room) }}"><br>
+                            value="{{ room|default(session['room']) }}"><br>
                         <input class="bar bookshelf" type="text" name="bookshelf"
-                            value="{{ bookshelf|default(SessionDict.bookshelf) }}"><br>
+                            value="{{ bookshelf|default(session['bookshelf']) }}"><br>
                     </div>
                 </div>
                 <div class="empty_space">
@@ -267,7 +267,7 @@
             // if it was autofilled (DO we need?)
             b_title = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
             b_id = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input:nth-child(7)").value;
-            if (('{{ SessionDict.autosubmit }}' == "True") && ('{{ SessionDict.autofilled }}' == "True") && b_title != "" && b_id != "") {
+            if (('{{ session["autosubmit"] }}' == "True") && ('{{ session["autofilled"] }}' == "True") && b_title != "" && b_id != "") {
                 countdown();
             }
         });
