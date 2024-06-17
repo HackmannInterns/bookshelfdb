@@ -8,6 +8,9 @@ BOOKSHELFDB_PASSWORD_EDITOR=editor
 
 BOOKSHELFDB_SECRET_KEY=secretkey
 
+
+
+
 `.env`
 
 #admin password
