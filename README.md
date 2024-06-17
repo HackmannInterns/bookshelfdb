@@ -35,15 +35,25 @@ To run the container in background add -d to the above command.
 
 There are three tiers of permissions that can be use by anyone accessing the database, general user, editor, and admin. The admin can change how the other two user types are allowed to interact with the database as well as having full access, these permissions are visible in admin.yml
 ```
-default_address: place
-editor_can_remove: false
-visitor_can_add: true
+    'visitor_can_add': False,
+    'editor_can_remove': True,
+    'default_address': ""
 ```
 
 general user can view the database and assuming visitor_can_add is enabled, add new content and remove or edit content they have created this session
 
 editor can edit any entries and if editor_can_remove is enabled, remove any file, not just those they have entered this session.
+### (visualization)
+|     Permitions | Viewer | Viewer (recent) | Editor | Editor (recent) | Admin |
+|---------------:|:------:|:---------------:|:------:|:---------------:|:-----:|
+|            Add |   0*   |        0*       |   1    |        1        |   1   |
+|         Remove |   0    |        1        |   1*   |        1        |   1   |
+|           Edit |   0    |        1        |   1    |        1        |   1   |
+|View Admin Page |   0    |        0        |   0    |        0        |   1   |
+|      View Data |   1    |        1        |   1    |        1        |   1   |
 
+\* = Default behavior able to be changed via config
 
+1 being true 0 being false, recent means this session. For example if a viewer adds something they can then edit or remove it. 
 
 # User script
