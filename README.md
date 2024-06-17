@@ -2,14 +2,6 @@
 Hackmann library scan and DB
 
 
-BOOKSHELFDB_PASSWORD=admin
-
-BOOKSHELFDB_PASSWORD_EDITOR=editor
-
-BOOKSHELFDB_SECRET_KEY=secretkey
-
-
-
 
 `.env`
 
@@ -19,8 +11,8 @@ BOOKSHELFDB_PASSWORD
 
 #editor password
 
-BOOKSHELFDB_PASSWORD_EDITOR=editor
+BOOKSHELFDB_PASSWORD_EDITOR
 
 #bookshelf secret key
 
-BOOKSHELFDB_SECRET_KEY=secretkey
+BOOKSHELFDB_SECRET_KEY
