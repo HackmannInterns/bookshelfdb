@@ -22,8 +22,8 @@
 
 <body>
     <div class="main">
-        {% if SessionDict.authenticated %}
-        <h3>Your are currently logged in as an {{ SessionDict.authenticated }}</h3>
+        {% if session['authenticated'] %}
+        <h3>Your are currently logged in as an {{ session['authenticated'] }}</h3>
         <form action="/logout">
             <input type="submit" value="Log Out">
         </form>
