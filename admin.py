@@ -11,7 +11,8 @@ EXPORT_FILE_LOCATION = "data/export.json"
 DEFAULT_DATA = {
     'visitor_can_add': False,
     'editor_can_remove': True,
-    'default_address': ""
+    'default_address': "",
+    'header_name': "My Library"
 }
 
 
@@ -28,12 +29,13 @@ def init_yaml():
     data.setdefault('visitor_can_add', DEFAULT_DATA['visitor_can_add'])
     data.setdefault('editor_can_remove', DEFAULT_DATA['editor_can_remove'])
     data.setdefault('default_address', DEFAULT_DATA['default_address'])
+    data.setdefault('header_name', DEFAULT_DATA['header_name'])
 
     with open(ADMIN_YAML_LOCATION, 'w') as file:
         yaml.safe_dump(data, file)
 
 
-def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=None):
+def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=None, header_name=None):
     init_yaml()
     with open(ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
@@ -41,6 +43,7 @@ def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=No
     data['visitor_can_add'] = visitor_can_add if visitor_can_add is not None else data['visitor_can_add']
     data['editor_can_remove'] = editor_can_remove if editor_can_remove is not None else data['editor_can_remove']
     data['default_address'] = default_address if default_address is not None else data['default_address']
+    data['header_name'] = header_name if header_name is not None else data['header_name']
 
     with open(ADMIN_YAML_LOCATION, 'w') as file:
         yaml.safe_dump(data, file)
@@ -55,6 +58,7 @@ def get_settings():
         visitor_can_add = data['visitor_can_add']
         editor_can_remove = data['editor_can_remove']
         default_address = data['default_address']
+        header_name = data['header_name']
     return Yaml_Settings()
 
 
@@ -87,6 +91,9 @@ def change_address():
     with open('example.yaml', 'r') as file:
         data = yaml.safe_load(file)
 
+def change_header():
+    with open('example.yaml', 'r') as file:
+        data = yaml.safe_load(file)
 
 # if __name__ == '__main__':
     # pass

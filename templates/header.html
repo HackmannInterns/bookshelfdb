@@ -33,7 +33,7 @@
 </style>
 <header class="header">
     <h1>
-        <a href="/">Hackmann Library</a>
+        <a href="/">{{ header_name|default("My Library") }}</a>
     </h1>
     {% include "tabs.html" %}
 </header>

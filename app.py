@@ -49,10 +49,11 @@ def admin():
     print(request.form)
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
+        new_head = str(request.form.get("header_name", ""))
         new_view = bool(request.form.get("viewer", False))
         new_edit = bool(request.form.get("editor", False))
         # print(f"New Add: {new_add}\nNew View: {new_view}\nNew Edit: {new_edit}\n")
-        admin_settings.update_yaml(visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add)
+        admin_settings.update_yaml(visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
 
     else:
         if 'q' in request.args and request.args['q'] == "clear":
@@ -72,7 +73,7 @@ def admin():
                 except:
                     return "File upload failed, ensure the file is a .json and exported from our application"
 
-    return render_template('admin.html', Admin=admin_settings.get_settings())
+    return render_template('admin.html', header_name=admin_settings.get_settings().header_name, Admin=admin_settings.get_settings())
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -92,7 +93,7 @@ def login():
             session['authenticated'] = "Editor"
             return redirect(referer)
         return 'Invalid password', 401
-    return render_template('login.html')
+    return render_template('login.html', header_name=admin_settings.get_settings().header_name)
 
 
 @app.route('/logout')
@@ -115,7 +116,7 @@ def logout():
 
 @app.route('/scan')
 def scan():
-    return render_template('scan.html')
+    return render_template('scan.html', header_name=admin_settings.get_settings().header_name)
 
 
 # When you hit the /view page, rows.html is rendered
@@ -139,7 +140,7 @@ def view():
                   publisher=row[9],
                   subjects=row[11],
                   description=row[10],) for row in rows]
-    return render_template('rows.html', Books=books)
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
 
 
 @app.route('/view-recent')
@@ -163,7 +164,7 @@ def view2():
                   publisher=row[9],
                   subjects=row[11],
                   description=row[10],) for row in rows if row is not None]
-    return render_template('rows.html', Books=books)
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
 
 
 @app.route('/delete')
@@ -192,7 +193,7 @@ def edit():
         book = db.read_book(db_id)
         if book is None:
             return redirect('/view')
-        return render_template('form.html', db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
+        return render_template('form.html', header_name=admin_settings.get_settings().header_name, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
     elif 'q' in request.args and not can_edit:
         return redirect("/login")
 
@@ -255,7 +256,7 @@ def submit():
         if 'recent' not in session:
             session['recent'] = []
         session['recent'].append(b_id)
-        return render_template('form.html', address=admin_settings.get_settings().default_address)
+        return render_template('form.html', header_name=admin_settings.get_settings().header_name, address=admin_settings.get_settings().default_address)
 
     # isbn/lccn given
     elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args:
@@ -269,10 +270,10 @@ def submit():
             book_id, id_type)
         session['autofilled'] = True
         # print(title, author, publish_date, publisher)
-        return render_template('form.html', address=admin_settings.get_settings().default_address, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
+        return render_template('form.html', header_name=admin_settings.get_settings().header_name, address=admin_settings.get_settings().default_address, title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 
     else:
-        return render_template('form.html', address=admin_settings.get_settings().default_address)
+        return render_template('form.html', header_name=admin_settings.get_settings().header_name, address=admin_settings.get_settings().default_address)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -282,7 +283,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', header_name=admin_settings.get_settings().header_name)
 
 
 def run_flask(p=5000):

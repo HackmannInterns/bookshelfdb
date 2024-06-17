@@ -17,7 +17,11 @@
         }
 
         .address-block {
-            padding: 20px;
+            padding: 10px;
+        }
+
+        .header-block {
+            padding: 10px;
         }
 
         .database-block {
@@ -93,6 +97,10 @@
         <div class="address-block">
             <label for="address">Default Address:</label>
             <input class="address" id="address" type="text" name="address" value="{{ Admin.default_address }}">
+        </div>
+        <div class="header-block">
+            <label for="header_name">Header Value:</label>
+            <input class="header_name" id="header_name" type="text" name="header_name" value="{{ Admin.header_name }}">
         </div>
         <p id="reminder">You have unsaved changes. Please hit the save button.</p>
         <input type="submit" value="Save Changes">
