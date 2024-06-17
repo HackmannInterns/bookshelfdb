@@ -32,10 +32,30 @@
         .text {
             margin: 5%;
         }
+
+        .image {
+            width: 200px;
+            height: auto;
+            display: inline-flex;
+        }
+
+        .first {
+            display: inline-flex;
+        }
+
         @media only screen and (max-width: 40em) {
             body {
                 padding: 75px 0;
             }
+
+            .first {
+            display: inline;
+        }
+            .image {
+            width: auto;
+            height: 100px;
+            display: inline;
+        }
 
             .text-container {
                 
@@ -54,10 +74,14 @@
             <h1>About</h1>
 
             <h2>Background</h2>
-            <p>This is a library started by John Hackmann. He gathered up his interns to help sort out and build a library that
+            <p class="first">This is a library started by John Hackmann. He gathered up his interns to help sort out and build a library that
                 would be used to perserve many and all kinds of books. John Hackmann was a stanford grad.... some more
                 background about john. About how he started this library, some more background in terms of why he likes books.
-                <br><br>
+                <img src="static\images\books.jpg"  class="image">
+
+            </p>
+
+            <p>
                 It is available in 2 locations.
             </p>
         
@@ -71,15 +95,14 @@
         
             <h2>Technologies</h2>
             <p>
-                Flask, Gunicorn, Docker, Datatables, Python, Html, CSS, Javascript.
+                Flask, Gunicorn, Docker, Datatables, Python.
             </p>
             <p>
-                We use open library to access to gather data on the books users enter onto our database. It has been a helpful
-                tool and website in gathering data on whatever bbok that you so find in the Hackmann Library.
+                We use <a href="https://openlibrary.org/">Open Library</a> to access to gather data on the books users enter onto our database. It has been a helpful
+                tool and website in gathering data on whatever bbok that you so find in the Hackmann Library. 
             </p>
         
-            <h2>References</h2>
-            <a href="https://openlibrary.org/">Open Library</a>
+            
         
             <h2>Contact</h2>
             <a href="https://github.com/HackmannInterns/bookshelfdb">Github</a>
