@@ -12,7 +12,7 @@ def test_fetch_book_metadata_success_isbn():
     responses.add(responses.GET, url, json=mock_response, status=200)
 
     # test api without cache
-    result = api(book_id, id_type, False)
+    result = api(f"{id_type}:{book_id}", url, False)
 
     assert result is not None
     assert result != ""
@@ -31,7 +31,7 @@ def test_fetch_book_metadata_success_lccn():
     responses.add(responses.GET, url, json=mock_response, status=200)
 
     # test api without cache
-    result = api(book_id, id_type, False)
+    result = api(f"{id_type}:{book_id}", url, False)
 
     assert result is not None
     assert result != ""
