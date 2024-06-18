@@ -6,7 +6,7 @@ Hackmann library scan and DB
 ## Using Docker Compose
 The image is hosted on [DockerHub]("https://hub.docker.com/r/alexreynen/bookshelfdb").
 
-Create a ```docker-compose.yml``` file with the following contents. An example can be see in [docker-compose.yml](/blob/main/docker-compose.yml) or below:
+Create a ```docker-compose.yml``` file with the following contents. An example can be see in [docker-compose.yml](/docker-compose.yml) or below:
 ```
 services:
   flask-app:
