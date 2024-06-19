@@ -63,6 +63,6 @@ Editors can add entries, edit any entries, and if editor_can_remove is enabled, 
 1 being true 0 being false, recent means this session. For example if a viewer adds something they can then edit or remove only the recently added item. 
 
 # Userscript
-We include a userscript for ease of entry. To install a userscript, first install a userscript extension, such as [Violentmonkey]("https://violentmonkey.github.io/"). With the extension installed, install the userscript by clicking [here]("https://github.com/HackmannInterns/bookshelfdb/raw/main/barcode.user.js") or copying and pasting it into a new script.  Ensure that the @match matches your hosted copy of the app (http://localhost:5000 or https://my.server.domain).
+We include a userscript for ease of entry. To install a userscript, first install a userscript extension, such as [Violentmonkey]("https://violentmonkey.github.io/"). With the extension installed, install the userscript by clicking [here](https://github.com/HackmannInterns/bookshelfdb/raw/main/barcode.user.js) or copying and pasting it into a new script.  Ensure that the @match matches your hosted copy of the app (http://localhost:5000 or https://my.server.domain).
 
 This will allow for easy scanning using scanapp.org. When scanning the book's ISBN code, it will redirect you to the submit page with information already filled out about the book. If only the ID is filled, ensure it is an ISBN barcode and not another type of barcode.
