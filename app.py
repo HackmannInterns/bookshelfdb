@@ -26,39 +26,24 @@ class Auth(Enum):
 
 def get_permissions(is_recent=False):
     user_type = Auth[session.get('authenticated', 'Viewer')]
-    # print(user_type)
     yaml_settings = admin_settings.get_settings()
 
     class Permissions:
-        # admin=2 editor=1 viewer=0
-
         # setting add perms
-        req_perms_add = Auth['Viewer'] if user_type is Auth['Viewer'] and yaml_settings.visitor_can_add else Auth[
-            'Editor']
+        req_perms_add = Auth['Viewer'] if user_type is Auth['Viewer'] and yaml_settings.visitor_can_add else Auth['Editor']
         desc_can_add = 'You cannot add with your current authentication level'
-        can_add = False
-        if user_type.value >= Auth['Editor'].value or yaml_settings.visitor_can_add:
-            can_add = True
+        can_add = user_type.value >= req_perms_add.value
 
         # setting remove perms
-        if (user_type == Auth['Editor'] and yaml_settings.editor_can_remove) or (
-                user_type == Auth['Editor'] and is_recent):
-            req_perms_remove = Auth['Editor']
-        elif user_type is Auth['Viewer'] and is_recent:
-            req_perms_remove = Auth['Viewer']
-        else:
-            req_perms_remove = Auth['Admin']
+        req_perms_remove = Auth['Editor'] if user_type == Auth['Editor'] and (yaml_settings.editor_can_remove or is_recent) else (
+            Auth['Viewer'] if user_type == Auth['Viewer'] and is_recent else Auth['Admin'])
         desc_can_remove = 'You cannot remove with your current authentication level'
-        can_remove = False
-        if user_type == Auth['Admin'] or (user_type == Auth['Editor'] and yaml_settings.editor_can_remove) or (
-                user_type == Auth['Editor']
-                and is_recent) or (user_type is None and is_recent):
-            can_remove = True
+        can_remove = user_type.value >= req_perms_remove.value
 
         # setting edit perms
-        req_perms_edit = Auth['Viewer'] if user_type is None and is_recent else Auth['Editor']
+        req_perms_edit = Auth['Viewer'] if is_recent else Auth['Editor']
         desc_can_edit = 'You cannot edit with your current authentication level'
-        can_edit = ((user_type.value >= Auth['Editor'].value) or ((user_type.value >= Auth['Viewer'].value) and is_recent))
+        can_edit = user_type.value >= req_perms_edit.value
 
         # setting admin perms
         req_perms_admin = Auth['Admin']
@@ -97,6 +82,7 @@ def admin():
     if not get_permissions().can_view_admin:
         session['description'] = get_permissions().desc_can_view_admin
         session['required_permission'] = get_permissions().req_perms_admin.name
+        session['insufficient_perm'] = True
         return redirect('/login')
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
@@ -130,11 +116,7 @@ def admin():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
-
-    session['insufficient_perm'] = 'true'
-    if Auth[session['required_permission']].value <= Auth[session.get('authenticated', 'Viewer')].value:
-        session['insufficient_perm'] = 'false'
+    print(session.get('insufficient_perm', "NOT SET"))
     referer = request.headers.get('Referer')
     if referer is None:
         referer = '/'
@@ -151,6 +133,13 @@ def login():
             return redirect(referer)
         return 'Invalid password', 401
     return render_template('login.html', header_name=admin_settings.get_settings().header_name)
+
+
+@app.after_request
+def clear_session_test(response):
+    if request.path == '/login':
+        session.pop('insufficient_perm', None)
+    return response
 
 
 @app.route('/logout')
@@ -185,7 +174,9 @@ def scan():
 def view():
     if not get_permissions().can_view_views:
         session['description'] = get_permissions().desc_can_view_views
-        session['required_permission'] = get_permissions().req_perms_view_views.name
+        session['required_permission'] = get_permissions(
+        ).req_perms_view_views.name
+        session['insufficient_perm'] = True
         return redirect('/login')
     rows = db.read_books()
     books = [dict(b_id=row[0],
@@ -232,12 +223,13 @@ def delete():
     if 'recent' not in session:
         session['recent'] = []
     can_remove = get_permissions(is_recent=(
-            int(request.args.get('q', 0)) in session['recent'])).can_remove
+        int(request.args.get('q', 0)) in session['recent'])).can_remove
     if 'q' in request.args and can_remove:
         db.delete_book(request.args['q'])
     elif 'q' in request.args and not can_remove:
         session['description'] = get_permissions().desc_can_remove
         session['required_permission'] = get_permissions().req_perms_remove.name
+        session['insufficient_perm'] = True
         return redirect('/login')
     return redirect('/view')
 
@@ -247,7 +239,8 @@ def edit():
     if 'recent' not in session:
         session['recent'] = []
 
-    can_edit = get_permissions(is_recent=(int(request.args.get('q', 0)) in session['recent'])).can_edit
+    can_edit = get_permissions(is_recent=(
+        int(request.args.get('q', 0)) in session['recent'])).can_edit
     if 'q' in request.args and can_edit:
         session['q'] = True
         db_id = request.args['q']
@@ -261,7 +254,8 @@ def edit():
     elif 'q' in request.args and not can_edit:
         session['description'] = get_permissions().desc_can_edit
         session['required_permission'] = get_permissions().req_perms_edit.name
-        return redirect("/login")
+        session['insufficient_perm'] = True
+        return redirect('/login')
 
     if request.method == 'POST':
         id = request.form['db_id']
@@ -297,6 +291,7 @@ def submit():
     if not get_permissions().can_add:
         session['description'] = get_permissions().desc_can_add
         session['required_permission'] = get_permissions().req_perms_add.name
+        session['insufficient_perm'] = True
         return redirect('/login')
     # print(session["recent"])
     # session["recent"] = []

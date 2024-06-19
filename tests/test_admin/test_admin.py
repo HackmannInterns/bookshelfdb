@@ -90,16 +90,16 @@ def test_export_to_json():
     data = json.loads(file_content)
 
     for i in data:
-        assert i[1] != None
-        assert i[2] != None
-        assert i[3] != None
-        assert i[4] != None
-        assert i[5] != None
-        assert i[6] != None
-        assert i[7] != None
-        assert i[8] != None
-        assert i[9] != None
-        assert i[11] != None
+        assert i[1] is not None
+        assert i[2] is not None
+        assert i[3] is not None
+        assert i[4] is not None
+        assert i[5] is not None
+        assert i[6] is not None
+        assert i[7] is not None
+        assert i[8] is not None
+        assert i[9] is not None
+        assert i[11] is not None
 
 def test_import_from_json():
     clear_table("books", fake_db)

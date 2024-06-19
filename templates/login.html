@@ -22,8 +22,8 @@
 
 <body>
     <div class="main">
-        {% if session['insufficient_perm']=='true' %}
-        <h3> {{session['description']}}, {{session['permission_required']}} or greater required </h3>
+        {% if session['insufficient_perm'] %}
+        <h3> {{session['description']}}; {{session['required_permission']}} or greater required </h3>
         {% endif %}
         {% if session['authenticated'] %}
         <label>You're are currently logged in as an {{ session['authenticated'] }}</label>
