@@ -30,7 +30,16 @@ docker compose up
 
 To run the container in background add `-d` to the above command. The app can be accessed at http://localhost:5000 by default.
 
-The environmental variables BOOKSHELFDB_PASSWORD is for admin password for site and BOOKSHELFDB_PASSWORD_EDITOR is for editor permissions. View [here](#permissions) for more information regarding the permissions. BOOKSHELFDB_SECRET_KEY is being used for security, change this to something secure.
+The environmental variables:
+
+BOOKSHELFDB_PASSWORD is for admin password for site 
+
+BOOKSHELFDB_PASSWORD_EDITOR is for editor permissions
+
+BOOKSHELFDB_SECRET_KEY is being used for security, change this to something secure.
+
+View [here](#permissions) for more information regarding the permissions
+
 
 Additionally, the persistent storage for the app is held in /data, and can be stored outside of the container, as demonstrated in the compose file. The main library database, the cache database, and the admin config file are stored here. All will be created upon use.
 
