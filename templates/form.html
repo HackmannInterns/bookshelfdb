@@ -132,6 +132,18 @@
             font-size: small;
             color: #888;
         }
+
+        .searching {
+            padding-top: 25px;
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: 5px;
+            justify-content: center;
+        }
+
+        .searching-label{
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -219,11 +231,14 @@
             </form>
         </div>
         <div class="mass_search">
-            <label class="label">Search via Title</label><br>
-            <label class="label">Search via Author</label><br>
             <form method="post">
-                <input class="bar search_title" type="text" name="search_title"><br>
-                <input class="bar search_author" type="text" name="search_author"><br>
+                <div class="searching">
+                    <label class="searching-label">Search via Title:</label>
+                    <input class="bar search_title" type="text" name="search_title">
+                    <label class="searching-label">Search via Author:</label>
+                    <input class="bar search_author" type="text" name="search_author">
+                    <div><br></div>
+                </div>
                 <input type="submit" name="action" value="Search via Title or Author">
                 <input type="hidden" name="button_class" value="title_author_search">
             </form>
