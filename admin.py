@@ -14,7 +14,6 @@ DEFAULT_DATA = {
     'default_address': "",
     'header_name': "My Library"
 }
- myla
 
 def init_yaml():
     # Check if the file exists
