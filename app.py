@@ -1,3 +1,5 @@
+from enum import Enum
+
 from flask import Flask, request, redirect, render_template, session, send_file
 import fetch
 import db
@@ -21,25 +23,56 @@ def get_permissions(is_recent=False):
     user_type = session.get('authenticated', None)
     yaml_settings = admin_settings.get_settings()
 
+    class Auth(Enum):
+        Viewer = 0
+        Editor = 1
+        Admin = 2
+
     class Permissions:
+        # admin=2 editor=1 viewer=0
+        # TODO: change user_type and yaml settings to use enums
+
+        # setting add perms
+        req_perms_add = Auth['Viewer'] if user_type is None and yaml_settings.visitor_can_add else Auth['Editor']
+        desc_can_add = 'You cannot add with your current authentication level'
         can_add = False
-        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and yaml_settings.visitor_can_add):
+        if user_type == 'Admin' or user_type == 'Editor' or (user_type is None and yaml_settings.visitor_can_add):
             can_add = True
 
+        # setting remove perms
+        if (user_type == 'Editor' and yaml_settings.editor_can_remove) or (user_type == 'Editor' and is_recent):
+            req_perms_remove = Auth['Editor']
+        elif user_type is None and is_recent:
+            req_perms_remove = Auth['Viewer']
+        else:
+            req_perms_remove = Auth['Admin']
+        desc_can_remove = 'You cannot remove with your current authentication level'
         can_remove = False
-        if user_type == 'Admin' or (user_type == 'Editor' and yaml_settings.editor_can_remove) or (user_type == 'Editor' and is_recent) or (user_type == None and is_recent):
+        if user_type == 'Admin' or (user_type == 'Editor' and yaml_settings.editor_can_remove) or (user_type == 'Editor' and is_recent) or (
+                user_type is None and is_recent):
             can_remove = True
 
+        # setting edit perms
+        req_perms_edit = Auth['Viewer'] if user_type is None and is_recent else Auth['Editor']
+        desc_can_edit = 'You cannot edit with your current authentication level'
         can_edit = False
-        if user_type == 'Admin' or user_type == 'Editor' or (user_type == None and is_recent):
+        if user_type == 'Admin' or user_type == 'Editor' or (user_type is None and is_recent):
             can_edit = True
 
+        # setting admin perms
+        req_perms_admin = Auth['Admin']
+        desc_can_view_admin = 'You cannot view admin with your current authentication level'
         can_view_admin = False
         if user_type == 'Admin':
             can_view_admin = True
 
+        # setting viewing perms
+        req_perms_view_views = Auth['Viewer']
+        desc_can_view_views = 'You cannot view the views page with your current authentication level'
         can_view_views = True
     return Permissions()
+
+
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -64,6 +97,8 @@ def mass_search():
 @app.route('/admin', methods=["GET", "POST"])
 def admin():
     if not get_permissions().can_view_admin:
+        session['description'] = get_permissions().desc_can_view_admin
+        session['permission_required'] = get_permissions().req_perms_admin.name
         return redirect('/login')
     # print(request.form)
     if 'address' in request.form and request.method == 'POST':
@@ -146,6 +181,8 @@ def scan():
 @app.route('/view')
 def view():
     if not get_permissions().can_view_views:
+        session['description'] = get_permissions().desc_can_view_views
+        session['permission_required'] = get_permissions().req_perms_view_views.name
         return redirect('/login')
     rows = db.read_books()
     books = [dict(b_id=row[0],
@@ -196,6 +233,8 @@ def delete():
     if 'q' in request.args and can_remove:
         db.delete_book(request.args['q'])
     elif 'q' in request.args and not can_remove:
+        session['description'] = get_permissions().desc_can_remove
+        session['permission_required'] = get_permissions().req_perms_remove.name
         return redirect('/login')
     return redirect('/view')
 
@@ -215,6 +254,8 @@ def edit():
             return redirect('/view')
         return render_template('form.html', header_name=admin_settings.get_settings().header_name, db_id=db_id, title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7], publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11], edit=True)
     elif 'q' in request.args and not can_edit:
+        session['description'] = get_permissions().desc_can_edit
+        session['permission_required'] = get_permissions().req_perms_edit.name
         return redirect("/login")
 
     if request.method == 'POST':
@@ -247,6 +288,8 @@ def edit():
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     if not get_permissions().can_add:
+        session['description'] = get_permissions().desc_can_add
+        session['permission_required'] = get_permissions().req_perms_add.name
         return redirect('/login')
     # print(session["recent"])
     # session["recent"] = []

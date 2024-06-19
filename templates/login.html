@@ -23,10 +23,15 @@
 <body>
     <div class="main">
         {% if session['authenticated'] %}
-        <h3>Your are currently logged in as an {{ session['authenticated'] }}</h3>
+        <h3> {{session['description']}}, {{session['permission_required']}} or greater required </h3>
+        <label>You're are currently logged in as an {{ session['authenticated'] }}</label>
+        <br>
+        <br>
         <form action="/logout">
             <input type="submit" value="Log Out">
         </form>
+        <br>
+        <br>
         <br>
         <br>
         {% endif %}
