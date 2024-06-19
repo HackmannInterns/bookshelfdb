@@ -90,7 +90,7 @@
                 <th>Subjects</th>
                 <th>Identifier</th>
                 <th>Publisher</th>
-                {% if Books[0].b_id | default(-1) != -1 %}
+                {% if Books and Books[0].b_id | default(-1) != -1 %}
                 <th>Address</th>
                 <th>Room</th>
                 <th>Shelf</th>
@@ -115,7 +115,7 @@
                 <td>{{ book.identifier }}</td>
                 {% endif %}
                 <td>{{ book.publisher }}</td>
-                {% if Books[0].b_id | default(-1) != -1 %}
+                {% if Books and Books[0].b_id | default(-1) != -1 %}
                 <td>{{ book.address }}</td>
                 <td>{{ book.room }}</td>
                 <td>{{ book.bookshelf_location }}</td>
@@ -159,7 +159,7 @@
                 scrollCollapse: true,
                 scrollY: '',
 
-                {% if Books[0].b_id | default (-1) != -1 %}
+                {% if Books and Books[0].b_id | default(-1) != -1 %}
                 "columnDefs": [
             { "orderable": false, "targets": -1 } // Disables sorting on the last column
         ],
