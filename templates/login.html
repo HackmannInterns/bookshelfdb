@@ -22,8 +22,10 @@
 
 <body>
     <div class="main">
-        {% if session['authenticated'] %}
+        {% if session['insufficient_perm']=='true' %}
         <h3> {{session['description']}}, {{session['permission_required']}} or greater required </h3>
+        {% endif %}
+        {% if session['authenticated'] %}
         <label>You're are currently logged in as an {{ session['authenticated'] }}</label>
         <br>
         <br>
@@ -32,9 +34,9 @@
         </form>
         <br>
         <br>
-        <br>
-        <br>
         {% endif %}
+        <br>
+        <br>
         <form action="/login" method="post">
             <label>Enter Password:</label>
             <input required type="password" id="password" name="password">
