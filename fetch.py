@@ -98,13 +98,18 @@ def lookup_book_info(og_id, identifier, use_cache=True):
 
 
 def search_by_author_title(author, title, use_cache=True):
-    url = f"https://openlibrary.org/search.json?title={title}&author={author}"
+    if title == "":
+        title = '""'
+    if author == "":
+        author = '""'
+    url = f"https://openlibrary.org/search.json?title={title}&author={(author)}"
     data = api(f"{author}:{title}", url, use_cache)
+    # print(data)
     olid_list = str(data['docs'])
     pattern = r'/books/OL\w+'
     matches = re.findall(pattern, olid_list)
     master_list = []
-    for i in matches:
+    for i in matches[:50]:
         b_id = i.split('/')[-1]
         indiv_data = api(f'OLID:{b_id}', f"https://openlibrary.org/api/books?bibkeys=OLID:{b_id}&format=json&jscmd=data", True)
         title, authors, publish_date, publisher, subjects = parse_data(indiv_data, "OLID", b_id)
@@ -113,17 +118,18 @@ def search_by_author_title(author, title, use_cache=True):
         book['title'] = title
         book['authors'] = authors
         book['publish_date'] = publish_date
+        book['publisher'] = publisher
         book['subjects'] = subjects
         master_list.append(book)
     return(master_list)
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     #     data = lookup_book_info('9781778041303', 'isbn', False)
     #     for i in data:
     #         print(i)
     #     data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
     #     for i in data:
     #         print(i)
-    # search_by_author_title(author="Matt Ruff",
-    #                        title="Set This House in Order")
+    search_by_author_title(author="",
+                           title="Alice in Wonderland")

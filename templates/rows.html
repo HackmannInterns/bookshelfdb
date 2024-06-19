@@ -90,10 +90,16 @@
                 <th>Subjects</th>
                 <th>Identifier</th>
                 <th>Publisher</th>
+                {% if Books[0].b_id | default(-1) != -1 %}
                 <th>Address</th>
                 <th>Room</th>
                 <th>Shelf</th>
                 <th></th>
+                {% else %}
+                <th></th>
+                <th></th>
+                {% endif %}
+
             </tr>
         </thead>
         <tbody>
@@ -109,6 +115,7 @@
                 <td>{{ book.identifier }}</td>
                 {% endif %}
                 <td>{{ book.publisher }}</td>
+                {% if Books[0].b_id | default(-1) != -1 %}
                 <td>{{ book.address }}</td>
                 <td>{{ book.room }}</td>
                 <td>{{ book.bookshelf_location }}</td>
@@ -129,6 +136,11 @@
                         </div>
                     </div>
                 </td>
+                {% else %}
+                <td><input type="button" onclick="location.href='/submit?olid={{ book.identifier }}';" value="Add" /></td>
+                <td><input type="button" onclick="location.href='https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}';" value="More Info" /></td>
+                {% endif %}
+
             </tr>
             {% endfor %}
         </tbody>
@@ -147,50 +159,57 @@
                 scrollCollapse: true,
                 scrollY: '',
 
-
+                {% if Books[0].b_id | default (-1) != -1 %}
                 "columnDefs": [
-                    { "orderable": false, "targets": -1 } // Disables sorting on the last column
-                ],
-                initComplete: function () {
-                    this.api()
-                        .columns()
-                        .every(function () {
-                            let column = this;
-                            let title = column.header().textContent;
+            { "orderable": false, "targets": -1 } // Disables sorting on the last column
+        ],
+            {% else %}
+            "columnDefs": [
+            { "orderable": false, "targets": -1 }, // Disables sorting on the last column
+            { "orderable": false, "targets": -2 }
+        ],
+            {% endif %}
 
-                            if (title != "") {
+            initComplete: function () {
+                this.api()
+                    .columns()
+                    .every(function () {
+                        let column = this;
+                        let title = column.header().textContent;
 
-                                // Create input element
-                                let input = document.createElement('input');
-                                input.placeholder = title;
-                                column.header().replaceChildren(input);
+                        if (title != "") {
 
-                                // Set the width only of these
-                                if (title == "Year" || title == "Address" || title == "Room" || title == "Shelf") {
-                                    let width = title.length * 20; // maybe change???
-                                    input.style.width = width + 'px';
-                                }
+                            // Create input element
+                            let input = document.createElement('input');
+                            input.placeholder = title;
+                            column.header().replaceChildren(input);
 
-                                // Event listener for user input
-                                input.addEventListener('click', (e) => {
-                                    e.stopPropagation(); // Stop the click event from propagating
-                                });
-
-                                // Event listener for user input
-                                input.addEventListener('keyup', () => {
-                                    if (column.search() !== this.value) {
-                                        column.search(input.value).draw();
-                                    }
-                                });
+                            // Set the width only of these
+                            if (title == "Year" || title == "Address" || title == "Room" || title == "Shelf") {
+                                let width = title.length * 20; // maybe change???
+                                input.style.width = width + 'px';
                             }
 
-                        });
-                }
+                            // Event listener for user input
+                            input.addEventListener('click', (e) => {
+                                e.stopPropagation(); // Stop the click event from propagating
+                            });
+
+                            // Event listener for user input
+                            input.addEventListener('keyup', () => {
+                                if (column.search() !== this.value) {
+                                    column.search(input.value).draw();
+                                }
+                            });
+                        }
+
+                    });
+            }
             });
-            $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-            $('#books tbody').on('click', 'td', function () {
-                $(this).toggleClass('show-subjects');
-            });
+        $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        $('#books tbody').on('click', 'td', function () {
+            $(this).toggleClass('show-subjects');
+        });
         });
 
         function toggleMenu(menuId, event) {

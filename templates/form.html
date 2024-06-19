@@ -180,14 +180,13 @@
                         <label class="info"
                             title='An identifier that makes sense to you&#10;i.e. "3rd from the Right" or "Bookshelf #3"'>
                             <span class="information">&#9432; </span>
-                            Bookshelf 
+                            Bookshelf
                         </label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
                             value="{{ session['address']|default(address) }}"><br>
-                        <input class="bar room" type="text" name="room"
-                            value="{{ room|default(session['room']) }}"><br>
+                        <input class="bar room" type="text" name="room" value="{{ room|default(session['room']) }}"><br>
                         <input class="bar bookshelf" type="text" name="bookshelf"
                             value="{{ bookshelf|default(session['bookshelf']) }}"><br>
                     </div>
@@ -214,12 +213,23 @@
                 </select>
                 <input class="bar search_id" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                 <div onclick="clearID()">
-                    <input type="submit" name="action" value="Search">
+                    <input type="submit" name="action" value="Search via ID">
                     <input type="hidden" name="button_class" value="auto">
                 </div>
             </form>
         </div>
-        {% endif %}
+        <div class="mass_search">
+            <label class="label">Search via Title</label><br>
+            <label class="label">Search via Author</label><br>
+            <form method="post">
+                <input class="bar search_title" type="text" name="search_title"><br>
+                <input class="bar search_author" type="text" name="search_author"><br>
+                <input type="submit" name="action" value="Search via Title or Author">
+                <input type="hidden" name="button_class" value="title_author_search">
+            </form>
+        </div>
+    </div>
+    {% endif %}
     </div>
     <script>
         var cancel = false;

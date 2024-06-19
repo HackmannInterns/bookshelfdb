@@ -42,18 +42,38 @@ def get_permissions(is_recent=False):
     return Permissions()
 
 
+@app.route('/search', methods=["GET", "POST"])
+def mass_search():
+    search_title = session['search_title']
+    search_author = session['search_author']
+    rows = fetch.search_by_author_title(search_author, search_title)
+    books = [dict(b_id=-1,
+                  identifier=row['olid'],
+                  identifier_type='OLID',
+                  title=row['title'],
+                  author=row['authors'],
+                  year=row['publish_date'],
+                  publisher=row['publisher'],
+                  subjects=row['subjects'],
+                  description=None,) for row in rows]
+    if len(books) == 0:
+        return "No results Found", 401
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
+
+
 @app.route('/admin', methods=["GET", "POST"])
 def admin():
     if not get_permissions().can_view_admin:
         return redirect('/login')
-    print(request.form)
+    # print(request.form)
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
         new_head = str(request.form.get("header_name", ""))
         new_view = bool(request.form.get("viewer", False))
         new_edit = bool(request.form.get("editor", False))
         # print(f"New Add: {new_add}\nNew View: {new_view}\nNew Edit: {new_edit}\n")
-        admin_settings.update_yaml(visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
+        admin_settings.update_yaml(
+            visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
 
     else:
         if 'q' in request.args and request.args['q'] == "clear":
@@ -106,7 +126,7 @@ def logout():
         referer = '/'
     session.pop('authenticated', None)
     session.pop('recent', None)
-    print(session.get('recent'))
+    # print(session.get('recent'))
     return redirect(referer)
 
 # When you hit the /scan page, under all circumstances, it renders scan.html
@@ -234,6 +254,11 @@ def submit():
     session['autosubmit'] = AUTO
     session['autofilled'] = False
 
+    if request.method == 'POST' and request.form.get('button_class') == 'title_author_search':
+        session['search_title'] = request.form.get('search_title', "")
+        session['search_author'] = request.form.get('search_author', "")
+        return redirect("/search")
+
     # Manual entry
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
         title = request.form['title']
@@ -259,10 +284,13 @@ def submit():
         return render_template('form.html', header_name=admin_settings.get_settings().header_name, address=admin_settings.get_settings().default_address)
 
     # isbn/lccn given
-    elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args:
+    elif request.method == 'POST' and request.form.get('button_class') == 'auto' or 'isbn' in request.args or 'olid' in request.args:
         if 'isbn' in request.args:
             id_type = 'isbn'
             book_id = request.args['isbn']
+        elif 'olid' in request.args:
+            id_type = 'olid'
+            book_id = request.args['olid']
         else:
             id_type = request.form['id_type']
             book_id = request.form['search_id']
