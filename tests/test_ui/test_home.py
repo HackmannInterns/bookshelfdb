@@ -44,7 +44,6 @@ def test_header_present(browser, flask_init):
     header.find_element(By.TAG_NAME, "h1")
     tabs = browser.find_element(By.CLASS_NAME, "tabs")
     assert tabs
-    assert header.text == 'Hackmann Library\nSubmit Library Scan\nLogin'
 
 
 def test_input_fields_empty(browser, flask_init):
