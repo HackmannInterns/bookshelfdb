@@ -19,12 +19,9 @@ title = "book title"
 publisher = "John Hackmann"
 subjects = "Biography, Horor"
 
+def clear_data():
+    os.remove(db)
 
-@pytest.fixture
-def set_up():
-    init_db(db)
-
-    # create_book(bookshelf_location, address, room, identifier, identifier_type, author, year, title, publisher, description)
 
 
 def delete_table(table_name, db):
@@ -93,6 +90,8 @@ def test_database_creation():
     assert db_exists is True
     assert results is True
 
+    clear_data()
+
 
 def test_create_book():
     init_db(db)
@@ -112,6 +111,8 @@ def test_create_book():
     clear_table("books", db=db)
 
     assert len(rows) == 2
+
+    clear_data()
 
 
 def test_read_books():
@@ -147,6 +148,7 @@ def test_read_books():
         assert book['description'] is None
 
     clear_table("books", db=db)
+    clear_data()
 
 
 def test_read_book():
@@ -187,6 +189,7 @@ def test_read_book():
     assert row[10] is None
 
     clear_table("books", db=db)
+    clear_data()
 
 
 def test_update_book():
@@ -241,6 +244,7 @@ def test_update_book():
     assert f_subjects == row[11]
 
     clear_table("books", db=db)
+    clear_data()
 
 
 def test_delete_book():
@@ -277,3 +281,4 @@ def test_delete_book():
     con.close()
 
     assert len(rows) == 0
+    clear_data()

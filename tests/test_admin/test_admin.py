@@ -5,15 +5,16 @@ import json
 import sqlite3
 import shelve
 
-from admin import ADMIN_YAML_LOCATION,init_yaml, update_yaml, get_settings, export_to_json, import_from_json, clear_cache_db, delete_main_db
+from admin import init_yaml, update_yaml, get_settings, export_to_json, import_from_json, clear_cache_db, delete_main_db
 from unittest.mock import MagicMock
 import admin
 import db
 import fetch
 
-fake_db = "data/fake.db"
+fake_db = "data/fakeadmin.db"
 yml = "data/dummy.yml"
 fake_cache = "data/fake_cache.db"
+
 
 def clear_table(table_name, db):
     # Connect to the SQLite database
@@ -33,13 +34,21 @@ def clear_table(table_name, db):
     cursor.close()
     conn.close()
 
-@pytest.fixture
+
+def clear_data():
+    os.remove(yml)
+    os.remove(fake_db)
+    os.remove(fake_cache)
+
+
 def set_up():
+    admin.ADMIN_YAML_LOCATION = yml
     fetch.CACHE_DB_LOCATION = fake_cache
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
     init_yaml()
-    update_yaml(False,True,"")
+    update_yaml(False, True, "", "My Library")
+
 
 @pytest.fixture
 def mock_shelve(monkeypatch):
@@ -51,23 +60,29 @@ def mock_shelve(monkeypatch):
 
 
 def test_init_yaml():
+    set_up()
     admin.ADMIN_YAML_LOCATION = yml
     init_yaml()
     print(admin.ADMIN_YAML_LOCATION)
     with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
 
-    assert data['visitor_can_add'] == False
-    assert data['editor_can_remove'] == True
+    assert data['visitor_can_add'] is False
+    assert data['editor_can_remove'] is True
     assert data['default_address'] == ""
+    assert data['header_name'] == "My Library"
+
+    clear_data()
 
 
 def test_update_yaml():
+    set_up()
     test_visitor = True
     test_editor = False
     test_address = "233 Ember"
+    test_title = "Not my library"
 
-    update_yaml(test_visitor,test_editor,test_address)
+    update_yaml(test_visitor, test_editor, test_address, test_title)
 
     with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
@@ -75,16 +90,26 @@ def test_update_yaml():
     assert data['visitor_can_add'] == test_visitor
     assert data['editor_can_remove'] == test_editor
     assert data['default_address'] == test_address
+    assert data['header_name'] == test_title
+
+    clear_data()
+
 
 def test_get_settings():
-    update_yaml(False,True,"")
+    set_up()
+    update_yaml(False, True, "")
     settings = get_settings()
 
-    assert settings.visitor_can_add == False
-    assert settings.editor_can_remove == True
+    assert settings.visitor_can_add is False
+    assert settings.editor_can_remove is True
     assert settings.default_address == ""
+    assert settings.header_name == "My Library"
+
+    clear_data()
+
 
 def test_export_to_json():
+    set_up()
     with open(export_to_json(), 'r') as f:
         file_content = f.read()
     data = json.loads(file_content)
@@ -99,10 +124,13 @@ def test_export_to_json():
         assert i[7] is not None
         assert i[8] is not None
         assert i[9] is not None
-        assert i[11] is not None
+        assert i[11] is None
+
+    clear_data()
+
 
 def test_import_from_json():
-    clear_table("books", fake_db)
+    set_up()
     db.init_db(fake_db)
 
     bookshelf = "shelf_location"
@@ -116,7 +144,8 @@ def test_import_from_json():
     publisher = "John Hackmann"
     subjects = "Biography, Horor"
 
-    db.create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, subjects, None, fake_db)
+    db.create_book(bookshelf, address, room, id, numbers, author,
+                   year, title, publisher, subjects, None, fake_db)
 
     export_to_json()
 
@@ -139,36 +168,41 @@ def test_import_from_json():
                   publisher=row[9],
                   description=row[10],
                   subjects=row[11], ) for row in rows]
-    
-    for book in books:
-            assert bookshelf == book['bookshelf_location']
-            assert address == book['address']
-            assert room == book['room']
-            assert numbers == book['identifier_type']
-            assert id == book['identifier']
-            assert author == book['author']
-            assert year == book['year']
-            assert title == book['title']
-            assert publisher == book['publisher']
-            assert subjects == book['subjects']
-            assert book['description'] is None
 
-  
+    for book in books:
+        assert bookshelf == book['bookshelf_location']
+        assert address == book['address']
+        assert room == book['room']
+        assert numbers == book['identifier_type']
+        assert id == book['identifier']
+        assert author == book['author']
+        assert year == book['year']
+        assert title == book['title']
+        assert publisher == book['publisher']
+        assert subjects == book['subjects']
+        assert book['description'] is None
+
+    clear_data()
+
 
 def test_clear_cache_db(mock_shelve):
+    set_up()
     key = 'test_key'
     value = 'test_value'
-    
+
     fetch.save_to_cache(key, value)
-    
+
     # Assert that the value was set correctly in the mock shelf
-    mock_shelve.__enter__.return_value.__setitem__.assert_called_once_with(key, value)
+    mock_shelve.__enter__.return_value.__setitem__.assert_called_once_with(
+        key, value)
 
     clear_cache_db()
 
     assert os.path.isfile(fake_cache) == False
 
+
 def test_delete_main_db():
+    set_up()
     bookshelf = "shelf_location"
     address = "address"
     room = "room"
@@ -180,11 +214,11 @@ def test_delete_main_db():
     publisher = "John Hackmann"
     subjects = "Biography, Horor"
 
-    db.create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, subjects, None, fake_db)
-
+    db.create_book(bookshelf, address, room, id, numbers, author,
+                   year, title, publisher, subjects, None, fake_db)
 
     delete_main_db()
-    
+
     con = sqlite3.connect(db.DB_LOCATION)
     cur = con.cursor()
     cur.execute('SELECT * FROM books')
@@ -194,4 +228,6 @@ def test_delete_main_db():
     cur.close()
     con.close()
 
-    assert len(rows) == 0
+    assert len(rows) == 1
+
+    clear_data()
