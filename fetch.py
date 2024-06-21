@@ -65,10 +65,11 @@ def parse_book_data(book_info):
         publish_date = match.group()
     publisher = ', '.join(publisher.get('name', '')
                           for publisher in book_info.get('publishers', []))
-    all_subjects = book_info.get('subjects', '')
-    all_subjects += book_info.get('subject_places', '')
-    all_subjects += book_info.get('subject_people', '')
-    all_subjects += book_info.get('subject_times', '')
+
+    all_subjects = book_info.get('subjects', [])
+    all_subjects += book_info.get('subject_places', [])
+    all_subjects += book_info.get('subject_people', [])
+    all_subjects += book_info.get('subject_times', [])
     # print(all_subjects)
     subjects = list(subject.get('name', '')
                     for subject in all_subjects)
@@ -111,8 +112,10 @@ def search_by_author_title(author, title, use_cache=True):
     master_list = []
     for i in matches[:50]:
         b_id = i.split('/')[-1]
-        indiv_data = api(f'OLID:{b_id}', f"https://openlibrary.org/api/books?bibkeys=OLID:{b_id}&format=json&jscmd=data", True)
-        title, authors, publish_date, publisher, subjects = parse_data(indiv_data, "OLID", b_id)
+        indiv_data = api(
+            f'OLID:{b_id}', f"https://openlibrary.org/api/books?bibkeys=OLID:{b_id}&format=json&jscmd=data", True)
+        title, authors, publish_date, publisher, subjects = parse_data(
+            indiv_data, "OLID", b_id)
         book = {}
         book['olid'] = b_id
         book['title'] = title
@@ -121,7 +124,7 @@ def search_by_author_title(author, title, use_cache=True):
         book['publisher'] = publisher
         book['subjects'] = subjects
         master_list.append(book)
-    return(master_list)
+    return (master_list)
 
 
 if __name__ == '__main__':
