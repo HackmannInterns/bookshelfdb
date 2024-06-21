@@ -27,7 +27,7 @@ var instance = "http://localhost:5000";
             if (isNumeric(content) && content != code) {
                 code = content;
                 console.log(content);
-                window.open(instance + "/submit?isbn=" + content, "_blank");
+                window.open(instance + "/add-book?isbn=" + content, "_blank");
             } else {
               // Non numberic
             }

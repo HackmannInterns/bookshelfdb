@@ -46,10 +46,10 @@
             {% else %}
             <div class="account"><a href="/login">Login</a></div>
             {% endif %}
-            <a id="library" href="/view">Library</a>
-            <a id="submit" href="/submit">Submit</a>
+            <a id="library" href="/library">Library</a>
+            <a id="add-book" href="/add-book">Add Book</a>
             {% if 'recent' in session and session['recent'] %}
-            <a id="recent" href="/view-recent">Recent Additions</a>
+            <a id="recent" href="/library-recent">Recent Additions</a>
             {% endif %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
@@ -63,13 +63,13 @@
     <script>
         function tabChecker() {
             var currentSite = null
-            if (window.location.pathname === "/submit") {
-                var currentSite = document.getElementById("submit");
+            if (window.location.pathname === "/add-book") {
+                var currentSite = document.getElementById("add book");
             }
-            else if (window.location.pathname === "/view") {
+            else if (window.location.pathname === "/library") {
                 var currentSite = document.getElementById("library");
             }
-            else if (window.location.pathname === "/view-recent") {
+            else if (window.location.pathname === "/library-recent") {
                 var currentSite = document.getElementById("recent");
             }
             else if (window.location.pathname === "/scan") {

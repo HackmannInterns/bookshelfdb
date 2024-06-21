@@ -29,8 +29,8 @@ def browser():
     driver.quit()
 
 
-def test_view_page(flask_init, browser):
-    browser.get("localhost:5000/view")
+def test_library_page(flask_init, browser):
+    browser.get("localhost:5000/library")
     assert browser.title == "Book Table"
 
 

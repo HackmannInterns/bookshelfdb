@@ -51,9 +51,9 @@ def get_permissions(is_recent=False):
         can_view_admin = user_type.value >= Auth['Admin'].value
 
         # setting viewing perms
-        req_perms_view_views = Auth['Viewer']
-        desc_can_view_views = 'You cannot view the views page with your current authentication level'
-        can_view_views = user_type.value >= Auth['Viewer'].value
+        req_perms_view_library = Auth['Viewer']
+        desc_can_view_library = 'You cannot view the library page with your current authentication level'
+        can_view_library = user_type.value >= Auth['Viewer'].value
 
     return Permissions()
 
@@ -166,16 +166,16 @@ def scan():
     return render_template('scan.html', header_name=admin_settings.get_settings().header_name)
 
 
-# When you hit the /view page, rows.html is rendered
+# When you hit the /library page, rows.html is rendered
 # It creates and passes in a dictionary containing all the row data for a Book
 # rows.html then processes this and creates a table, 1 row per DB entry
 # TODO: implement permissions
-@app.route('/view')
+@app.route('/library')
 def view():
-    if not get_permissions().can_view_views:
-        session['description'] = get_permissions().desc_can_view_views
+    if not get_permissions().can_view_library:
+        session['description'] = get_permissions().desc_can_view_library
         session['required_permission'] = get_permissions(
-        ).req_perms_view_views.name
+        ).req_perms_view_library.name
         session['insufficient_perm'] = True
         return redirect('/login')
     rows = db.read_books()
@@ -194,7 +194,7 @@ def view():
     return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
 
 
-@app.route('/view-recent')
+@app.route('/library-recent')
 # TODO: implement permissions
 def view2():
     if 'recent' not in session:
@@ -231,7 +231,7 @@ def delete():
         session['required_permission'] = get_permissions().req_perms_remove.name
         session['insufficient_perm'] = True
         return redirect('/login')
-    return redirect('/view')
+    return redirect('/library')
 
 
 @app.route('/edit', methods=['GET', 'POST'])
@@ -246,7 +246,7 @@ def edit():
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:
-            return redirect('/view')
+            return redirect('/library')
         return render_template('form.html', header_name=admin_settings.get_settings().header_name, db_id=db_id,
                                title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7],
                                publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11],
@@ -272,22 +272,22 @@ def edit():
         db.update_book(id=id, bookshelf_location=bookshelf, address=address, room=room, identifier=book_id,
                        identifier_type=id_type, author=author, year=year,
                        title=title, publisher=publisher, subjects=subjects)
-        return redirect('/view')
+        return redirect('/library')
 
     else:
-        return redirect('/view')
+        return redirect('/library')
     # End Editting
 
 
-# When /submit is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
+# When /add-book is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
 # When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
 # When the page is first met, it is rendered with nothing else happening
 
 # TODO: implement permissions & change page
 
 
-@app.route('/submit', methods=['GET', 'POST'])
-def submit():
+@app.route('/add-book', methods=['GET', 'POST'])
+def add_book():
     if not get_permissions().can_add:
         session['description'] = get_permissions().desc_can_add
         session['required_permission'] = get_permissions().req_perms_add.name
@@ -357,7 +357,7 @@ def submit():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return redirect('/view')
+    return redirect('/library')
 
 
 @app.route('/about')
