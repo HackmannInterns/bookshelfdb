@@ -48,6 +48,12 @@ def test_delete_page(flask_init, browser):
     browser.get("localhost:5000/delete?q=1")
     assert browser.title == "Login Required"
 
+
 def test_none_page(flask_init, browser):
     browser.get("localhost:5000/jared")
     assert browser.title == "404 Not Found"
+
+
+def test_recent_page(flask_init, browser):
+    browser.get("localhost:5000/library-recent")
+    assert browser.title == "Book Table"

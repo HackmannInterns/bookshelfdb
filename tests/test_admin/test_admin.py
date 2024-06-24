@@ -198,7 +198,7 @@ def test_clear_cache_db(mock_shelve):
 
     clear_cache_db()
 
-    assert os.path.isfile(fake_cache) == False
+    assert os.path.isfile(fake_cache) is False
 
 
 def test_delete_main_db():
