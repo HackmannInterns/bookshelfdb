@@ -36,6 +36,14 @@ def browser():
     yield driver
     driver.quit()
 
+# @pytest.fixture(scope="module")
+# def browser():
+#     options = Options()
+#     options.add_argument("-headless")
+#     driver = webdriver.Firefox(options=options)
+#     yield driver
+#     driver.quit()
+
 
 def test_library_page(flask_init, browser):
     browser.get("localhost:5000/library")

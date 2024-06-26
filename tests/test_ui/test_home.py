@@ -2,6 +2,7 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from multiprocessing import Process
 from app import run_flask
 import time
@@ -28,9 +29,21 @@ def flask_init():
 def browser():
     options = Options()
     options.add_argument("-headless")
-    driver = webdriver.Firefox(options=options)
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    service = Service(executable_path="/snap/bin/firefox.geckodriver")
+    driver = webdriver.Firefox(options=options, service=service)
     yield driver
     driver.quit()
+
+# @pytest.fixture(scope="module")
+# def browser():
+#     options = Options()
+#     options.add_argument("-headless")
+#     driver = webdriver.Firefox(options=options)
+#     yield driver
+#     driver.quit()
 
 
 def test_app_starts(browser, flask_init):
