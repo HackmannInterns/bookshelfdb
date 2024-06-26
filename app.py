@@ -107,7 +107,7 @@ def admin():
                     f = request.files['file']
                     admin_settings.import_from_json(f)
                     return redirect('/admin')
-                except:
+                except UnicodeDecodeError:
                     return "File upload failed, ensure the file is a .json and exported from our application"
 
     return render_template('admin.html', header_name=admin_settings.get_settings().header_name,
@@ -116,7 +116,7 @@ def admin():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print(session.get('insufficient_perm', "NOT SET"))
+    # print(session.get('insufficient_perm', "NOT SET"))
     referer = request.headers.get('Referer')
     if referer is None:
         referer = '/'

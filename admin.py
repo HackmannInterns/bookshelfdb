@@ -1,4 +1,3 @@
-import sqlite3
 import json
 import yaml
 import os
@@ -14,6 +13,7 @@ DEFAULT_DATA = {
     'default_address': "",
     'header_name': "My Library"
 }
+
 
 def init_yaml():
     # Check if the file exists
@@ -85,14 +85,6 @@ def delete_main_db():
     db.delete_db()
     db.init_db()
 
-
-def change_address():
-    with open('example.yaml', 'r') as file:
-        data = yaml.safe_load(file)
-
-def change_header():
-    with open('example.yaml', 'r') as file:
-        data = yaml.safe_load(file)
 
 # if __name__ == '__main__':
     # pass
