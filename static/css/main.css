@@ -1,0 +1,439 @@
+/* About Page */
+.about-body {
+    padding: 100px 0;
+    background-color: white;
+}
+
+.text-container{
+    
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: white;
+    border: 2px solid #333;
+}
+
+h1 {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+}
+
+h2 {
+    color: #464646;
+}
+
+.text {
+    margin: 5%;
+}
+
+.image {
+    width: 200px;
+    height: 100px;
+    display: inline-flex;
+}
+
+.first {
+    display: inline-flex;
+}
+
+@media only screen and (max-width: 40em) {
+    .about-body {
+        padding: 75px 0;
+    }
+
+    .first {
+    display: inline;
+}
+    .image {
+    width: auto;
+    height: 100px;
+    display: inline;
+}
+
+    .text-container {
+        
+        margin-left: 5%;
+        margin-right: 5%;
+        background-color: white;
+    }
+}
+
+/* Admin Page */
+form {
+    text-align: center;
+    margin: auto;
+}
+
+.perm-block {
+    padding-top: 0px;
+}
+
+.address-block {
+    padding: 10px;
+}
+
+.header-block {
+    padding: 10px;
+}
+
+.database-block {
+    display: grid;
+    grid-template-columns: 100px 100px;
+    grid-gap: 10px;
+    justify-content: center;
+    margin: auto;
+}
+
+.separator {
+    text-align: center;
+    padding: 10px;
+}
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#reminder {
+    display: none;
+    color: red;
+    font-weight: bold;
+}
+
+/* Form Page */
+.form1 {
+    margin: auto;
+    text-align: center;
+    padding: 100px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.search {
+    padding: 20px 0;
+}
+
+.label {
+    padding-right: 5px;
+    text-align: right;
+    float: right;
+}
+
+.bar {
+    padding-left: 5px;
+    margin-left: auto;
+}
+
+@media only screen and (min-width: 40em) {
+    .grid-overall {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+@media only screen and (max-width: 40em) {
+    .grid-overall {
+        flex-direction: column;
+        align-items: center;
+        row-gap: 10px;
+    }
+
+    .form-body {
+        padding: 25px;
+    }
+    
+}
+
+.grid-overall {
+    display: flex;
+    margin: auto;
+    padding: auto;
+    justify-content: space-around;
+}
+
+
+.grid {
+    display: grid;
+    padding: inherit;
+    grid-template-columns: auto auto;
+    justify-content: center;
+}
+
+.grid-label {
+    float: left;
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-rows: 5;
+    grid-row-gap: 5px;
+    text-align: right;
+}
+
+.grid-bar {
+    float: right;
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-rows: 5;
+}
+
+.grid-locations-name {
+    float: left;
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-rows: 3;
+    grid-row-gap: 5px;
+    text-align: right;
+
+}
+
+.grid-locations-bar {
+    float: right;
+    display: grid;
+    grid-auto-columns: 1;
+    grid-auto-rows: 3;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 5px;
+}
+
+.submit_button {
+    width: 90px;
+    height: 40px;
+    margin: auto;
+    padding-top: 5px;
+}
+
+.empty_space {
+    width: 16%;
+}
+
+.required {
+    color: red;
+    margin-left: 5px;
+}
+
+.form-body {
+    overflow-y: auto;
+}
+
+.information {
+    /* vertical-align: super; */
+    font-size: small;
+    color: #888;
+}
+
+.searching {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 5px;
+    justify-content: center;
+}
+
+.searching-label {
+    text-align: right;
+}
+
+/* Header */
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.header nav a:hover {
+    text-decoration: underline;
+}
+
+.nav {
+    justify-content: right;
+}
+.empty_space {
+    width: 50px;
+}
+
+/* Login */
+.main {
+    margin: auto;
+    text-align: center;
+    padding: 100px 0;
+}
+@media only screen and (min-height: 400px) {
+    .login-body {
+        padding: 25px;
+    }
+}
+
+/* Library */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.library-body {
+    padding: 10px;
+
+}
+
+.kebab-menu {
+    display: none;
+    position: fixed;
+    background-color: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    z-index: 9999;
+}
+
+.kebab-menu a {
+    display: block;
+    padding: 8px 12px;
+    color: black;
+    text-decoration: none;
+}
+
+.kebab-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.kebab-menu-icon {
+    cursor: pointer;
+}
+
+#books_wrapper {
+    height: 80%;
+    /* Adjust the height as needed */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+}
+
+
+@media only screen and (min-height: 400px) {
+    #books_wrapper {
+        height: 90%;
+        /* Adjust the height as needed */
+    }
+
+    .library-body {
+        padding: 25px;
+    }
+}
+
+.kebab-menu-container {
+    position: relative;
+    padding: 0 5px;
+}
+
+.show-subjects {
+    /* Add your styles for displaying full content */
+    /* For example: */
+    white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+}
+
+.no-books {
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* Scan */
+#scanner-container {
+    text-align: center;
+}
+
+#scanner-video {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+}
+
+#result {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Tabs */
+.tabs {
+    margin-top: 60px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    padding: 0 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.tabs nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 10px;
+    overflow: hidden;
+}
+
+.account {
+    position: fixed;
+    top: 20px;
+    right: 0;
+}
+
+@media only screen and (max-width: 40em) {
+    .account {
+        position: relative;
+        top: 0%;
+        right: 0%;
+        text-align: center;
+    }
+}

@@ -1,83 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Table</title>
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    <style>
-        .truncate {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 200px;
-        }
-
-        body {
-            padding: 10px;
-
-        }
-
-        .kebab-menu {
-            display: none;
-            position: fixed;
-            background-color: white;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            z-index: 9999;
-        }
-
-        .kebab-menu a {
-            display: block;
-            padding: 8px 12px;
-            color: black;
-            text-decoration: none;
-        }
-
-        .kebab-menu a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .kebab-menu-icon {
-            cursor: pointer;
-        }
-
-        #books_wrapper {
-            height: 80%;
-            /* Adjust the height as needed */
-            overflow-y: auto;
-            /* Enable vertical scrolling */
-        }
-
-
-        @media only screen and (min-height: 400px) {
-            #books_wrapper {
-                height: 90%;
-                /* Adjust the height as needed */
-            }
-
-            body {
-                padding: 25px;
-            }
-        }
-
-        .kebab-menu-container {
-            position: relative;
-            padding: 0 5px;
-        }
-
-        .show-subjects {
-            /* Add your styles for displaying full content */
-            /* For example: */
-            white-space: normal;
-            overflow: visible;
-            text-overflow: initial;
-        }
-
-        .no-books {
-            text-align: center;
-            padding: 40px 0;
-        }
-    </style>
+    <link rel="stylesheet" href='static\css\main.css'>
 </head>
 {% include "header.html" %}
 <br>
@@ -85,7 +15,7 @@
 <br>
 <br>
 
-<body>
+<body class="library-body">
     {% if Books | length == 0%}
     <div class="no-books">
         <h3>The Library is empty. Please enter a book</h3>

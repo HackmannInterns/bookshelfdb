@@ -6,69 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Page</title>
-    <style>
-        body {
-            padding: 60px 0;
-            background-color: white;
-        }
-
-        .text-container{
-            
-            margin-left: 25%;
-            margin-right: 25%;
-            background-color: white;
-            border: 2px solid #333;
-        }
-
-        h1 {
-            background-color: #333;
-            color: #fff;
-        }
-
-        h2 {
-            color: #464646;
-        }
-
-        .text {
-            margin: 5%;
-        }
-
-        .image {
-            width: 200px;
-            height: 100px;
-            display: inline-flex;
-        }
-
-        .first {
-            display: inline-flex;
-        }
-
-        @media only screen and (max-width: 40em) {
-            body {
-                padding: 75px 0;
-            }
-
-            .first {
-            display: inline;
-        }
-            .image {
-            width: auto;
-            height: 100px;
-            display: inline;
-        }
-
-            .text-container {
-                
-                margin-left: 10%;
-                margin-right: 10%;
-                background-color: white;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href='static\css\main.css'>
 </head>
 {% include "header.html" %}
 
-<body>
+<body class="about-body">
     <div class="text-container">
         <div class="text">
             <h1>About</h1>
