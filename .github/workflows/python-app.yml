@@ -5,41 +5,38 @@ name: Python application
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with Ruff
-      run: |
-        pip install ruff
-        ruff --output-format=github .
-      continue-on-error: true
-    - name: Test with pytest
-      run: |
-        pip install -r requirements-dev.txt;
-        pytest tests/test_db/test_crud.py --doctest-modules --junitxml=junit/test-results.xml
-        pytest tests/test_fetch/test_api.py --doctest-modules --junitxml=junit/test-results.xml
-        pytest tests/test_fetch/test_cache.py --doctest-modules --junitxml=junit/test-results.xml
-        pytest tests/test_fetch/test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
-        pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
-        # pytest tests/test_ui/test_api.py --doctest-modules --junitxml=junit/test-results.xml
-        # pytest tests/test_ui/test_home.py --doctest-modules --junitxml=junit/test-results.xml
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with Ruff
+        run: |
+          pip install ruff
+          ruff --output-format=github .
+        continue-on-error: true
+      - name: Test with pytest
+        run: |
+          pip install -r requirements-dev.txt;
+          pytest tests/test_db/test_crud.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_fetch/test_api.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_fetch/test_cache.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_fetch/test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
