@@ -72,6 +72,11 @@
             overflow: visible;
             text-overflow: initial;
         }
+
+        .no-books {
+            text-align: center;
+            padding: 40px 0;
+        }
     </style>
 </head>
 {% include "header.html" %}
@@ -81,6 +86,13 @@
 <br>
 
 <body>
+    {% if Books | length == 0%}
+    <div class="no-books">
+        <h3>The Library is empty. Please enter a book</h3>
+        <br>
+        <button class="button" onclick="location.href='/add-book';">Add Book</button>
+    </div>
+    {% else %}
     <table id="books" class="display" style="width:100%">
         <thead>
             <tr>
@@ -137,8 +149,11 @@
                     </div>
                 </td>
                 {% else %}
-                <td><input type="button" onclick="location.href='/add-book?olid={{ book.identifier }}';" value="Add" /></td>
-                <td><input type="button" onclick="location.href='https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}';" value="More Info" /></td>
+                <td><input type="button" onclick="location.href='/add-book?olid={{ book.identifier }}';" value="Add" />
+                </td>
+                <td><input type="button"
+                        onclick="location.href='https://openlibrary.org/{{ book.identifier_type }}/{{ book.identifier }}';"
+                        value="More Info" /></td>
                 {% endif %}
 
             </tr>
@@ -159,7 +174,7 @@
                 scrollCollapse: true,
                 scrollY: '',
 
-                {% if Books and Books[0].b_id | default(-1) != -1 %}
+                {% if Books and Books[0].b_id | default (-1) != -1 %}
                 "columnDefs": [
             { "orderable": false, "targets": -1 } // Disables sorting on the last column
         ],
@@ -246,4 +261,5 @@
             }
         }
     </script>
+    {% endif %}
 </body>
