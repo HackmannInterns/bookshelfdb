@@ -1,6 +1,8 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 import time
 from multiprocessing import Process
 from app import run_flask
@@ -23,9 +25,11 @@ def flask_init():
     app_process.join()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def browser():
-    driver = webdriver.Firefox()
+    options = Options()
+    options.add_argument('-headless')
+    driver = webdriver.Firefox(options=options)
     yield driver
     driver.quit()
 
@@ -52,7 +56,7 @@ def test_input_fields_empty(browser, flask_init):
     inputs = browser.find_elements(By.TAG_NAME, "input")
     for i in inputs:
         if i.get_attribute("type") != "submit" and i.get_attribute("type") != "hidden":
-            #name = i.get_attribute("class").split(" ")[1]
+            # name = i.get_attribute("class").split(" ")[1]
             assert i.get_attribute("value") == ""
 
 

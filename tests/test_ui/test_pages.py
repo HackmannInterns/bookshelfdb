@@ -2,6 +2,8 @@ import pytest
 from selenium import webdriver
 import time
 from multiprocessing import Process
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
 from app import run_flask
 
 
@@ -22,9 +24,11 @@ def flask_init():
     app_process.join()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def browser():
-    driver = webdriver.Firefox()
+    options = Options()
+    options.add_argument('-headless')
+    driver = webdriver.Firefox(options=options)
     yield driver
     driver.quit()
 
