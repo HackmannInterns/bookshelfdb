@@ -74,7 +74,7 @@ def mass_search():
                   description=None, ) for row in rows]
     if len(books) == 0:
         return "No results Found", 401
-    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permissions=get_permissions())
 
 
 @app.route('/admin', methods=["GET", "POST"])
@@ -111,7 +111,7 @@ def admin():
                     return "File upload failed, ensure the file is a .json and exported from our application"
 
     return render_template('admin.html', header_name=admin_settings.get_settings().header_name,
-                           Admin=admin_settings.get_settings())
+                           Admin=admin_settings.get_settings(), Permission=get_permissions())
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -132,7 +132,7 @@ def login():
             session['authenticated'] = 'Editor'
             return redirect(referer)
         return 'Invalid password', 401
-    return render_template('login.html', header_name=admin_settings.get_settings().header_name)
+    return render_template('login.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
 @app.after_request
@@ -163,7 +163,7 @@ def logout():
 
 @app.route('/scan')
 def scan():
-    return render_template('scan.html', header_name=admin_settings.get_settings().header_name)
+    return render_template('scan.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
 # When you hit the /library page, rows.html is rendered
@@ -191,7 +191,7 @@ def view():
                   publisher=row[9],
                   subjects=row[11],
                   description=row[10], ) for row in rows]
-    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permission=get_permissions())
 
 
 @app.route('/library-recent')
@@ -215,7 +215,7 @@ def view2():
                   publisher=row[9],
                   subjects=row[11],
                   description=row[10], ) for row in rows if row is not None]
-    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books)
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permission=get_permissions())
 
 
 @app.route('/delete')
@@ -250,7 +250,7 @@ def edit():
         return render_template('form.html', header_name=admin_settings.get_settings().header_name, db_id=db_id,
                                title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7],
                                publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11],
-                               edit=True)
+                               edit=True, Permission=get_permissions())
     elif 'q' in request.args and not can_edit:
         session['description'] = get_permissions().desc_can_edit
         session['required_permission'] = get_permissions().req_perms_edit.name
@@ -327,7 +327,7 @@ def add_book():
             session['recent'] = []
         session['recent'].append(b_id)
         return render_template('form.html', header_name=admin_settings.get_settings().header_name,
-                               address=admin_settings.get_settings().default_address)
+                               address=admin_settings.get_settings().default_address, Permission=get_permissions())
 
     # isbn/lccn given
     elif request.method == 'POST' and request.form.get(
@@ -348,11 +348,11 @@ def add_book():
         return render_template('form.html', header_name=admin_settings.get_settings().header_name,
                                address=admin_settings.get_settings().default_address, title=title, author=author,
                                book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher,
-                               subjects=subjects)
+                               subjects=subjects, Permission=get_permissions())
 
     else:
         return render_template('form.html', header_name=admin_settings.get_settings().header_name,
-                               address=admin_settings.get_settings().default_address)
+                               address=admin_settings.get_settings().default_address, Permission=get_permissions())
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -362,7 +362,7 @@ def index():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', header_name=admin_settings.get_settings().header_name)
+    return render_template('about.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
 def run_flask(p=5000):

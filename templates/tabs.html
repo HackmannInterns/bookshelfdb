@@ -1,5 +1,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <link rel="icon" type="static\images\favicon2.png" href="static\images\favicon2.png">
     <style>
         .tabs {
             margin-top: 60px;
@@ -51,8 +52,10 @@
             {% if 'recent' in session and session['recent'] %}
             <a id="recent" href="/library-recent">Recent Additions</a>
             {% endif %}
+            {% if Permission.can_add %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
+            {% endif %}
             <a id="about" href="/about">About</a>
             {% if 'authenticated' in session and session['authenticated'] == "Admin" %}
             <a id="admin" href="/admin">Settings</a>
