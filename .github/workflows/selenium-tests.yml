@@ -1,0 +1,50 @@
+# This workflow will set up Python, install dependencies, and run Selenium tests with Firefox in headless mode
+
+name: Selenium tests
+
+on: workflow_dispatch
+# on:
+#   push:
+#     branches: ["main"]
+#   pull_request:
+#     branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Set up GeckoDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget tar
+          wget https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz
+          tar -xzf geckodriver-v0.32.0-linux64.tar.gz
+          sudo mv geckodriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/geckodriver
+
+      - name: Install Firefox
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox
+
+      - name: Run Selenium tests
+        run: |
+          pytest tests/test_ui/test_home.py --junitxml=junit/test-results.xml
+          pytest tests/test_ui/test_pages.py --junitxml=junit/test-results.xml
+          pytest tests/test_ui/test_with_admin.py --junitxml=junit/test-results.xml

@@ -1,4 +1,3 @@
-import os
 import pytest
 from selenium import webdriver
 import time
@@ -28,8 +27,6 @@ def flask_init():
 def browser():
     options = Options()
     options.add_argument("-headless")
-    firefox_bin = os.getenv('FIREFOX_BIN', '/usr/bin/firefox')
-    options.binary_location = firefox_bin
     driver = webdriver.Firefox(options=options)
     yield driver
     driver.quit()

@@ -1,5 +1,4 @@
 import pytest
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
@@ -29,8 +28,6 @@ def flask_init():
 def browser():
     options = Options()
     options.add_argument("-headless")
-    firefox_bin = os.getenv('FIREFOX_BIN', '/usr/bin/firefox')
-    options.binary_location = firefox_bin
     driver = webdriver.Firefox(options=options)
     yield driver
     driver.quit()
