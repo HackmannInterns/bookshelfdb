@@ -97,14 +97,12 @@
             display: grid;
             grid-auto-columns: 1;
             grid-auto-rows: 3;
-
         }
 
         .grid-2 {
             display: grid;
-            padding: inherit;
             grid-template-columns: auto auto;
-            justify-content: center;
+            grid-column-gap: 5px;
         }
 
         .submit_button {
@@ -134,14 +132,13 @@
         }
 
         .searching {
-            padding-top: 25px;
             display: grid;
             grid-template-columns: auto auto;
             grid-gap: 5px;
             justify-content: center;
         }
 
-        .searching-label{
+        .searching-label {
             text-align: right;
         }
     </style>
@@ -152,7 +149,10 @@
 <body class="body">
     <div class="form1">
         <form method="post">
+            <h2>Add Book</h2>
             <div class="grid-overall">
+                <div class="empty_space">
+                </div>
                 <div class="empty_space">
                 </div>
                 <div class="empty_space">
@@ -161,13 +161,15 @@
                     <div class="grid-label">
                         <label class="label"><span class="required">*</span>Title</label>
                         <label class="label">Author(s)</label>
-                        <label class="label" title="An identifier, such as: &#10;LCCN (often inside the cover).&#10;ISBN (often with a barcode on the back).">
+                        <label class="label"
+                            title="An identifier, such as: &#10;LCCN (often inside the cover).&#10;ISBN (often with a barcode on the back).">
                             <span class="information">&#9432;</span>
                             ID
                         </label>
                         <label class="label">Year</label>
                         <label class="label">Publisher(s)</label>
-                        <label class="label" title="A list of subjects or genres covered by this book. &#10;Separate different topics with commas and spaces">
+                        <label class="label"
+                            title="A list of subjects or genres covered by this book. &#10;Separate different topics with commas and spaces">
                             <span class="information">&#9432;
                             </span>
                             Subject(s)
@@ -191,9 +193,7 @@
                         <label class="label">Room</label>
                         <label class="info"
                             title='An identifier that makes sense to you.&#10;I.E. "3rd from the Right" or "Bookshelf #3"'>
-                            <span class="information">&#9432; </span>
-                            Bookshelf
-                        </label>
+                            <span class="information">&#9432; </span>Bookshelf</label>
                     </div>
                     <div class="grid-locations-bar">
                         <input class="bar address" type="text" name="address"
@@ -217,6 +217,7 @@
         </div>
         {% if edit is not defined or edit == False %}
         <div class="search">
+            <h2>Search by ID</h2>
             <form method="post">
                 <select required name="id_type" id="id_type">
                     <option selected disabled value=""> -- Identifier Type -- </option>
@@ -231,6 +232,7 @@
             </form>
         </div>
         <div class="mass_search">
+            <h2>Search by Book Info</h2>
             <form method="post">
                 <div class="searching">
                     <label class="searching-label">Search via Title:</label>
