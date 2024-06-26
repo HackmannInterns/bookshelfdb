@@ -227,6 +227,7 @@ form {
 
 .grid-2 {
     display: grid;
+    padding: inherit;
     grid-template-columns: auto auto;
     grid-column-gap: 5px;
 }
