@@ -52,11 +52,11 @@
             {% if 'recent' in session and session['recent'] %}
             <a id="recent" href="/library-recent">Recent Additions</a>
             {% endif %}
+            <a id="about" href="/about">About</a>
             {% if Permission.can_add %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
             {% endif %}
-            <a id="about" href="/about">About</a>
             {% if 'authenticated' in session and session['authenticated'] == "Admin" %}
             <a id="admin" href="/admin">Settings</a>
             {% endif %}
