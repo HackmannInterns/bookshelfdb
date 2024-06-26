@@ -1,9 +1,9 @@
+import os
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
 import time
 from multiprocessing import Process
 from app import run_flask
@@ -30,7 +30,9 @@ def flask_init():
 @pytest.fixture(scope="module")
 def browser():
     options = Options()
-    options.add_argument('-headless')
+    options.add_argument("-headless")
+    firefox_bin = os.getenv('FIREFOX_BIN', '/usr/bin/firefox')
+    options.binary_location = firefox_bin
     driver = webdriver.Firefox(options=options)
     yield driver
     driver.quit()
@@ -56,7 +58,7 @@ def test_admin_settings(browser):
     from app import ADMIN_PASSWORD
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
-    time.sleep(2)
+    time.sleep(3)
     editor_checkbox = browser.find_element(By.ID, "editor")
     viewer_checkbox = browser.find_element(By.ID, "viewer")
     assert editor_checkbox.is_selected() == get_settings().editor_can_remove

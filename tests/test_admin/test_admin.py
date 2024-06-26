@@ -46,6 +46,7 @@ def set_up():
     fetch.CACHE_DB_LOCATION = fake_cache
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
+    shelve.open(fake_cache)
     init_yaml()
     update_yaml(False, True, "", "My Library")
 
