@@ -25,10 +25,10 @@ def init_yaml():
     with open(ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
 
-    data.setdefault('visitor_can_add', DEFAULT_DATA['visitor_can_add'])
-    data.setdefault('editor_can_remove', DEFAULT_DATA['editor_can_remove'])
-    data.setdefault('default_address', DEFAULT_DATA['default_address'])
-    data.setdefault('header_name', DEFAULT_DATA['header_name'])
+        data.setdefault('visitor_can_add', DEFAULT_DATA['visitor_can_add'])
+        data.setdefault('editor_can_remove', DEFAULT_DATA['editor_can_remove'])
+        data.setdefault('default_address', DEFAULT_DATA['default_address'])
+        data.setdefault('header_name', DEFAULT_DATA['header_name'])
 
     with open(ADMIN_YAML_LOCATION, 'w') as file:
         yaml.safe_dump(data, file)

@@ -74,7 +74,7 @@ def mass_search():
                   description=None, ) for row in rows]
     if len(books) == 0:
         return "No results Found", 401
-    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permissions=get_permissions())
+    return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permission=get_permissions())
 
 
 @app.route('/admin', methods=["GET", "POST"])
