@@ -81,9 +81,9 @@ def clear_cache_db():
     db.delete_db(CACHE_DB_LOCATION)
 
 
-def delete_main_db():
-    db.delete_db()
-    db.init_db()
+def delete_main_db(db_to_kill=db.DB_LOCATION):
+    db.delete_db(db=db_to_kill)
+    db.init_db(db=db_to_kill)
 
 
 # if __name__ == '__main__':

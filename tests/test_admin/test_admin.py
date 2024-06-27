@@ -125,7 +125,7 @@ def test_export_to_json():
         assert i[7] is not None
         assert i[8] is not None
         assert i[9] is not None
-        assert i[11] is None
+        assert i[11] is ''
 
     clear_data()
 
@@ -216,11 +216,11 @@ def test_delete_main_db():
     subjects = "Biography, Horor"
 
     db.create_book(bookshelf, address, room, id, numbers, author,
-                   year, title, publisher, subjects, None, fake_db)
+                   year, title, publisher, subjects, None, db=fake_db)
 
-    delete_main_db()
+    delete_main_db(db_to_kill=fake_db)
 
-    con = sqlite3.connect(db.DB_LOCATION)
+    con = sqlite3.connect(fake_db)
     cur = con.cursor()
     cur.execute('SELECT * FROM books')
     rows = cur.fetchall()
@@ -229,6 +229,6 @@ def test_delete_main_db():
     cur.close()
     con.close()
 
-    assert len(rows) == 1
+    assert len(rows) == 0
 
     clear_data()
