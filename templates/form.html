@@ -150,8 +150,8 @@
 
         async function countdown() {
             // console.log("yes")
-            submit_p = document.querySelector("body > div > div.submitting > p")
-            submit_div = document.querySelector("body > div > div.submitting")
+            submit_p = document.querySelector("body > div > div.text-container > div > p")
+            submit_div = document.querySelector("body > div > div.text-container > div")
             submit_div.style.display = "block"
             for (var i = 3; i > -1; i--) {
                 // console.log(i);
@@ -159,7 +159,7 @@
                 await sleep(1 * 1000);
             }
             if (!cancel) {
-                button = document.querySelector("body > div > form > div.submit_button > input[type=submit]:nth-child(1)");
+                button = document.querySelector("body > div > div.text-container > form > div.submit_button > input[type=submit]:nth-child(2)");
                 button.click()
             }
         }
@@ -168,8 +168,8 @@
             // if autosubmit
             // if isbn and title
             // if it was autofilled (DO we need?)
-            b_title = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
-            b_id = document.querySelector("body > div > form > div.grid-overall > div.grid > div.grid-bar > input:nth-child(7)").value;
+            b_title = document.querySelector("body > div > div.text-container > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
+            b_id = document.querySelector("body > div > div.text-container > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_id").value;
             if (('{{ session["autosubmit"] }}' == "True") && ('{{ session["autofilled"] }}' == "True") && b_title != "" && b_id != "") {
                 countdown();
             }
