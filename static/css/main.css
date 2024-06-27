@@ -28,15 +28,15 @@ h2 {
 
 .image {
     width: 200px;
-    height: 100px;
-    display: inline-flex;
+    height: 125px;
+    display: inline-block;
 }
 
 .first {
     display: inline-flex;
 }
 
-@media only screen and (max-width: 40em) {
+@media only screen and (max-width: 62.5em) {
     .about-body {
         padding: 75px 0;
     }
@@ -47,7 +47,7 @@ h2 {
     .image {
     width: auto;
     height: 100px;
-    display: inline;
+    display: flex;
 }
 
     .text-container {
