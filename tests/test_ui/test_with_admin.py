@@ -8,6 +8,7 @@ import time
 from multiprocessing import Process
 from app import run_flask
 from admin import get_settings
+from selenium.common.exceptions import NoSuchDriverException
 
 
 @pytest.fixture(scope='session')
@@ -29,23 +30,23 @@ def flask_init():
 
 @pytest.fixture(scope="module")
 def browser():
-    options = Options()
-    options.add_argument("-headless")
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+    try:
+        options = Options()
+        options.add_argument("-headless")
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
 
-    service = Service(executable_path="/snap/bin/firefox.geckodriver")
-    driver = webdriver.Firefox(options=options, service=service)
-    yield driver
-    driver.quit()
+        service = Service(executable_path="/snap/bin/firefox.geckodriver")
+        driver = webdriver.Firefox(options=options, service=service)
+        yield driver
+        driver.quit()
 
-# @pytest.fixture(scope="module")
-# def browser():
-#     options = Options()
-#     options.add_argument("-headless")
-#     driver = webdriver.Firefox(options=options)
-#     yield driver
-#     driver.quit()
+    except NoSuchDriverException:
+        options = Options()
+        options.add_argument("-headless")
+        driver = webdriver.Firefox(options=options)
+        yield driver
+        driver.quit()
 
 
 def login(browser, password):
