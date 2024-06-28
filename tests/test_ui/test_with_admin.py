@@ -80,6 +80,14 @@ def test_admin_settings(browser):
     assert header_box.get_attribute('value') == get_settings().header_name
 
 
+def test_add_book_page(flask_init, browser):
+    from app import ADMIN_PASSWORD
+    login(browser, ADMIN_PASSWORD)
+    browser.get("localhost:5000/")
+    browser.get("localhost:5000/add-book")
+    assert browser.title == "Book Form"
+
+
 # Requires an entry, not sure how we wanna handle this
 # def test_edit_page_with_admin(flask_init, browser):
 #     from app import ADMIN_PASSWORD
