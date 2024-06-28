@@ -6,6 +6,9 @@ import db
 import admin as admin_settings
 from dotenv import load_dotenv
 from os import getenv
+import version
+
+APP_VERSION = "0.9"
 
 app = Flask(__name__)
 AUTO = True
@@ -15,8 +18,8 @@ ADMIN_PASSWORD = getenv('BOOKSHELFDB_PASSWORD', 'changeme')
 EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
-
 # Maybe goes in new class, idk
+
 
 class Auth(Enum):
     Viewer = 0
@@ -113,7 +116,7 @@ def admin():
                     return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="File upload failed, ensure the file is a .json and exported from our application")
 
     return render_template('admin.html', header_name=admin_settings.get_settings().header_name,
-                           Admin=admin_settings.get_settings(), Permission=get_permissions())
+                           Admin=admin_settings.get_settings(), Permission=get_permissions(), Version=version.version_info)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -368,16 +371,21 @@ def about():
     return render_template('about.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
-def run_flask(p=5000):
+def init_all():
+    version.version_check()
     db.init_db()
+
+
+def run_flask(p=5000):
+    init_all()
     app.run(port=p, host='0.0.0.0', debug=True)
 
 
 def create_app():
-    db.init_db()
+    init_all()
     return app
 
 
 if __name__ == '__main__':
-    db.init_db()
+    init_all()
     app.run(port=5000, host='0.0.0.0', debug=True)

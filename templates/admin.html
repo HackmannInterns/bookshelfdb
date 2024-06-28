@@ -15,7 +15,6 @@
     <form class="" method="POST">
         <div class="text-container">
             <div class="perm-block" style="margin: 5%;">
-                <!-- TODO: Hookup changes, should be easy -->
                 <h1>Admin Property Changes:</h1>
                 <label for="viewer">Viewers have add permissions</label>
                 <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.visitor_can_add %}checked{%
@@ -60,6 +59,15 @@
             </div>
         </div>
     </div>
+    <div class="versioning">
+        <p>Current Version:
+            <span style="color: {% if Version.newest != Version.current %}red{% else %}green{% endif %};">
+                {{ Version.current }}
+            </span>
+        </p>
+        <p>Newest Version: <a style="text-decoration:none;" href="{{ Version.newest_link }}" title="View Release Notes">{{ Version.newest }}</a></p>
+    </div>
+
     <div class="popup-overlay" id="popup-overlay"></div>
 
     <div class="popup" id="popup">
@@ -89,7 +97,6 @@
             par.style.display = "block"
             button.style.display = "inline-block"
             import_form.style.display = "none"
-            // TODO: Write better info_texts
             switch (ref) {
                 case "clear":
                     button_href += "?q=clear"
@@ -99,14 +106,13 @@
                     par.style.display = "none"
                     button.style.display = "none"
                     import_form.style.display = "block"
-                    // TODO: code block to have a file upload
                     break;
                 case "delete":
                     button_href += "?q=delete"
                     info_text = "This action will delete all your data.  There is no way to recover from this, your data will be gone."
                     break;
                 default:
-                // code block
+
             }
             if (par) {
                 par.innerText = info_text;
