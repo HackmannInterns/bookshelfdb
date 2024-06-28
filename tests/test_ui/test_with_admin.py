@@ -62,7 +62,7 @@ def test_view_page(flask_init, browser):
     from app import ADMIN_PASSWORD
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
-    assert browser.title == "Admin Page"
+    assert browser.title == "Settings"
 
 
 def test_admin_settings(browser):
@@ -85,7 +85,7 @@ def test_admin_settings(browser):
 #     from app import ADMIN_PASSWORD
 #     login(browser, ADMIN_PASSWORD)
 #     browser.get("localhost:5000/edit?q=1")
-#     assert browser.title == "Book Table"
+#     assert browser.title == "Library"
 
 
 def test_delete_page_with_admin(flask_init, browser):
@@ -94,4 +94,4 @@ def test_delete_page_with_admin(flask_init, browser):
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/")
     browser.get("localhost:5000/delete?q=-1")
-    assert browser.title == "Book Table"
+    assert browser.title == "Library"

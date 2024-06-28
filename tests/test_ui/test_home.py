@@ -50,7 +50,7 @@ def browser():
 def test_app_starts(browser, flask_init):
     browser.get('localhost:5000')
     # We now redirect
-    assert browser.title == 'Book Table'
+    assert browser.title == 'Library'
 
 
 def test_header_present(browser, flask_init):

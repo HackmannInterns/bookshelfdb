@@ -48,7 +48,7 @@ def browser():
 
 def test_library_page(flask_init, browser):
     browser.get("localhost:5000/library")
-    assert browser.title == "Book Table"
+    assert browser.title == "Library"
 
 
 def test_scan_page(flask_init, browser):
@@ -73,4 +73,4 @@ def test_none_page(flask_init, browser):
 
 def test_recent_page(flask_init, browser):
     browser.get("localhost:5000/library-recent")
-    assert browser.title == "Book Table"
+    assert browser.title == "Library"
