@@ -73,7 +73,8 @@ def mass_search():
                   subjects=row['subjects'],
                   description=None, ) for row in rows]
     if len(books) == 0:
-        return "No results Found", 401
+        # return "No results Found", 401
+        return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="No Results Found 401")
     return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permission=get_permissions())
 
 
@@ -108,7 +109,8 @@ def admin():
                     admin_settings.import_from_json(f)
                     return redirect('/admin')
                 except UnicodeDecodeError:
-                    return "File upload failed, ensure the file is a .json and exported from our application"
+                    # return "File upload failed, ensure the file is a .json and exported from our application"
+                    return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="File upload failed, ensure the file is a .json and exported from our application")
 
     return render_template('admin.html', header_name=admin_settings.get_settings().header_name,
                            Admin=admin_settings.get_settings(), Permission=get_permissions())
@@ -131,7 +133,8 @@ def login():
         elif entered_password == EDITOR_PASSWORD:
             session['authenticated'] = 'Editor'
             return redirect(referer)
-        return 'Invalid password', 401
+        # return "invalid password", 401
+        return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="Invalid Password 401")
     return render_template('login.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
