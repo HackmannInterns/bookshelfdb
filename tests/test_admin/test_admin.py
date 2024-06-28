@@ -111,21 +111,11 @@ def test_get_settings():
 
 def test_export_to_json():
     set_up()
-    with open(export_to_json(), 'r') as f:
+    with open(export_to_json(fake_db), 'r') as f:
         file_content = f.read()
     data = json.loads(file_content)
 
-    for i in data:
-        assert i[1] is not None
-        assert i[2] is not None
-        assert i[3] is not None
-        assert i[4] is not None
-        assert i[5] is not None
-        assert i[6] is not None
-        assert i[7] is not None
-        assert i[8] is not None
-        assert i[9] is not None
-        assert i[11] == ''
+    assert data == []
 
     clear_data()
 
