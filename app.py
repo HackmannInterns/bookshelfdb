@@ -347,7 +347,7 @@ def add_book():
         title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
         session['autofilled'] = True
-        session['id'] = request.form['id_type']
+        request.form.get('id_type')
         # print(title, author, publish_date, publisher)
         return render_template('form.html', header_name=admin_settings.get_settings().header_name,
                                address=admin_settings.get_settings().default_address, title=title, author=author,

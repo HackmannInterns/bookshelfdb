@@ -18,7 +18,7 @@ def load_from_cache(key):
 
 
 def api(key, url, use_cache):
-    # print(url)
+    print(url)
 
     # Cache
     cached = load_from_cache(key)
@@ -28,7 +28,7 @@ def api(key, url, use_cache):
     # print("Miss cache")
 
     try:
-        # print(url)
+        print(url)
         response = requests.get(url)
         # print(response)
         if response.status_code == 200:
