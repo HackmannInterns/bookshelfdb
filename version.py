@@ -28,11 +28,10 @@ def threaded_check():
         else:
             # set it to something we can use in admin.html to move it
             print(f"resp is {r.status_code}")
-        time.sleep(5*60)
+        time.sleep(6*60*60)
 
 
 def version_check():
-    global version_thread
     if version_thread is None or not version_thread.is_alive():
         version_thread = threading.Thread(target=threaded_check)
         version_thread.daemon = True
