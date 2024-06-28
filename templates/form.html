@@ -92,9 +92,10 @@
                 <form method="post" style="margin: 5%;">
                     <h1>Search by ID</h1>
                     <select required name="id_type" id="id_type">
-                        <option selected disabled value=""> -- Identifier Type -- </option>
-                        <option value="isbn">ISBN</option>
-                        <option value="lccn">Library of Congress</option>
+                        <option {% if session['id'] !="isbn" and session['id'] !="lccn" %}selected{% endif %} disabled value=""> --
+                            Identifier Type -- </option>
+                        <option {% if test=="isbn" %}selected{% endif %} value="isbn">ISBN</option>
+                        <option {% if test=="lccn" %}selected{% endif %} value="lccn">Library of Congress</option>
                     </select>
                     <input class="bar search_id" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                     <div onclick="clearID()">

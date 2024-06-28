@@ -293,9 +293,6 @@ def add_book():
         session['required_permission'] = get_permissions().req_perms_add.name
         session['insufficient_perm'] = True
         return redirect('/login')
-    # print(session["recent"])
-    # session["recent"] = []
-    # print(request.form.get('button_class'))
     session['autosubmit'] = AUTO
     session['autofilled'] = False
 
@@ -334,9 +331,11 @@ def add_book():
             'button_class') == 'auto' or 'isbn' in request.args or 'olid' in request.args:
         if 'isbn' in request.args:
             id_type = 'isbn'
+            session['id'] = 'isbn'
             book_id = request.args['isbn']
         elif 'olid' in request.args:
             id_type = 'olid'
+            session['id'] = 'olid'
             book_id = request.args['olid']
         else:
             id_type = request.form['id_type']
@@ -344,6 +343,7 @@ def add_book():
         title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
         session['autofilled'] = True
+        session['id'] = request.form['id_type']
         # print(title, author, publish_date, publisher)
         return render_template('form.html', header_name=admin_settings.get_settings().header_name,
                                address=admin_settings.get_settings().default_address, title=title, author=author,
