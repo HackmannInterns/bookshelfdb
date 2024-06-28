@@ -94,8 +94,8 @@
                     <select required name="id_type" id="id_type">
                         <option {% if session['id'] !="isbn" and session['id'] !="lccn" %}selected{% endif %} disabled value=""> --
                             Identifier Type -- </option>
-                        <option {% if test=="isbn" %}selected{% endif %} value="isbn">ISBN</option>
-                        <option {% if test=="lccn" %}selected{% endif %} value="lccn">Library of Congress</option>
+                        <option {% if session['id']=="isbn" %}selected{% endif %} value="isbn">ISBN</option>
+                        <option {% if session['id']=="lccn" %}selected{% endif %} value="lccn">Library of Congress</option>
                     </select>
                     <input class="bar search_id" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                     <div onclick="clearID()">

@@ -41,7 +41,7 @@ def api(key, url, use_cache):
         data = ""
     return data
 
-
+# TODO WORK WITH OLID
 def correct_id(og_id, identifier):
     if identifier == "isbn":
         og_id = og_id.replace("-", "")
@@ -54,7 +54,7 @@ def correct_id(og_id, identifier):
 
 
 def parse_book_data(book_info):
-    # print(book_info)
+    a = book_info
     title = book_info.get('title', '')
     authors = ', '.join(author.get('name', '')
                         for author in book_info.get('authors', []))
@@ -76,7 +76,7 @@ def parse_book_data(book_info):
     subjects = ', '.join(subjects)
     return title, authors, publish_date, publisher, subjects
 
-
+# TODO WORK WITH OLID
 def parse_data(data, identifier, book_id):
     title = authors = publish_date = publisher = subjects = ""
     if len(data) > 0:
@@ -86,7 +86,7 @@ def parse_data(data, identifier, book_id):
             book_info)
     return title, authors, publish_date, publisher, subjects
 
-
+# TODO WORK WITH OLID
 def lookup_book_info(og_id, identifier, use_cache=True):
     book_id, identifier = correct_id(og_id, identifier)
     data = api(f"{identifier}:{book_id}",
