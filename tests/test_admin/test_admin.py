@@ -125,7 +125,7 @@ def test_export_to_json():
         assert i[7] is not None
         assert i[8] is not None
         assert i[9] is not None
-        assert i[11] is ''
+        assert i[11] == ''
 
     clear_data()
 
@@ -146,15 +146,15 @@ def test_import_from_json():
     subjects = "Biography, Horor"
 
     db.create_book(bookshelf, address, room, id, numbers, author,
-                   year, title, publisher, subjects, None, fake_db)
+                   year, title, publisher, None, subjects, fake_db)
 
-    export_to_json()
+    export_to_json(fake_db)
 
     clear_table("books", fake_db)
     db.init_db(fake_db)
 
     with open(admin.EXPORT_FILE_LOCATION, 'rb') as file_storage:
-        import_from_json(file_storage)
+        import_from_json(file_storage, fake_db)
 
     rows = db.read_books(fake_db)
     books = [dict(b_id=row[0],

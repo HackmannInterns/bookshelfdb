@@ -61,20 +61,20 @@ def get_settings():
     return Yaml_Settings()
 
 
-def export_to_json():
-    rows = db.read_books()
+def export_to_json(use_db=db.DB_LOCATION):
+    rows = db.read_books(db=use_db)
     rows_json = json.dumps(rows, indent=4)
     with open(EXPORT_FILE_LOCATION, 'w') as file:
         file.writelines(rows_json)
     return EXPORT_FILE_LOCATION
 
 
-def import_from_json(file_storage):
+def import_from_json(file_storage, db_to_use=db.DB_LOCATION):
     file_content = file_storage.read().decode('utf-8')
     data = json.loads(file_content)
     for i in data:
         db.create_book(i[1], i[2], i[3], i[4], i[5], i[6],
-                       i[7], i[8], i[9], i[10], i[11])
+                       i[7], i[8], i[9], i[10], i[11], db=db_to_use)
 
 
 def clear_cache_db():
