@@ -8,8 +8,6 @@ from dotenv import load_dotenv
 from os import getenv
 import version
 
-APP_VERSION = "0.9"
-
 app = Flask(__name__)
 AUTO = True
 

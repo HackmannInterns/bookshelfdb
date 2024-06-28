@@ -1,11 +1,11 @@
 import threading
 import time
 import requests
-from app import APP_VERSION
 import xml.etree.ElementTree as ET
 
 version_info = {}
 version_thread = None
+APP_VERSION = "0.9"
 
 
 def threaded_check():
