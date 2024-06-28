@@ -32,6 +32,7 @@ def threaded_check():
 
 
 def version_check():
+    global version_thread
     if version_thread is None or not version_thread.is_alive():
         version_thread = threading.Thread(target=threaded_check)
         version_thread.daemon = True

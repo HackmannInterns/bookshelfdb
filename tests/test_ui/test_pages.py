@@ -78,4 +78,4 @@ def test_recent_page(flask_init, browser):
 
 def test_about_page(flask_init, browser):
     browser.get("localhost:5000/about")
-    assert browser.title == "About Page"
+    assert browser.title == "About"

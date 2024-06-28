@@ -85,7 +85,7 @@ def test_add_book_page(flask_init, browser):
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/")
     browser.get("localhost:5000/add-book")
-    assert browser.title == "Book Form"
+    assert browser.title == "Add Book"
 
 
 # Requires an entry, not sure how we wanna handle this
