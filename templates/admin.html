@@ -61,11 +61,21 @@
     </div>
     <div class="versioning">
         <p>Current Version:
-            <span style="color: {% if Version.newest != Version.current %}red{% else %}green{% endif %};">
+            <span
+                style="color: {% if Version.newest and Version.newest != Version.current %}red{% else %}green{% endif %};">
                 {{ Version.current }}
             </span>
         </p>
-        <p>Newest Version: <a style="text-decoration:none;" href="{{ Version.newest_link }}" title="View Release Notes">{{ Version.newest }}</a></p>
+        {% if Version.newest %}
+        <p>Newest Version: <a style="text-decoration:none;" href="{{ Version.newest_link }}"
+                title="View Release Notes">{{ Version.newest }}</a></p>
+        {% if Version.newest and Version.newest != Version.current %}
+        <p>To update, if you're using Docker, run <code>docker compose pull && docker compose up -d</code>.<br>If you're running with gunicorn or python directly, pull the project's update and restart.</p>
+        {% endif %}
+        {% else %}
+        <p>Unable to check for current version, check our <a
+                href="https://github.com/HackmannInterns/bookshelfdb">GitHub</a> for status.</p>
+        {% endif %}
     </div>
 
     <div class="popup-overlay" id="popup-overlay"></div>
