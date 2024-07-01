@@ -4,8 +4,8 @@
     background-color: white;
 }
 
-.text-container{
-    
+.text-container {
+
     margin-left: 25%;
     margin-right: 25%;
     background-color: white;
@@ -42,16 +42,17 @@ h2 {
     }
 
     .first {
-    display: inline;
-}
+        display: inline;
+    }
+
     .image {
-    width: auto;
-    height: 100px;
-    display: flex;
-}
+        width: auto;
+        height: 100px;
+        display: flex;
+    }
 
     .text-container {
-        
+
         margin-left: 5%;
         margin-right: 5%;
         background-color: white;
@@ -142,6 +143,12 @@ form {
     padding: 0%;
 }
 
+.search_note {
+    color: #333;
+    padding: 0%;
+    font-size: medium;
+}
+
 
 .search {
     padding: 20px 0;
@@ -175,7 +182,7 @@ form {
     .form-body {
         padding: 25px;
     }
-    
+
 }
 
 .grid-overall {
@@ -298,6 +305,7 @@ form {
 .nav {
     justify-content: right;
 }
+
 .empty_space {
     width: 50px;
 }
@@ -308,6 +316,7 @@ form {
     text-align: center;
     padding: 100px 0;
 }
+
 @media only screen and (min-height: 400px) {
     .login-body {
         padding: 25px;
