@@ -120,6 +120,7 @@
             <div class="text-container">
                 <form method="post" style="margin: 5%;">
                     <h1>Search by Book Info</h1>
+                    <p>Note: Searching via Title and/or Author may take time depending on how popular the title is</p>
                     <div class="searching">
                         <label class="searching-label">Search via Title:</label>
                         <input class="bar search_title" type="text" name="search_title">
@@ -133,7 +134,7 @@
                         value="{{ room|default(session['room']) }}">
                     <input type="hidden" class="bookshelf" type="text" name="bookshelf"
                         value="{{ bookshelf|default(session['bookshelf']) }}">
-                    <input type="submit" name="action" value="Search via Title or Author">
+                    <input type="submit" name="action" value="Search via Title and/or Author">
                     <input type="hidden" name="button_class" value="title_author_search">
                 </form>
 
