@@ -167,12 +167,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // if autosubmit
-            // if isbn and title
-            // if it was autofilled (DO we need?)
+            // not EDIT
             b_title = document.querySelector("body > div > div.text-container > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_title").value;
             b_id = document.querySelector("body > div > div.text-container > form > div.grid-overall > div.grid > div.grid-bar > input.bar.book_id").value;
-            if (('{{ session["autosubmit"] }}' == "True") && ('{{ session["autofilled"] }}' == "True") && b_title != "" && b_id != "") {
+            if (!window.location.pathname.includes('/edit') && b_title != "" && b_id != "") {
                 countdown();
             }
         });
