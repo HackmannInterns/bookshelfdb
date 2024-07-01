@@ -54,7 +54,6 @@ def correct_id(og_id, identifier):
 
 
 def parse_book_data(book_info):
-    a = book_info
     title = book_info.get('title', '')
     authors = ', '.join(author.get('name', '')
                         for author in book_info.get('authors', []))

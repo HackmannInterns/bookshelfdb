@@ -142,23 +142,23 @@ def admin():
                            Admin=admin_settings.get_settings(), Version=version.version_info)
 
 
+@app.before_request
+def before_request():
+    if not request.path.startswith('/login') and not request.path.startswith('/static'):
+        session['referer'] = request.path
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # print(session.get('insufficient_perm', "NOT SET"))
-    referer = request.headers.get('Referer')
-    if referer is None:
-        referer = '/'
-    page = referer.split('/')[-1]
-    if page == 'login' or page == 'logout':
-        referer = '/'
+    print(session['referer'])
     if request.method == 'POST':
         entered_password = request.form['password']
         if entered_password == ADMIN_PASSWORD:
             session['authenticated'] = 'Admin'
-            return redirect(referer)
+            return redirect(session['referer'])
         elif entered_password == EDITOR_PASSWORD:
             session['authenticated'] = 'Editor'
-            return redirect(referer)
+            return redirect(session['referer'])
         # return "invalid password", 401
         raise IncorrectPassword("Invalid Password")
     return render_template('login.html')
