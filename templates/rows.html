@@ -19,9 +19,9 @@
 <body class="library-body">
     {% if Books | length == 0%}
     <div class="no-books">
-        <h3>The Library is empty. Please enter a book</h3>
+        <h3>The Library is Empty.</h3>
         <br>
-        <button class="button" onclick="location.href='/add-book';">Add Book</button>
+        <button class="button" onclick="location.href='/add-book';">Add Books</button>
     </div>
     {% else %}
     <table id="books" class="display" style="width:100%">
