@@ -102,6 +102,10 @@ form {
 }
 
 .popup {
+    width: 60%;
+    @media (min-width: 40em) {
+        width: 30%;
+    }
     display: none;
     position: fixed;
     top: 50%;

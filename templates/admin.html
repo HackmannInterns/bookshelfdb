@@ -79,15 +79,16 @@
         {% endif %}
     </div>
 
-    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
 
     <div class="popup" id="popup">
         <div class="popup-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
-            <h2>Preform Action?</h2>
+            <h2>Continue?</h2>
             <p></p>
             <form style="display: none;" action="/admin?q=import" method="POST" enctype="multipart/form-data">
                 <input type="file" name="file" />
+                <br>
                 <br>
                 <input type="submit" />
                 <br>
@@ -100,33 +101,46 @@
         function openPopup(ref) {
             document.getElementById("popup-overlay").style.display = "block";
             document.getElementById("popup").style.display = "block";
-            button_href = "/admin"
-            info_text = ""
+
+            button_href = "/admin";
+            h2_text = "Continue?";
+            info_text = "";
+
+            head2 = document.querySelector("#popup > div > h2");
             par = document.querySelector("#popup > div > p");
             button = document.querySelector("#popup > div > button");
             import_form = document.querySelector("#popup > div > form");
-            par.style.display = "block"
-            button.style.display = "inline-block"
-            import_form.style.display = "none"
+
+            par.style.display = "block";
+            button.style.display = "inline-block";
+            import_form.style.display = "none";
+
             switch (ref) {
                 case "clear":
+                    head2_text = "Clear Cache"
                     button_href += "?q=clear"
-                    info_text = "This action will clear the cache.  Only do so if you believe the metadata shown is wrong."
+                    info_text = "This action will clear the app's cache.\nThis only regards searching for books by their IDs, Titles, and Authors."
                     break;
                 case "import":
-                    par.style.display = "none"
+                    head2_text = "Import Library"
+                    info_text = "Select a file you've previously exported.\nThis action will append, not replace.";
+                    // par.style.display = "none"
                     button.style.display = "none"
                     import_form.style.display = "block"
                     break;
                 case "delete":
+                    head2_text = "Delete Database"
                     button_href += "?q=delete"
-                    info_text = "This action will delete all your data.  There is no way to recover from this, your data will be gone."
+                    info_text = "This action will delete your library.\nThere is no way to recover from this, your data will be gone.\nEnsure you have a backup first."
                     break;
                 default:
 
             }
             if (par) {
                 par.innerText = info_text;
+            };
+            if (head2) {
+                head2.innerText = head2_text;
             };
             if (button) {
                 button.onclick = function () {
