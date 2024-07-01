@@ -29,7 +29,7 @@ def threaded_check():
             version_info['newest_link'] = None
             version_info['newest'] = None
 
-            print(f"resp is {r.status_code}")
+            # print(f"resp is {r.status_code}")
         time.sleep(6*60*60)
 
 

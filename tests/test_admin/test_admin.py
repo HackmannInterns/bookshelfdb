@@ -64,7 +64,7 @@ def test_init_yaml():
     set_up()
     admin.ADMIN_YAML_LOCATION = yml
     init_yaml()
-    print(admin.ADMIN_YAML_LOCATION)
+    # print(admin.ADMIN_YAML_LOCATION)
     with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
 

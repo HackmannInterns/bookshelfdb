@@ -145,12 +145,12 @@ def admin():
 @app.before_request
 def before_request():
     if not request.path.startswith('/login') and not request.path.startswith('/static'):
-        session['referer'] = request.path
+        session['referer'] = request.full_path
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print(session['referer'])
+    # print(session['referer'])
     if request.method == 'POST':
         entered_password = request.form['password']
         if entered_password == ADMIN_PASSWORD:
@@ -159,7 +159,6 @@ def login():
         elif entered_password == EDITOR_PASSWORD:
             session['authenticated'] = 'Editor'
             return redirect(session['referer'])
-        # return "invalid password", 401
         raise IncorrectPassword("Invalid Password")
     return render_template('login.html')
 
