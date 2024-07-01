@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error Page</title>
+    <title>Error Encountered</title>
     <link rel="stylesheet" href='static\css\main.css'>
     <link rel="icon" type="image/png" sizes="16x16" href="static\images\favicon.png">
 </head>
@@ -13,12 +13,48 @@
 
 <body class="about-body">
     <div class="no-books">
-        <h3>{{ Error }}</h3>
+        <h3>{{ error_message }}</h3>
         <br>
-        <button>Go back</button>
+        <button onclick="window.history.back()">Go back</button>
+        <br>
+        <br>
+        <br>
+        <div class="submitting">
+            <p>Returning you to the prior page... (5)</p>
+            <br>
+            <button onclick="cancel_submit()">Cancel</button>
+        </div>
     </div>
-
     <script>
-        
+        var cancel = false;
+        document.addEventListener('DOMContentLoaded', function () {
+            countdown();
+        });
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function cancel_submit() {
+            cancel = true
+            submit_div = document.querySelector("body > div > div")
+            submit_div.style.display = "none"
+        }
+
+        async function countdown() {
+            // console.log("yes")
+            submit_p = document.querySelector("body > div > div > p")
+            submit_div = document.querySelector("body > div > div")
+            submit_div.style.display = "block"
+            for (var i = 5; i > -1; i--) {
+                // console.log(i);
+                submit_p.innerText = `Returning you to the prior page... (${i})`;
+                await sleep(1 * 1000);
+            }
+            if (!cancel) {
+                button = document.querySelector("body > div > button");
+                button.click()
+            }
+        }
     </script>
 </body>

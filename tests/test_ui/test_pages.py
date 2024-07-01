@@ -68,7 +68,7 @@ def test_delete_page(flask_init, browser):
 
 def test_none_page(flask_init, browser):
     browser.get("localhost:5000/jared")
-    assert browser.title == "404 Not Found"
+    assert browser.title == "Error Encountered"
 
 
 def test_recent_page(flask_init, browser):

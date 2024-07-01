@@ -1,6 +1,7 @@
 from enum import Enum
 
 from flask import Flask, request, redirect, render_template, session, send_file
+from json.decoder import JSONDecodeError
 import fetch
 import db
 import admin as admin_settings
@@ -16,7 +17,23 @@ ADMIN_PASSWORD = getenv('BOOKSHELFDB_PASSWORD', 'changeme')
 EDITOR_PASSWORD = getenv('BOOKSHELFDB_PASSWORD_EDITOR', 'changeme2')
 app.secret_key = getenv('BOOKSHELFDB_SECRET_KEY', 'changeme')
 
-# Maybe goes in new class, idk
+
+class NoResultsFound(Exception):
+    pass
+
+
+class IncorrectPassword(Exception):
+    pass
+
+
+class BadFileType(Exception):
+    pass
+
+
+@app.errorhandler(Exception)
+def handle_error(error):
+    error_message = str(error)
+    return render_template('error.html', error_message=error_message, header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
 class Auth(Enum):
@@ -75,7 +92,7 @@ def mass_search():
                   description=None, ) for row in rows]
     if len(books) == 0:
         # return "No results Found", 401
-        return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="No Results Found 401")
+        raise NoResultsFound("No Results Found")
     return render_template('rows.html', header_name=admin_settings.get_settings().header_name, Books=books, Permission=get_permissions())
 
 
@@ -109,9 +126,9 @@ def admin():
                     f = request.files['file']
                     admin_settings.import_from_json(f)
                     return redirect('/admin')
-                except UnicodeDecodeError:
+                except (UnicodeDecodeError, JSONDecodeError):
                     # return "File upload failed, ensure the file is a .json and exported from our application"
-                    return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="File upload failed, ensure the file is a .json and exported from our application")
+                    raise BadFileType("File upload failed, ensure the file is a .json exported from the application.")
 
     return render_template('admin.html', header_name=admin_settings.get_settings().header_name,
                            Admin=admin_settings.get_settings(), Permission=get_permissions(), Version=version.version_info)
@@ -135,7 +152,8 @@ def login():
             session['authenticated'] = 'Editor'
             return redirect(referer)
         # return "invalid password", 401
-        return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="Invalid Password 401")
+        # return render_template('error.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions(), Error="Invalid Password 401")
+        raise IncorrectPassword("Invalid Password")
     return render_template('login.html', header_name=admin_settings.get_settings().header_name, Permission=get_permissions())
 
 
