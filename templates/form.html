@@ -16,7 +16,7 @@
         <div class="text-container">
             <form method="post" style="margin: 5%;">
                 <h1>Add Book</h1>
-                <div class="grid-overall" >
+                <div class="grid-overall">
                     <div class="empty_space">
                     </div>
                     <div class="empty_space">
@@ -64,11 +64,11 @@
                             </label>
                         </div>
                         <div class="grid-locations-bar">
-                            <input class="bar address" type="text" name="address"
+                            <input oninput="handleChange(this)" class="address bar" type="text" name="address"
                                 value="{{ session['address']|default(address) }}"><br>
-                            <input class="bar room" type="text" name="room"
+                            <input oninput="handleChange(this)" class="room bar" type="text" name="room"
                                 value="{{ room|default(session['room']) }}"><br>
-                            <input class="bar bookshelf" type="text" name="bookshelf"
+                            <input oninput="handleChange(this)" class="bookshelf bar" type="text" name="bookshelf"
                                 value="{{ bookshelf|default(session['bookshelf']) }}"><br>
                         </div>
                     </div>
@@ -92,13 +92,21 @@
                 <form method="post" style="margin: 5%;">
                     <h1>Search by ID</h1>
                     <select required name="id_type" id="id_type">
-                        <option {% if session['id'] !="isbn" and session['id'] !="lccn" %}selected{% endif %} disabled value=""> --
+                        <option {% if session['id'] !="isbn" and session['id'] !="lccn" %}selected{% endif %} disabled
+                            value=""> --
                             Identifier Type -- </option>
                         <option {% if session['id']=="isbn" %}selected{% endif %} value="isbn">ISBN</option>
-                        <option {% if session['id']=="lccn" %}selected{% endif %} value="lccn">Library of Congress</option>
+                        <option {% if session['id']=="lccn" %}selected{% endif %} value="lccn">Library of Congress
+                        </option>
                     </select>
                     <input class="bar search_id" type="text" name="search_id" value="{{ search_id }}" required><br><br>
                     <div onclick="clearID()">
+                        <input type="hidden" class="address" type="text" name="address"
+                            value="{{ session['address']|default(address) }}">
+                        <input type="hidden" class="room" type="text" name="room"
+                            value="{{ room|default(session['room']) }}">
+                        <input type="hidden" class="bookshelf" type="text" name="bookshelf"
+                            value="{{ bookshelf|default(session['bookshelf']) }}">
                         <input type="submit" name="action" value="Search via ID">
                         <input type="hidden" name="button_class" value="auto">
                     </div>
@@ -117,6 +125,12 @@
                         <input class="bar search_author" type="text" name="search_author">
                         <div><br></div>
                     </div>
+                    <input type="hidden" class="address" type="text" name="address"
+                        value="{{ session['address']|default(address) }}">
+                    <input type="hidden" class="room" type="text" name="room"
+                        value="{{ room|default(session['room']) }}">
+                    <input type="hidden" class="bookshelf" type="text" name="bookshelf"
+                        value="{{ bookshelf|default(session['bookshelf']) }}">
                     <input type="submit" name="action" value="Search via Title or Author">
                     <input type="hidden" name="button_class" value="title_author_search">
                 </form>
@@ -177,6 +191,16 @@
 
         function isMobileDevice() {
             return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+
+        function handleChange(elem) {
+            // console.log("Text changed:", elem.value);
+            var all_of_elem = document.querySelectorAll('.' + elem.className.split(" ")[0])
+            var other_of_elem = Array.from(all_of_elem).slice(-2);
+            other_of_elem.forEach(element => {
+                // console.log(element)
+                element.value = elem.value
+            });
         }
 
         document.addEventListener("DOMContentLoaded", function () {

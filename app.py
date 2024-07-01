@@ -119,15 +119,15 @@ def admin():
             visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
 
     else:
-        if 'q' in request.args and request.args['q'] == "clear":
+        if request.args.get('q', "") == "clear":
             admin_settings.clear_cache_db()
-        elif 'q' in request.args and request.args['q'] == "delete":
+        elif request.args.get('q', "") == "delete":
             admin_settings.delete_main_db()
             session['recent'] = []
-        elif 'q' in request.args and request.args['q'] == "export":
+        elif request.args.get('q', "") == "export":
             file_location = admin_settings.export_to_json()
             return send_file(file_location, as_attachment=True)
-        elif 'q' in request.args and request.args['q'] == "import":
+        elif request.args.get('q', "") == "import":
             if request.method == 'POST':
                 try:
                     f = request.files['file']
@@ -188,8 +188,6 @@ def logout():
 # When you hit the /scan page, under all circumstances, it renders scan.html
 # nothing is passed in, scan.html works off JS
 # scan.html is currently unreachable in the header unless hit directly as scanapp.org is better
-
-
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
@@ -198,7 +196,6 @@ def scan():
 # When you hit the /library page, rows.html is rendered
 # It creates and passes in a dictionary containing all the row data for a Book
 # rows.html then processes this and creates a table, 1 row per DB entry
-# TODO: implement permissions
 @app.route('/library')
 def view():
     if not get_permissions().can_view_library:
@@ -224,13 +221,9 @@ def view():
 
 
 @app.route('/library-recent')
-# TODO: implement permissions
 def view2():
-    if 'recent' not in session:
-        session['recent'] = []
     rows = []
-    # print(session["recent"])
-    for i in session["recent"]:
+    for i in session.get("recent", []):
         rows.append(db.read_book(i))
     books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
@@ -249,10 +242,8 @@ def view2():
 
 @app.route('/delete')
 def delete():
-    if 'recent' not in session:
-        session['recent'] = []
     can_remove = get_permissions(is_recent=(
-        int(request.args.get('q', 0)) in session['recent'])).can_remove
+        int(request.args.get('q', 0)) in session.get('recent', []))).can_remove
     if 'q' in request.args and can_remove:
         db.delete_book(request.args['q'])
     elif 'q' in request.args and not can_remove:
@@ -265,11 +256,8 @@ def delete():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
-    if 'recent' not in session:
-        session['recent'] = []
-
     can_edit = get_permissions(is_recent=(
-        int(request.args.get('q', 0)) in session['recent'])).can_edit
+        int(request.args.get('q', 0)) in session.get('recent', []))).can_edit
     if 'q' in request.args and can_edit:
         session['q'] = True
         db_id = request.args['q']
@@ -312,11 +300,13 @@ def edit():
 # When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
 # When the page is first met, it is rendered with nothing else happening
 
-# TODO: implement permissions & change page
-
-
 @app.route('/add-book', methods=['GET', 'POST'])
 def add_book():
+    if request.method == 'POST':
+        session['address'] = request.form.get('address')
+        session['room'] = request.form.get('room')
+        session['bookshelf'] = request.form.get('bookshelf')
+
     if not get_permissions().can_add:
         session['description'] = get_permissions().desc_can_add
         session['required_permission'] = get_permissions().req_perms_add.name
@@ -341,10 +331,6 @@ def add_book():
         room = request.form['room']
         bookshelf = request.form['bookshelf']
         subjects = request.form['subjects']
-        session['address'] = address
-        session['room'] = room
-        session['bookshelf'] = bookshelf
-        session['edit'] = False
         b_id = db.create_book(bookshelf, address, room, book_id, id_type, author, year,
                               title, publisher, None, subjects)
 
