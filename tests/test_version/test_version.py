@@ -1,6 +1,7 @@
 import responses
-from version import version_info, update_version_info, ATOM_LINK, APP_VERSION
-from unittest.mock import patch
+from version import version_info, update_version_info, version_check, ATOM_LINK, APP_VERSION
+from unittest.mock import patch, MagicMock
+import version
 
 
 def test_200_response():
@@ -33,7 +34,7 @@ def test_200_response():
     with patch('requests.get') as mock_get:
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = mock_response
-        responses.add(responses.GET, ATOM_LINK, body=mock_response, status=200)
+        responses.add(responses.GET, ATOM_LINK, body=mock_response)
 
         update_version_info()
 
@@ -41,3 +42,79 @@ def test_200_response():
         assert version_info.get(
             'newest_link') == 'https://github.com/jellyfin/jellyfin/releases/tag/v10.9.7'
         assert version_info.get('current') == APP_VERSION
+
+
+def test_404_response():
+    mock_response = """Not Found"""
+
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 404
+        mock_get.return_value.text = mock_response
+        responses.add(responses.GET, ATOM_LINK, body=mock_response)
+
+        update_version_info()
+
+        assert version_info.get('newest') is None
+        assert version_info.get(
+            'newest_link') is None
+        assert version_info.get('current') == APP_VERSION
+
+
+def test_empty_200_response():
+    mock_response = """
+    <feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+    </feed>
+    """
+
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = mock_response
+        responses.add(responses.GET, ATOM_LINK, body=mock_response)
+
+        update_version_info()
+
+        assert version_info.get('newest') is None
+        assert version_info.get(
+            'newest_link') is None
+        assert version_info.get('current') == APP_VERSION
+
+
+def test_malformed_response():
+    mock_response = """NoGood"""
+
+    with patch('requests.get') as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = mock_response
+        responses.add(responses.GET, ATOM_LINK, body=mock_response)
+
+        update_version_info()
+
+        assert version_info.get('newest') is None
+        assert version_info.get(
+            'newest_link') is None
+        assert version_info.get('current') == APP_VERSION
+
+
+def test_threads():
+    with patch('version.threading.Thread') as MockThread:
+        mock_thread = MagicMock()
+        MockThread.return_value = mock_thread
+
+        # starts thread
+        version_check()
+        assert MockThread.called
+        assert mock_thread.start.called
+        MockThread.reset_mock()
+        mock_thread.reset_mock()
+
+        # ensure doesn't start if it's running
+        mock_thread.is_alive.return_value = True
+        version_check()
+        assert not MockThread.called
+        assert not mock_thread.start.called
+
+        # ensure does start if it isn't running
+        mock_thread.is_alive.return_value = False
+        version_check()
+        assert MockThread.called
+        assert mock_thread.start.called
