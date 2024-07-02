@@ -42,3 +42,6 @@ jobs:
           pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_admin/test_admin.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_version/test_version.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_viewer.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_editor.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_admin.py --doctest-modules --junitxml=junit/test-results.xml
