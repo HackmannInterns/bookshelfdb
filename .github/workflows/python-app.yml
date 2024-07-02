@@ -5,9 +5,9 @@ name: Python Tests
 
 on:
   push:
-    branches: ['*']
+    branches: ["*"]
   pull_request:
-    branches: ['*']
+    branches: ["*"]
 
 permissions:
   contents: read
@@ -40,3 +40,5 @@ jobs:
           pytest tests/test_fetch/test_cache.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_admin/test_admin.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_version/test_version.py --doctest-modules --junitxml=junit/test-results.xml
