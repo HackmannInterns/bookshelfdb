@@ -1,7 +1,6 @@
 import responses
 from version import version_info, update_version_info, version_check, ATOM_LINK, APP_VERSION
 from unittest.mock import patch, MagicMock
-import version
 
 
 def test_200_response():
