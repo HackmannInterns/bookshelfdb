@@ -61,11 +61,11 @@ Editors can add entries, edit any entries, and if editor_can_remove is enabled, 
 ### Default Permissions
 |     Permissions | Viewer | Viewer (recent) | Editor | Editor (recent) | Admin |
 |----------------:|:------:|:---------------:|:------:|:---------------:|:-----:|
-|             Add |   0*   |       0*        |   1    |        1        |   1   |
-|          Remove |   0    |        1        |   1*   |        1        |   1   |
-|            Edit |   0    |        1        |   1    |        1        |   1   |
-| View Admin Page |   0    |        0        |   0    |        0        |   1   |
 |       View Data |   1    |        1        |   1    |        1        |   1   |
+|             Add |   0*   |       0*        |   1    |        1        |   1   |
+|            Edit |   0    |        1        |   1    |        1        |   1   |
+|          Remove |   0    |        1        |   1*   |        1        |   1   |
+| View Admin Page |   0    |        0        |   0    |        0        |   1   |
 
 \* = Default behavior able to be changed via config - either using the web UI (via the /admin page) or directly changing the .yml (in /data) file.
 

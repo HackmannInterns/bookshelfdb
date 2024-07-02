@@ -148,13 +148,6 @@
     </div>
     <script>
         var cancel = false;
-        window.onload = function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('edit')) {
-                var searchDiv = document.querySelector('.search');
-                searchDiv.style.display = 'none';
-            }
-        };
 
         function clearID() {
             history.pushState({}, document.title, window.location.pathname);

@@ -1,13 +1,13 @@
-from enum import Enum
-
 from flask import Flask, request, redirect, render_template, session, send_file
 from json.decoder import JSONDecodeError
+from dotenv import load_dotenv
+from os import getenv
+
 import fetch
 import db
 import admin as admin_settings
-from dotenv import load_dotenv
-from os import getenv
 import version
+from permissions import get_permissions, is_permitted
 
 app = Flask(__name__)
 
@@ -43,46 +43,6 @@ def handle_error(error):
     return render_template('error.html', error_message=error_message)
 
 
-class Auth(Enum):
-    Viewer = 0
-    Editor = 1
-    Admin = 2
-
-
-def get_permissions(is_recent=False):
-    user_type = Auth[session.get('authenticated', 'Viewer')]
-    yaml_settings = admin_settings.get_settings()
-
-    class Permissions:
-        # setting add perms
-        req_perms_add = Auth['Viewer'] if user_type is Auth['Viewer'] and yaml_settings.visitor_can_add else Auth['Editor']
-        desc_can_add = 'You cannot add with your current authentication level'
-        can_add = user_type.value >= req_perms_add.value
-
-        # setting remove perms
-        req_perms_remove = Auth['Editor'] if user_type == Auth['Editor'] and (yaml_settings.editor_can_remove or is_recent) else (
-            Auth['Viewer'] if user_type == Auth['Viewer'] and is_recent else Auth['Admin'])
-        desc_can_remove = 'You cannot remove with your current authentication level'
-        can_remove = user_type.value >= req_perms_remove.value
-
-        # setting edit perms
-        req_perms_edit = Auth['Viewer'] if is_recent else Auth['Editor']
-        desc_can_edit = 'You cannot edit with your current authentication level'
-        can_edit = user_type.value >= req_perms_edit.value
-
-        # setting admin perms
-        req_perms_admin = Auth['Admin']
-        desc_can_view_admin = 'You cannot view admin with your current authentication level'
-        can_view_admin = user_type.value >= Auth['Admin'].value
-
-        # setting viewing perms
-        req_perms_view_library = Auth['Viewer']
-        desc_can_view_library = 'You cannot view the library page with your current authentication level'
-        can_view_library = user_type.value >= Auth['Viewer'].value
-
-    return Permissions()
-
-
 @app.route('/search', methods=["GET", "POST"])
 def mass_search():
     search_title = session.get('search_title', "")
@@ -105,11 +65,9 @@ def mass_search():
 
 @app.route('/admin', methods=["GET", "POST"])
 def admin():
-    if not get_permissions().can_view_admin:
-        session['description'] = get_permissions().desc_can_view_admin
-        session['required_permission'] = get_permissions().req_perms_admin.name
-        session['insufficient_perm'] = True
+    if not is_permitted('can_view_admin'):
         return redirect('/login')
+
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
         new_head = str(request.form.get("header_name", ""))
@@ -197,11 +155,7 @@ def scan():
 # rows.html then processes this and creates a table, 1 row per DB entry
 @app.route('/library')
 def view():
-    if not get_permissions().can_view_library:
-        session['description'] = get_permissions().desc_can_view_library
-        session['required_permission'] = get_permissions(
-        ).req_perms_view_library.name
-        session['insufficient_perm'] = True
+    if not is_permitted('can_view_library'):
         return redirect('/login')
     rows = db.read_books()
     books = [dict(b_id=row[0],
@@ -236,28 +190,28 @@ def view2():
                   publisher=row[9],
                   subjects=row[11],
                   description=row[10], ) for row in rows if row is not None]
+    if books == []:
+        session.pop('recent', None)
+        return redirect('/')
     return render_template('rows.html', Books=books)
 
 
 @app.route('/delete')
 def delete():
-    can_remove = get_permissions(is_recent=(
-        int(request.args.get('q', 0)) in session.get('recent', []))).can_remove
-    if 'q' in request.args and can_remove:
-        db.delete_book(request.args['q'])
-    elif 'q' in request.args and not can_remove:
-        session['description'] = get_permissions().desc_can_remove
-        session['required_permission'] = get_permissions().req_perms_remove.name
-        session['insufficient_perm'] = True
-        return redirect('/login')
+    if 'q' in request.args:
+        if not is_permitted('can_remove', check_for_recent=int(request.args.get('q', -1))):
+            return redirect('/login')
+        else:
+            db.delete_book(request.args['q'])
     return redirect('/library')
 
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
-    can_edit = get_permissions(is_recent=(
-        int(request.args.get('q', 0)) in session.get('recent', []))).can_edit
-    if 'q' in request.args and can_edit:
+    if 'q' in request.args:
+        if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
+            return redirect('/login')
+
         session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
@@ -267,11 +221,6 @@ def edit():
                                title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7],
                                publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11],
                                edit=True)
-    elif 'q' in request.args and not can_edit:
-        session['description'] = get_permissions().desc_can_edit
-        session['required_permission'] = get_permissions().req_perms_edit.name
-        session['insufficient_perm'] = True
-        return redirect('/login')
 
     if request.method == 'POST':
         id = request.form['db_id']
@@ -301,16 +250,14 @@ def edit():
 
 @app.route('/add-book', methods=['GET', 'POST'])
 def add_book():
+
+    if not is_permitted('can_add'):
+        return redirect('/login')
+
     if request.method == 'POST':
         session['address'] = request.form.get('address')
         session['room'] = request.form.get('room')
         session['bookshelf'] = request.form.get('bookshelf')
-
-    if not get_permissions().can_add:
-        session['description'] = get_permissions().desc_can_add
-        session['required_permission'] = get_permissions().req_perms_add.name
-        session['insufficient_perm'] = True
-        return redirect('/login')
 
     # For when you search via title/author
     if request.method == 'POST' and request.form.get('button_class') == 'title_author_search':
