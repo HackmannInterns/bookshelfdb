@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, send_file
+from flask import Flask, request, redirect, render_template, session, send_file, url_for
 from json.decoder import JSONDecodeError
 from dotenv import load_dotenv
 from os import getenv
@@ -66,7 +66,7 @@ def mass_search():
 @app.route('/admin', methods=["GET", "POST"])
 def admin():
     if not is_permitted('can_view_admin'):
-        return redirect('/login')
+        return redirect(url_for('login'))
 
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
@@ -90,7 +90,7 @@ def admin():
                 try:
                     f = request.files['file']
                     admin_settings.import_from_json(f)
-                    return redirect('/admin')
+                    return redirect(url_for('admin'))
                 except (UnicodeDecodeError, JSONDecodeError):
                     # return "File upload failed, ensure the file is a .json and exported from our application"
                     raise BadFileType(
@@ -142,21 +142,15 @@ def logout():
     return redirect(referer)
 
 
-# When you hit the /scan page, under all circumstances, it renders scan.html
-# nothing is passed in, scan.html works off JS
-# scan.html is currently unreachable in the header unless hit directly as scanapp.org is better
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
 
 
-# When you hit the /library page, rows.html is rendered
-# It creates and passes in a dictionary containing all the row data for a Book
-# rows.html then processes this and creates a table, 1 row per DB entry
 @app.route('/library')
 def view():
     if not is_permitted('can_view_library'):
-        return redirect('/login')
+        return redirect(url_for('login'))
     rows = db.read_books()
     books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
@@ -192,7 +186,7 @@ def view2():
                   description=row[10], ) for row in rows if row is not None]
     if books == []:
         session.pop('recent', None)
-        return redirect('/')
+        return redirect(url_for('index'))
     return render_template('rows.html', Books=books)
 
 
@@ -200,23 +194,23 @@ def view2():
 def delete():
     if 'q' in request.args:
         if not is_permitted('can_remove', check_for_recent=int(request.args.get('q', -1))):
-            return redirect('/login')
+            return redirect(url_for('login'))
         else:
             db.delete_book(request.args['q'])
-    return redirect('/library')
+    return redirect(url_for('view'))
 
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
     if 'q' in request.args:
         if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
-            return redirect('/login')
+            return redirect(url_for('login'))
 
         session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:
-            return redirect('/library')
+            return redirect(url_for('view'))
         return render_template('form.html', db_id=db_id,
                                title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7],
                                publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11],
@@ -237,22 +231,17 @@ def edit():
         db.update_book(id=id, bookshelf_location=bookshelf, address=address, room=room, identifier=book_id,
                        identifier_type=id_type, author=author, year=year,
                        title=title, publisher=publisher, subjects=subjects)
-        return redirect('/library')
+        return redirect(url_for('view'))
 
     else:
-        return redirect('/library')
-    # End Editting
+        return redirect(url_for('view'))
 
-
-# When /add-book is hit, form.html is rendered.  There are a lot of cases, as this page is used frequently
-# When data is entered sutomatically, a button is valued at auto, which will fill the data using fetch
-# When the page is first met, it is rendered with nothing else happening
 
 @app.route('/add-book', methods=['GET', 'POST'])
 def add_book():
 
     if not is_permitted('can_add'):
-        return redirect('/login')
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         session['address'] = request.form.get('address')
@@ -263,7 +252,7 @@ def add_book():
     if request.method == 'POST' and request.form.get('button_class') == 'title_author_search':
         session['search_title'] = request.form.get('search_title', "")
         session['search_author'] = request.form.get('search_author', "")
-        return redirect("/search")
+        return redirect(url_for('search'))
 
     # Manual entry via header "Add Book"
     if request.method == 'POST' and request.form.get('button_class') == 'manual':
@@ -315,7 +304,7 @@ def add_book():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return redirect('/library')
+    return redirect(url_for('view'))
 
 
 @app.route('/about')
