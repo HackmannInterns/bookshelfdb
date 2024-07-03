@@ -10,7 +10,8 @@ class Auth(Enum):
 
 def is_permitted(permission, check_for_recent=False):
     from app import session
-    is_recent = check_for_recent if check_for_recent is False else check_for_recent in session.get('recent', [])
+    is_recent = check_for_recent if check_for_recent is False else check_for_recent in session.get(
+        'recent', [])
     perms = get_permissions(is_recent=is_recent)
     permitted = getattr(perms, permission)
 
@@ -37,13 +38,13 @@ def get_permissions(is_recent=False):
 
     class Permissions:
         # setting add perms
-        req_perms_can_add = Auth['Viewer'] if user_type is Auth['Viewer'] and yaml_settings.visitor_can_add else Auth['Editor']
+        req_perms_can_add = Auth['Viewer'] if yaml_settings.visitor_can_add else Auth['Editor']
         desc_can_add = 'You cannot add with your current authentication level'
         can_add = user_type.value >= req_perms_can_add.value
 
         # setting remove perms
-        req_perms_can_remove = Auth['Editor'] if user_type == Auth['Editor'] and (yaml_settings.editor_can_remove or is_recent) else (
-            Auth['Viewer'] if user_type == Auth['Viewer'] and is_recent else Auth['Admin'])
+        req_perms_can_remove = Auth['Viewer'] if is_recent else Auth[
+            'Editor'] if yaml_settings.editor_can_remove else Auth['Admin']
         desc_can_remove = 'You cannot remove with your current authentication level'
         can_remove = user_type.value >= req_perms_can_remove.value
 
