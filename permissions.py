@@ -37,10 +37,21 @@ def get_permissions(is_recent=False):
     yaml_settings = admin_settings.get_settings()
 
     class Permissions:
+
+        # setting viewing perms
+        req_perms_can_view_library = Auth['Viewer']
+        desc_can_view_library = 'You cannot view the library page with your current authentication level'
+        can_view_library = user_type.value >= Auth['Viewer'].value
+
         # setting add perms
         req_perms_can_add = Auth['Viewer'] if yaml_settings.visitor_can_add else Auth['Editor']
         desc_can_add = 'You cannot add with your current authentication level'
         can_add = user_type.value >= req_perms_can_add.value
+
+        # setting edit perms
+        req_perms_can_edit = Auth['Viewer'] if is_recent else Auth['Editor']
+        desc_can_edit = 'You cannot edit with your current authentication level'
+        can_edit = user_type.value >= req_perms_can_edit.value
 
         # setting remove perms
         req_perms_can_remove = Auth['Viewer'] if is_recent else Auth[
@@ -48,19 +59,9 @@ def get_permissions(is_recent=False):
         desc_can_remove = 'You cannot remove with your current authentication level'
         can_remove = user_type.value >= req_perms_can_remove.value
 
-        # setting edit perms
-        req_perms_can_edit = Auth['Viewer'] if is_recent else Auth['Editor']
-        desc_can_edit = 'You cannot edit with your current authentication level'
-        can_edit = user_type.value >= req_perms_can_edit.value
-
         # setting admin perms
         req_perms_can_view_admin = Auth['Admin']
         desc_can_view_admin = 'You cannot view admin with your current authentication level'
         can_view_admin = user_type.value >= Auth['Admin'].value
-
-        # setting viewing perms
-        req_perms_can_view_library = Auth['Viewer']
-        desc_can_view_library = 'You cannot view the library page with your current authentication level'
-        can_view_library = user_type.value >= Auth['Viewer'].value
 
     return Permissions()
