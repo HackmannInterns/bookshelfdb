@@ -55,7 +55,7 @@ def handle_error(error):
     return render_template('error.html', error_message=error_message)
 
 
-@app.route('/search', methods=["GET", "POST"])
+@app.route('/search')
 def mass_search():
     search_title = session.get('search_title', "")
     search_author = session.get('search_author', "")
@@ -102,7 +102,6 @@ def admin():
                     admin_settings.import_from_json(f)
                     return redirect(url_for('admin'))
                 except (UnicodeDecodeError, JSONDecodeError):
-                    # return "File upload failed, ensure the file is a .json and exported from our application"
                     raise BadFileType(
                         "File upload failed, ensure the file is a .json exported from the application.")
 
@@ -118,7 +117,6 @@ def before_request():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # print(session['referer'])
     if request.method == 'POST':
         entered_password = request.form['password']
         if entered_password == ADMIN_PASSWORD:
@@ -213,7 +211,6 @@ def edit():
     if 'q' in request.args:
         if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
             return redirect(url_for('login'))
-        session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:
@@ -252,68 +249,60 @@ def add_book():
         session['room'] = request.form.get('room')
         session['bookshelf'] = request.form.get('bookshelf')
 
-    # For when you search via title/author
-    if request.method == 'POST' and request.form.get('button_class') == 'title_author_search':
-        session['search_title'] = request.form.get('search_title', "")
-        session['search_author'] = request.form.get('search_author', "")
-        return redirect(url_for('search'))
+        # Manual entry via header "Add Book"
+        if request.form.get('button_class') == 'manual':
+            title = request.form['title']
+            author = request.form['author']
+            book_id = request.form['book_id']
+            id_type = request.form['id_type']
+            year = request.form['year']
+            publisher = request.form['publisher']
+            address = request.form['address']
+            room = request.form['room']
+            bookshelf = request.form['bookshelf']
+            subjects = request.form['subjects']
+            b_id = db.create_book(bookshelf, address, room, book_id, id_type, author, year,
+                                  title, publisher, None, subjects)
+            session.setdefault('recent', []).append(b_id)
 
-    # Manual entry via header "Add Book"
-    if request.method == 'POST' and request.form.get('button_class') == 'manual':
-        title = request.form['title']
-        author = request.form['author']
-        book_id = request.form['book_id']
-        id_type = request.form['id_type']
-        year = request.form['year']
-        publisher = request.form['publisher']
-        address = request.form['address']
-        room = request.form['room']
-        bookshelf = request.form['bookshelf']
-        subjects = request.form['subjects']
-        b_id = db.create_book(bookshelf, address, room, book_id, id_type, author, year,
-                              title, publisher, None, subjects)
+            return render_template('form.html',
+                                   address=admin_settings.get_settings().default_address)
 
-        if 'recent' not in session:
-            session['recent'] = []
-        session['recent'].append(b_id)
-        return render_template('form.html',
-                               address=admin_settings.get_settings().default_address)
+        # For when you search via title/author
+        elif request.form.get('button_class') == 'title_author_search':
+            session['search_title'] = request.form.get('search_title', "")
+            session['search_author'] = request.form.get('search_author', "")
+            return redirect(url_for('mass_search'))
 
     # isbn/lccn given
-    elif request.method == 'POST' and request.form.get(
-            'button_class') == 'auto' or 'isbn' in request.args or 'olid' in request.args:
+    elif (request.method == 'POST' and request.form.get('button_class') == 'auto') or ('isbn' in request.args or 'olid' in request.args):
         if 'isbn' in request.args:
             id_type = 'isbn'
-            session['id'] = 'isbn'
             book_id = request.args['isbn']
         elif 'olid' in request.args:
             id_type = 'olid'
-            session['id'] = 'olid'
             book_id = request.args['olid']
-        else:
+        else:  # It's a auto
             id_type = request.form['id_type']
             book_id = request.form['search_id']
+            session['id'] = request.form.get('id_type')
+
         title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
-        session['id'] = request.form.get('id_type')
-        return render_template('form.html',
-                               address=admin_settings.get_settings().default_address, title=title, author=author,
-                               book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher,
-                               subjects=subjects)
+        return render_template('form.html', address=admin_settings.get_settings().default_address,
+                               title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 
-    else:
-        return render_template('form.html',
-                               address=admin_settings.get_settings().default_address)
-
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    return redirect(url_for('view'))
+    return render_template('form.html', address=admin_settings.get_settings().default_address)
 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/')
+def index():
+    return redirect(url_for('view'))
 
 
 def init_all():
