@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Flask, request, redirect, render_template, session, send_file, url_for
 from json.decoder import JSONDecodeError
 from dotenv import load_dotenv
@@ -27,6 +28,17 @@ class IncorrectPassword(Exception):
 
 class BadFileType(Exception):
     pass
+
+
+def permission_required(permission):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if not is_permitted(permission):
+                return redirect(url_for('login'))
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 
 @app.context_processor
@@ -64,10 +76,8 @@ def mass_search():
 
 
 @app.route('/admin', methods=["GET", "POST"])
+@permission_required('can_view_admin')
 def admin():
-    if not is_permitted('can_view_admin'):
-        return redirect(url_for('login'))
-
     if 'address' in request.form and request.method == 'POST':
         new_add = str(request.form.get("address", ""))
         new_head = str(request.form.get("header_name", ""))
@@ -148,9 +158,8 @@ def scan():
 
 
 @app.route('/library')
+@permission_required('can_view_library')
 def view():
-    if not is_permitted('can_view_library'):
-        return redirect(url_for('login'))
     rows = db.read_books()
     books = [dict(b_id=row[0],
                   bookshelf_location=row[1],
@@ -193,10 +202,9 @@ def view2():
 @app.route('/delete')
 def delete():
     if 'q' in request.args:
-        if not is_permitted('can_remove', check_for_recent=int(request.args.get('q', -1))):
+        if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
             return redirect(url_for('login'))
-        else:
-            db.delete_book(request.args['q'])
+        db.delete_book(request.args['q'])
     return redirect(url_for('view'))
 
 
@@ -205,7 +213,6 @@ def edit():
     if 'q' in request.args:
         if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
             return redirect(url_for('login'))
-
         session['q'] = True
         db_id = request.args['q']
         book = db.read_book(db_id)
@@ -238,11 +245,8 @@ def edit():
 
 
 @app.route('/add-book', methods=['GET', 'POST'])
+@permission_required('can_add')
 def add_book():
-
-    if not is_permitted('can_add'):
-        return redirect(url_for('login'))
-
     if request.method == 'POST':
         session['address'] = request.form.get('address')
         session['room'] = request.form.get('room')
