@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Flask, request, redirect, render_template, session, send_file, url_for
+from flask import Flask, request, redirect, render_template, session, send_file, url_for, jsonify
 from json.decoder import JSONDecodeError
 from dotenv import load_dotenv
 from os import getenv
@@ -172,6 +172,15 @@ def view():
                   subjects=row[11],
                   description=row[10], ) for row in rows]
     return render_template('rows.html', Books=books)
+
+
+@app.route('/update', methods=["GET"])
+def update():
+    import time
+    time.sleep(0.5)
+    version.update_version_info()
+    return jsonify({'newest': version.version_info.get('newest'), 'newest_link': version.version_info.get('newest_link')})
+    # return jsonify({'newest': '10.9.8', 'newest_link': 'https://github.com/jellyfin/jellyfin/releases/tag/v10.9.8'})
 
 
 @app.route('/library-recent')

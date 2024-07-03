@@ -9,7 +9,7 @@ version_info = {}
 version_thread = None
 # TODO: Change with our link && change the version to the right date (not just Jellyfin copied stuff) :)
 ATOM_LINK = "https://github.com/jellyfin/jellyfin/releases.atom"
-APP_VERSION = "10.9.6"
+APP_VERSION = "10.9.7"
 
 
 def update_version_info():
