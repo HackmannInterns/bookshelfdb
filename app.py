@@ -55,10 +55,10 @@ def handle_error(error):
     return render_template('error.html', error_message=error_message)
 
 
-@app.route('/search')
+@app.route('/search', methods=["GET", "POST"])
 def mass_search():
-    search_title = session.get('search_title', "")
-    search_author = session.get('search_author', "")
+    search_title = request.form.get('search_title', "")
+    search_author = request.form.get('search_author', "")
     rows = fetch.search_by_author_title(search_author, search_title)
     books = [dict(b_id=-1,
                   identifier=row['olid'],
@@ -267,12 +267,6 @@ def add_book():
 
             return render_template('form.html',
                                    address=admin_settings.get_settings().default_address)
-
-        # For when you search via title/author
-        elif request.form.get('button_class') == 'title_author_search':
-            session['search_title'] = request.form.get('search_title', "")
-            session['search_author'] = request.form.get('search_author', "")
-            return redirect(url_for('mass_search'))
 
     # isbn/lccn given
     elif (request.method == 'POST' and request.form.get('button_class') == 'auto') or ('isbn' in request.args or 'olid' in request.args):

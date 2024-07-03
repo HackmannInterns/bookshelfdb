@@ -39,10 +39,10 @@ def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=No
     with open(ADMIN_YAML_LOCATION, 'r') as file:
         data = yaml.safe_load(file)
 
-    data['visitor_can_add'] = visitor_can_add if visitor_can_add is not None else data['visitor_can_add']
-    data['editor_can_remove'] = editor_can_remove if editor_can_remove is not None else data['editor_can_remove']
-    data['default_address'] = default_address if default_address is not None else data['default_address']
-    data['header_name'] = header_name if header_name is not None else data['header_name']
+        data['visitor_can_add'] = visitor_can_add if visitor_can_add is not None else data['visitor_can_add']
+        data['editor_can_remove'] = editor_can_remove if editor_can_remove is not None else data['editor_can_remove']
+        data['default_address'] = default_address if default_address is not None else data['default_address']
+        data['header_name'] = header_name if header_name is not None else data['header_name']
 
     with open(ADMIN_YAML_LOCATION, 'w') as file:
         yaml.safe_dump(data, file)
