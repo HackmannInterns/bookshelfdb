@@ -260,6 +260,8 @@ def edit():
 @app.route('/add-book', methods=['GET', 'POST'])
 @permission_required('can_add')
 def add_book():
+    print(f'Method: {request.method}')
+    print(f'Button: {request.form.get("button_class")}')
     if request.method == 'POST':
         session['address'] = request.form.get('address')
         session['room'] = request.form.get('room')
@@ -285,7 +287,8 @@ def add_book():
                                    address=admin_settings.get_settings().default_address)
 
     # isbn/lccn given
-    elif (request.method == 'POST' and request.form.get('button_class') == 'auto') or ('isbn' in request.args or 'olid' in request.args):
+    if (request.method == 'POST' and request.form.get('button_class') == 'auto') or ('isbn' in request.args or 'olid' in request.args):
+        print("here i am")
         if 'isbn' in request.args:
             id_type = 'isbn'
             book_id = request.args['isbn']

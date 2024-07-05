@@ -91,8 +91,8 @@
             <div class="text-container">
                 <form method="post" style="margin: 5%;">
                     <h1>Search for Book by ID</h1>
-                    <p class="search_note" style="display: none;">Note: Dashes required in LCCNs, but not in other
-                        search types</p>
+                    <p class="search_note" style="display: none;">Note: Dashes are required in LCCNs, but not in other
+                        search types.</p>
                     <select onchange="show_warning()" required name="id_type" id="id_type">
                         <option {% if session['id'] not in ["isbn", "lccn" , "olid" ] %}selected{% endif %} disabled
                             value="">
