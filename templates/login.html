@@ -12,9 +12,12 @@
 
 <body class="login-body">
     <div class="main">
-        {% if session['insufficient_perm'] %}
-        <h3> {{session['description']}}; {{session['required_permission']}} or greater required </h3>
-        {% endif %}
+
+        {% for message in get_flashed_messages() %}
+        <h3> {{message['description']}}; {{message['required_permission']}} or greater required </h3>
+        <h4>Log in to below continue with your requested action.</h4>
+        {% endfor %}
+
         {% if session['authenticated'] %}
         <label>You're are currently logged in as an {{ session['authenticated'] }}</label>
         <br>

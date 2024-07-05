@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Flask, request, redirect, render_template, session, send_file, url_for, jsonify
+from flask import Flask, request, redirect, render_template, session, send_file, url_for, jsonify, flash
 from json.decoder import JSONDecodeError
 from dotenv import load_dotenv
 from os import getenv
@@ -30,12 +30,24 @@ class BadFileType(Exception):
     pass
 
 
+def send_to_login(permission):
+    # Set permission (used to be session)
+    perms = get_permissions()
+    description = getattr(perms, f"desc_{permission}")
+    required_permission = getattr(
+        perms, f"req_perms_{permission}").name
+    flash({'description': description,
+          'required_permission': required_permission})
+
+    return render_template('login.html')
+
+
 def permission_required(permission):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if not is_permitted(permission):
-                return redirect(url_for('login'))
+                return send_to_login(permission)
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -129,13 +141,6 @@ def login():
     return render_template('login.html')
 
 
-@app.after_request
-def clear_session_test(response):
-    if request.path == '/login':
-        session.pop('insufficient_perm', None)
-    return response
-
-
 @app.route('/logout')
 def logout():
     referer = request.headers.get('Referer')
@@ -210,7 +215,8 @@ def view2():
 def delete():
     if 'q' in request.args:
         if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
-            return redirect(url_for('login'))
+            # return redirect(url_for('login'))
+            return send_to_login('can_remove')
         db.delete_book(request.args['q'])
     return redirect(url_for('view'))
 
@@ -219,7 +225,8 @@ def delete():
 def edit():
     if 'q' in request.args:
         if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
-            return redirect(url_for('login'))
+            # return redirect(url_for('login'))
+            return send_to_login('can_edit')
         db_id = request.args['q']
         book = db.read_book(db_id)
         if book is None:

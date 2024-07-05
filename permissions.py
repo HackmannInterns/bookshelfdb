@@ -15,8 +15,8 @@ def is_permitted(permission, check_for_recent=False):
     perms = get_permissions(is_recent=is_recent)
     permitted = getattr(perms, permission)
 
-    if not permitted:
-        set_session_permissions(permission)
+    # if not permitted:
+    #     set_session_permissions(permission)
     return permitted
 
 
