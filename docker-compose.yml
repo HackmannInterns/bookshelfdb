@@ -1,6 +1,6 @@
 services:
   flask-app:
-    image: "alexreynen/bookshelfdb:latest"  # Currently Private
+    image: "alexreynen/bookshelfdb:latest"
     container_name: bookshelfdb
     volumes:
       - ./data:/app/data
