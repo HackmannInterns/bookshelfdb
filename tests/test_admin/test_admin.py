@@ -38,7 +38,7 @@ def clear_table(table_name, db):
 def clear_data():
     os.remove(yml)
     os.remove(fake_db)
-    os.remove(fake_cache)
+    admin.clear_cache_db
 
 
 def set_up():
@@ -187,9 +187,10 @@ def test_clear_cache_db(mock_shelve):
     mock_shelve.__enter__.return_value.__setitem__.assert_called_once_with(
         key, value)
 
-    clear_cache_db()
+    admin.clear_cache_db()
 
-    assert os.path.isfile(fake_cache) is False
+    assert not os.path.exists("fake_cache.db")
+    assert not os.path.exists("fake_cache.db.bak") and not os.path.exists("fake_cache.db.dat") and not os.path.exists("fake_cache.db.dir")
 
 
 def test_delete_main_db():
