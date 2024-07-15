@@ -6,7 +6,6 @@ import sqlite3
 import shelve
 
 from admin import init_yaml, update_yaml, get_settings, export_to_json, import_from_json, clear_cache_db, delete_main_db
-from unittest.mock import MagicMock
 import admin
 import db
 import fetch
@@ -38,7 +37,7 @@ def clear_table(table_name, db):
 def clear_data():
     os.remove(yml)
     os.remove(fake_db)
-    admin.clear_cache_db
+    clear_cache_db(fake_cache)
 
 
 def set_up():
@@ -49,15 +48,6 @@ def set_up():
     shelve.open(fake_cache)
     init_yaml()
     update_yaml(False, True, "", "My Library")
-
-
-@pytest.fixture
-def mock_shelve(monkeypatch):
-    # Create a mock shelf object
-    mock_shelf = MagicMock()
-    # Mock the shelve.open method to return the mock shelf
-    monkeypatch.setattr(shelve, 'open', MagicMock(return_value=mock_shelf))
-    return mock_shelf
 
 
 def test_init_yaml():
@@ -176,21 +166,18 @@ def test_import_from_json():
     clear_data()
 
 
-def test_clear_cache_db(mock_shelve):
+def test_clear_cache_db():
     set_up()
-    key = 'test_key'
-    value = 'test_value'
+    
+    fetch.save_to_cache("test_key","test_value")
 
-    fetch.save_to_cache(key, value)
+    assert os.path.exists(fake_cache) or os.path.exists(fake_cache + ".bak") and os.path.exists(fake_cache + ".dat") and os.path.exists(fake_cache + ".dir")
 
-    # Assert that the value was set correctly in the mock shelf
-    mock_shelve.__enter__.return_value.__setitem__.assert_called_once_with(
-        key, value)
 
-    admin.clear_cache_db()
+    clear_cache_db(fake_cache)
 
-    assert not os.path.exists("fake_cache.db")
-    assert not os.path.exists("fake_cache.db.bak") and not os.path.exists("fake_cache.db.dat") and not os.path.exists("fake_cache.db.dir")
+    assert not os.path.exists(fake_cache)
+    assert not os.path.exists(fake_cache + ".bak") and not os.path.exists(fake_cache + ".dat") and not os.path.exists(fake_cache + ".dir")
 
 
 def test_delete_main_db():
