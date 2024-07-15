@@ -79,6 +79,9 @@ def import_from_json(file_storage, db_to_use=db.DB_LOCATION):
 
 def clear_cache_db():
     db.delete_db(CACHE_DB_LOCATION)
+    db.delete_db(CACHE_DB_LOCATION + ".bak")
+    db.delete_db(CACHE_DB_LOCATION + ".dir")
+    db.delete_db(CACHE_DB_LOCATION + ".dat")
 
 
 def delete_main_db(db_to_kill=db.DB_LOCATION):
