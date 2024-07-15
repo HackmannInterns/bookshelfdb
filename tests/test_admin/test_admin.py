@@ -1,4 +1,3 @@
-import pytest
 import os
 import yaml
 import json
@@ -168,16 +167,17 @@ def test_import_from_json():
 
 def test_clear_cache_db():
     set_up()
-    
-    fetch.save_to_cache("test_key","test_value")
 
-    assert os.path.exists(fake_cache) or os.path.exists(fake_cache + ".bak") and os.path.exists(fake_cache + ".dat") and os.path.exists(fake_cache + ".dir")
+    fetch.save_to_cache("test_key", "test_value")
 
+    assert os.path.exists(fake_cache) or os.path.exists(
+        fake_cache + ".bak") and os.path.exists(fake_cache + ".dat") and os.path.exists(fake_cache + ".dir")
 
     clear_cache_db(fake_cache)
 
     assert not os.path.exists(fake_cache)
-    assert not os.path.exists(fake_cache + ".bak") and not os.path.exists(fake_cache + ".dat") and not os.path.exists(fake_cache + ".dir")
+    assert not os.path.exists(fake_cache + ".bak") and not os.path.exists(
+        fake_cache + ".dat") and not os.path.exists(fake_cache + ".dir")
 
 
 def test_delete_main_db():

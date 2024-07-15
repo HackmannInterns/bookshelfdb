@@ -214,7 +214,7 @@ def view2():
 @app.route('/delete')
 def delete():
     if 'q' in request.args:
-        if not is_permitted('can_edit', check_for_recent=int(request.args.get('q', -1))):
+        if not is_permitted('can_remove', check_for_recent=int(request.args.get('q', -1))):
             # return redirect(url_for('login'))
             return send_to_login('can_remove')
         db.delete_book(request.args['q'])
