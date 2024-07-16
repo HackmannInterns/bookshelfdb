@@ -112,10 +112,7 @@ def search_by_author_title(author, title, use_cache=True):
     master_list = []
     for i in olids[:50]:
         b_id = i.split('/')[-1]
-        indiv_data = api(
-            f'OLID:{b_id}', f"https://openlibrary.org/api/books?bibkeys=OLID:{b_id}&format=json&jscmd=data", use_cache)
-        title, authors, publish_date, publisher, subjects = parse_data(
-            indiv_data, "OLID", b_id)
+        title, authors, publish_date, publisher, subjects = lookup_book_info(b_id, 'olid', use_cache)
         book = {}
         book['olid'] = b_id
         book['title'] = title
