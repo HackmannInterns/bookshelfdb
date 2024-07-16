@@ -15,14 +15,14 @@ DEFAULT_DATA = {
 }
 
 
-def init_yaml():
+def init_yaml(yml_location=ADMIN_YAML_LOCATION):
     # Check if the file exists
-    if not os.path.exists(ADMIN_YAML_LOCATION):
+    if not os.path.exists(yml_location):
         # If the file doesn't exist, create it with default values
-        with open(ADMIN_YAML_LOCATION, 'w') as file:
+        with open(yml_location, 'w') as file:
             yaml.safe_dump(DEFAULT_DATA, file)
 
-    with open(ADMIN_YAML_LOCATION, 'r') as file:
+    with open(yml_location, 'r') as file:
         data = yaml.safe_load(file)
 
         data.setdefault('visitor_can_add', DEFAULT_DATA['visitor_can_add'])
@@ -30,13 +30,13 @@ def init_yaml():
         data.setdefault('default_address', DEFAULT_DATA['default_address'])
         data.setdefault('header_name', DEFAULT_DATA['header_name'])
 
-    with open(ADMIN_YAML_LOCATION, 'w') as file:
+    with open(yml_location, 'w') as file:
         yaml.safe_dump(data, file)
 
 
-def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=None, header_name=None):
+def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=None, header_name=None,yml_location=ADMIN_YAML_LOCATION):
     init_yaml()
-    with open(ADMIN_YAML_LOCATION, 'r') as file:
+    with open(yml_location, 'r') as file:
         data = yaml.safe_load(file)
 
         data['visitor_can_add'] = visitor_can_add if visitor_can_add is not None else data['visitor_can_add']
@@ -44,13 +44,13 @@ def update_yaml(visitor_can_add=None, editor_can_remove=None, default_address=No
         data['default_address'] = default_address if default_address is not None else data['default_address']
         data['header_name'] = header_name if header_name is not None else data['header_name']
 
-    with open(ADMIN_YAML_LOCATION, 'w') as file:
+    with open(yml_location, 'w') as file:
         yaml.safe_dump(data, file)
 
 
-def get_settings():
+def get_settings(yml_location=ADMIN_YAML_LOCATION):
     init_yaml()
-    with open(ADMIN_YAML_LOCATION, 'r') as file:
+    with open(yml_location, 'r') as file:
         data = yaml.safe_load(file)
 
     class Yaml_Settings():

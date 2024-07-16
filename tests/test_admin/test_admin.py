@@ -40,21 +40,18 @@ def clear_data():
 
 
 def set_up():
-    admin.ADMIN_YAML_LOCATION = yml
     fetch.CACHE_DB_LOCATION = fake_cache
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
     shelve.open(fake_cache)
-    init_yaml()
-    update_yaml(False, True, "", "My Library")
+    init_yaml(yml)
 
 
 def test_init_yaml():
     set_up()
-    admin.ADMIN_YAML_LOCATION = yml
-    init_yaml()
+    init_yaml(yml)
     # print(admin.ADMIN_YAML_LOCATION)
-    with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
+    with open(yml, 'r') as file:
         data = yaml.safe_load(file)
 
     assert data['visitor_can_add'] is False
@@ -72,9 +69,9 @@ def test_update_yaml():
     test_address = "233 Ember"
     test_title = "Not my library"
 
-    update_yaml(test_visitor, test_editor, test_address, test_title)
+    update_yaml(test_visitor, test_editor, test_address, test_title,yml)
 
-    with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
+    with open(yml, 'r') as file:
         data = yaml.safe_load(file)
 
     assert data['visitor_can_add'] == test_visitor
@@ -88,7 +85,7 @@ def test_update_yaml():
 def test_get_settings():
     set_up()
     update_yaml(False, True, "")
-    settings = get_settings()
+    settings = get_settings(yml)
 
     assert settings.visitor_can_add is False
     assert settings.editor_can_remove is True
