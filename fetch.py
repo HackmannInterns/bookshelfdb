@@ -18,13 +18,15 @@ def load_from_cache(key):
 
 
 def api(key, url, use_cache):
-    # print(url)
+    print(url)
 
     # Cache
-    cached = load_from_cache(key)
-    if use_cache and cached:
+    if use_cache:
+        cached = load_from_cache(key)
+        if cached:
+            return cached
         # print("Hit cache")
-        return cached
+
     # print("Miss cache")
 
     try:
@@ -68,6 +70,9 @@ def parse_book_data(book_info):
     all_subjects += book_info.get('subject_places', [])
     all_subjects += book_info.get('subject_people', [])
     all_subjects += book_info.get('subject_times', [])
+    all_subjects += book_info.get('subject_key', [])
+    all_subjects += book_info.get('subject_facet', [])
+
     # print(all_subjects)
     subjects = list(subject.get('name', '')
                     for subject in all_subjects)
