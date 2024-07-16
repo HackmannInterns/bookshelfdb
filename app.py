@@ -234,7 +234,7 @@ def edit():
         return render_template('form.html', db_id=db_id,
                                title=book[8], author=book[6], book_id=book[4], id_type=book[5], year=book[7],
                                publisher=book[9], address=book[2], bookshelf=book[1], room=book[3], subjects=book[11],
-                               edit=True)
+                               edit=True, edit_str='Edit Book')
 
     if request.method == 'POST':
         id = request.form['db_id']
