@@ -54,7 +54,7 @@ def test_init_yaml():
     with open(yml, 'r') as file:
         data = yaml.safe_load(file)
 
-    assert data['visitor_can_add'] is False
+    assert data['viewer_can_add'] is False
     assert data['editor_can_remove'] is True
     assert data['default_address'] == ""
     assert data['header_name'] == "My Library"
@@ -74,7 +74,7 @@ def test_update_yaml():
     with open(yml, 'r') as file:
         data = yaml.safe_load(file)
 
-    assert data['visitor_can_add'] == test_visitor
+    assert data['viewer_can_add'] == test_visitor
     assert data['editor_can_remove'] == test_editor
     assert data['default_address'] == test_address
     assert data['header_name'] == test_title
@@ -87,7 +87,7 @@ def test_get_settings():
     update_yaml(False, True, "")
     settings = get_settings(yml)
 
-    assert settings.visitor_can_add is False
+    assert settings.viewer_can_add is False
     assert settings.editor_can_remove is True
     assert settings.default_address == ""
     assert settings.header_name == "My Library"

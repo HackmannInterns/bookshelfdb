@@ -65,7 +65,7 @@ def test_view_page(flask_init, browser):
     assert browser.title == "Library"
 
 
-def test_admin_settings(browser):
+def test_admin_state(browser):
     from app import ADMIN_PASSWORD
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
@@ -73,12 +73,39 @@ def test_admin_settings(browser):
     editor_checkbox = browser.find_element(By.ID, "editor")
     viewer_checkbox = browser.find_element(By.ID, "viewer")
     assert editor_checkbox.is_selected() == get_settings().editor_can_remove
-    assert viewer_checkbox.is_selected() == get_settings().visitor_can_add
+    assert viewer_checkbox.is_selected() == get_settings().viewer_can_add
     address_box = browser.find_element(By.ID, "address")
     header_box = browser.find_element(By.ID, "header_name")
     assert address_box.get_attribute('value') == get_settings().default_address
     assert header_box.get_attribute('value') == get_settings().header_name
 
+def test_admin_toggle(browser):
+    from app import ADMIN_PASSWORD
+    login(browser, ADMIN_PASSWORD)
+    browser.get('localhost:5000/admin')
+    time.sleep(3)
+
+
+    viewer_checkbox = browser.find_element(By.ID, "viewer")
+    editor_checkbox = browser.find_element(By.ID, "editor")
+    address_box = browser.find_element(By.ID, "address")
+    header_box = browser.find_element(By.ID, "header_name")
+
+    checkbox_state = viewer_checkbox.is_selected()
+    viewer_checkbox.click()
+    assert checkbox_state != viewer_checkbox.is_selected()
+    assert viewer_checkbox.is_selected() == get_settings().viewer_can_add
+    browser.refresh()
+    assert checkbox_state != viewer_checkbox.is_selected()
+    assert viewer_checkbox.is_selected() == get_settings().viewer_can_add
+
+    checkbox_state = editor_checkbox.is_selected()
+    editor_checkbox.click()
+    assert checkbox_state != editor_checkbox.is_selected()
+    assert editor_checkbox.is_selected() == get_settings().editor_can_add
+    browser.refresh()
+    assert checkbox_state != editor_checkbox.is_selected()
+    assert editor_checkbox.is_selected() == get_settings().editor_can_add
 
 def test_add_book_page(flask_init, browser):
     from app import ADMIN_PASSWORD
@@ -86,14 +113,6 @@ def test_add_book_page(flask_init, browser):
     browser.get("localhost:5000/")
     browser.get("localhost:5000/add-book")
     assert browser.title == "Add Book"
-
-
-# Requires an entry, not sure how we wanna handle this
-# def test_edit_page_with_admin(flask_init, browser):
-#     from app import ADMIN_PASSWORD
-#     login(browser, ADMIN_PASSWORD)
-#     browser.get("localhost:5000/edit?q=1")
-#     assert browser.title == "Library"
 
 
 def test_delete_page_with_admin(flask_init, browser):

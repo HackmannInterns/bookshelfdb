@@ -96,7 +96,7 @@ def admin():
         new_view = bool(request.form.get("viewer", False))
         new_edit = bool(request.form.get("editor", False))
         admin_settings.update_yaml(
-            visitor_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
+            viewer_can_add=new_view, editor_can_remove=new_edit, default_address=new_add, header_name=new_head)
 
     else:
         if request.args.get('q', "") == "clear":

@@ -44,7 +44,7 @@ def get_permissions(is_recent=False):
         can_view_library = user_type.value >= Auth['Viewer'].value
 
         # setting add perms
-        req_perms_can_add = Auth['Viewer'] if yaml_settings.visitor_can_add else Auth['Editor']
+        req_perms_can_add = Auth['Viewer'] if yaml_settings.viewer_can_add else Auth['Editor']
         desc_can_add = 'You cannot add with your current authentication level'
         can_add = user_type.value >= req_perms_can_add.value
 

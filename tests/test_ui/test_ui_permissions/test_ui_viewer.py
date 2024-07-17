@@ -56,7 +56,7 @@ def test_viewer_can_view(flask_init, browser):
 def test_viewer_can_add(flask_init, browser):
     browser.get("localhost:5000/add-book")
     time.sleep(1)
-    if get_settings().visitor_can_add:
+    if get_settings().viewer_can_add:
         assert browser.title != "Login Required"
     else:
         assert browser.title == "Login Required"

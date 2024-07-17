@@ -11,7 +11,7 @@ def test_admin():
             }.get(key, default)
 
             mock_settings_instance = MagicMock()
-            mock_settings_instance.visitor_can_add = False
+            mock_settings_instance.viewer_can_add = False
             mock_settings_instance.editor_can_remove = False
             mock_get_settings.return_value = mock_settings_instance
 

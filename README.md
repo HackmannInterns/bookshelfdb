@@ -49,13 +49,13 @@ Additionally, the persistent storage for the app is held in /data, and can be st
 
 There are three tiers of permissions that can be use by anyone accessing the database, general user, editor, and admin. The admin can change how the other two user types are allowed to interact with the database as well as having full access, these permissions are visible in admin.yml.
 ```
-    'visitor_can_add': False,
+    'viewer_can_add': False,
     'editor_can_remove': True,
     'default_address': "",
     'header_name': "My Library"
 ```
 
-General user can view the database and if visitor_can_add is enabled, add new content and remove or edit content they have just created this session.  This prevents griefing of the database.
+General user can view the database and if viewer_can_add is enabled, add new content and remove or edit content they have just created this session.  This prevents griefing of the database.
 
 Editors can add entries, edit any entries, and if editor_can_remove is enabled, remove any file, not just those they have entered this session.
 ### Default Permissions

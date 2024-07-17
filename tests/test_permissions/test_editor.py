@@ -11,7 +11,7 @@ def test_editor():
             }.get(key, default)
 
             mock_settings_instance = MagicMock()
-            mock_settings_instance.visitor_can_add = False
+            mock_settings_instance.viewer_can_add = False
             mock_settings_instance.editor_can_remove = False
             mock_get_settings.return_value = mock_settings_instance
 
@@ -32,7 +32,7 @@ def test_editor_recent():
             mock_session.get
 
             mock_settings_instance = MagicMock()
-            mock_settings_instance.visitor_can_add = False
+            mock_settings_instance.viewer_can_add = False
             mock_settings_instance.editor_can_remove = False
             mock_get_settings.return_value = mock_settings_instance
 
@@ -53,7 +53,7 @@ def test_editor_recent_can_remove():
             mock_session.get
 
             mock_settings_instance = MagicMock()
-            mock_settings_instance.visitor_can_add = False
+            mock_settings_instance.viewer_can_add = False
             mock_settings_instance.editor_can_remove = True
             mock_get_settings.return_value = mock_settings_instance
 
@@ -74,7 +74,7 @@ def test_editor_can_remove():
             mock_session.get
 
             mock_settings_instance = MagicMock()
-            mock_settings_instance.visitor_can_add = False
+            mock_settings_instance.viewer_can_add = False
             mock_settings_instance.editor_can_remove = True
             mock_get_settings.return_value = mock_settings_instance
 
