@@ -9,10 +9,25 @@ from multiprocessing import Process
 from app import run_flask
 from selenium.common.exceptions import NoSuchDriverException
 from selenium.webdriver.support.ui import Select
-
+import shutil
+from admin import update_yaml
+from db import delete_db, init_db, create_book
 
 @pytest.fixture(scope='session')
 def flask_init():
+    # Move data
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(script_dir, "../../../data")
+    backup_path = os.path.join(script_dir, "../../../data-BAK")
+
+    if os.path.exists(backup_path):
+        if not os.path.exists(data_path):
+            os.rename(backup_path, data_path)
+
+    if os.path.exists(data_path):
+        os.rename(data_path, backup_path)
+
     # Start the Flask app in a separate process
     port = 5000  # Change the port number here if needed
     app_process = Process(target=run_flask, args=(port,))
@@ -26,6 +41,11 @@ def flask_init():
     # Teardown
     app_process.terminate()
     app_process.join()
+
+    if os.path.exists(backup_path):
+        if os.path.exists(data_path):
+            shutil.rmtree(data_path)
+        os.rename(backup_path, data_path)
 
 
 @pytest.fixture(scope="module")
@@ -59,7 +79,7 @@ def login(browser, password):
     time.sleep(3)
 
 
-def test_submit_isbn(browser):
+def test_submit_isbn(browser, flask_init):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
     time.sleep(1)
@@ -83,7 +103,7 @@ def test_submit_isbn(browser):
     time.sleep(5)
 
 
-def test_submit_lccn(browser):
+def test_submit_lccn(browser, flask_init):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
     time.sleep(1)
@@ -107,7 +127,7 @@ def test_submit_lccn(browser):
     time.sleep(5)
 
 
-def test_submit_olid(browser):
+def test_submit_olid(browser, flask_init):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
     time.sleep(1)
@@ -129,3 +149,33 @@ def test_submit_olid(browser):
         By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
     time.sleep(5)
+
+def test_edit_book_for_pk(browser, flask_init):
+    bookshelf = "shelf_location"
+    address = "address"
+    room = "room"
+    id = "ISBN"
+    numbers = "909090909090"
+    author = "John Whitney"
+    year = 2003
+    title = "book title"
+    publisher = "John Hackmann"
+    subjects = "Biography, Horor"
+    
+    delete_db()
+    init_db()
+    update_yaml(editor_can_remove=False)
+    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects)
+
+    from app import EDITOR_PASSWORD
+    login(browser, EDITOR_PASSWORD)
+    time.sleep(1)
+    browser.get("localhost:5000/library")
+    kebab_icon = browser.find_element(By.CLASS_NAME, "kebab-menu-icon")
+    kebab_icon.click()
+    time.sleep(1)
+    edit_button = browser.find_element(By.XPATH, "//a[contains(text(), 'Edit')]") 
+    edit_button.click()
+    time.sleep(1)
+    current_url = browser.current_url
+    assert current_url == "http://localhost:5000/edit?q=1"
