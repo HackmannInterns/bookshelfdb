@@ -61,10 +61,10 @@ def inject_header_name_and_permissions():
     }
 
 
-# @app.errorhandler(Exception)
-# def handle_error(error):
-#     error_message = str(error)
-#     return render_template('error.html', error_message=error_message)
+@app.errorhandler(Exception)
+def handle_error(error):
+    error_message = str(error)
+    return render_template('error.html', error_message=error_message)
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -151,7 +151,6 @@ def logout():
         referer = '/'
     session.pop('authenticated', 'Viewer')
     session.pop('recent', None)
-    # print(session.get('recent'))
     return redirect(referer)
 
 
@@ -260,8 +259,6 @@ def edit():
 @app.route('/add-book', methods=['GET', 'POST'])
 @permission_required('can_add')
 def add_book():
-    print(f'Method: {request.method}')
-    print(f'Button: {request.form.get("button_class")}')
     if request.method == 'POST':
         session['address'] = request.form.get('address')
         session['room'] = request.form.get('room')
@@ -288,7 +285,6 @@ def add_book():
 
     # isbn/lccn given
     if (request.method == 'POST' and request.form.get('button_class') == 'auto') or ('isbn' in request.args or 'olid' in request.args):
-        print("here i am")
         if 'isbn' in request.args:
             id_type = 'isbn'
             book_id = request.args['isbn']
@@ -302,6 +298,8 @@ def add_book():
 
         title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
+        if title == "":
+            raise NoResultsFound(f"No Results Found; invalid {id_type.upper()}")
         return render_template('form.html', address=admin_settings.get_settings().default_address,
                                title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 

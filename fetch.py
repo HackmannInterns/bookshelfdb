@@ -37,8 +37,8 @@ def api(key, url, use_cache):
             save_to_cache(key, data)
         else:
             data = ""
-    except ConnectionError as e:
-        print(e)
+    except ConnectionError:
+        # print(e)
         data = ""
     return data
 
@@ -117,7 +117,8 @@ def search_by_author_title(author, title, use_cache=True):
     master_list = []
     for i in olids[:50]:
         b_id = i.split('/')[-1]
-        title, authors, publish_date, publisher, subjects = lookup_book_info(b_id, 'olid', use_cache)
+        title, authors, publish_date, publisher, subjects = lookup_book_info(
+            b_id, 'olid', use_cache)
         book = {}
         book['olid'] = b_id
         book['title'] = title
