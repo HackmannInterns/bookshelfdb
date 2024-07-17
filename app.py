@@ -61,10 +61,10 @@ def inject_header_name_and_permissions():
     }
 
 
-@app.errorhandler(Exception)
-def handle_error(error):
-    error_message = str(error)
-    return render_template('error.html', error_message=error_message)
+# @app.errorhandler(Exception)
+# def handle_error(error):
+#     error_message = str(error)
+#     return render_template('error.html', error_message=error_message)
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -133,10 +133,10 @@ def login():
         entered_password = request.form['password']
         if entered_password == ADMIN_PASSWORD:
             session['authenticated'] = 'Admin'
-            return redirect(session['referer'])
+            return redirect(session.get('referer', url_for('index')))
         elif entered_password == EDITOR_PASSWORD:
             session['authenticated'] = 'Editor'
-            return redirect(session['referer'])
+            return redirect(session.get('referer', url_for('index')))
         raise IncorrectPassword("Invalid Password")
     return render_template('login.html')
 
