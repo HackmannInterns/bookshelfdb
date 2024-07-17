@@ -110,7 +110,11 @@ def search_by_author_title(author, title, use_cache=True):
     data = api(f"{author}:{title}", url, use_cache)
 
     olids = []
-    results = data.get('docs', [])
+    if len(data) > 0:
+        results = data.get('docs', [])
+    else:
+        results = []
+
     for result in results:
         olids.append(result.get('edition_key')[0])
 
