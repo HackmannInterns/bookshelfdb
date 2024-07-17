@@ -7,11 +7,12 @@ from selenium.webdriver.firefox.service import Service
 import time
 from multiprocessing import Process
 from app import run_flask
-from selenium.common.exceptions import NoSuchDriverException
+from selenium.common.exceptions import NoSuchDriverException, NoSuchElementException
 from selenium.webdriver.support.ui import Select
 import shutil
 from admin import update_yaml
 from db import delete_db, init_db, create_book
+
 
 @pytest.fixture(scope='session')
 def flask_init():
@@ -21,9 +22,8 @@ def flask_init():
     data_path = os.path.join(script_dir, "../../../data")
     backup_path = os.path.join(script_dir, "../../../data-BAK")
 
-    if os.path.exists(backup_path):
-        if not os.path.exists(data_path):
-            os.rename(backup_path, data_path)
+    while os.path.exists(backup_path):
+        time.sleep(1)
 
     if os.path.exists(data_path):
         os.rename(data_path, backup_path)
@@ -150,22 +150,24 @@ def test_submit_olid(browser, flask_init):
     cancel_button.click()
     time.sleep(5)
 
+
 def test_edit_book_for_pk(browser, flask_init):
     bookshelf = "shelf_location"
     address = "address"
     room = "room"
-    id = "ISBN"
+    b_id = "ISBN"
     numbers = "909090909090"
     author = "John Whitney"
     year = 2003
     title = "book title"
     publisher = "John Hackmann"
     subjects = "Biography, Horor"
-    
+
     delete_db()
     init_db()
     update_yaml(editor_can_remove=False)
-    create_book(bookshelf, address, room, id, numbers, author, year, title, publisher, None, subjects)
+    create_book(bookshelf, address, room, numbers, b_id, author,
+                year, title, publisher, None, subjects)
 
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
@@ -174,8 +176,20 @@ def test_edit_book_for_pk(browser, flask_init):
     kebab_icon = browser.find_element(By.CLASS_NAME, "kebab-menu-icon")
     kebab_icon.click()
     time.sleep(1)
-    edit_button = browser.find_element(By.XPATH, "//a[contains(text(), 'Edit')]") 
+    edit_button = browser.find_element(
+        By.XPATH, "//a[contains(text(), 'Edit')]")
     edit_button.click()
     time.sleep(1)
     current_url = browser.current_url
     assert current_url == "http://localhost:5000/edit?q=1"
+
+    try:
+        browser.find_element(By.CLASS_NAME, "search")
+        raise AssertionError("Element with class 'search' should not exist")
+    except NoSuchElementException:
+        pass
+    try:
+        browser.find_element(By.CLASS_NAME, "mass_search")
+        raise AssertionError("Element with class 'mass_search' should not exist")
+    except NoSuchElementException:
+        pass
