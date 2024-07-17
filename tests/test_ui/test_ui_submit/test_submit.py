@@ -58,6 +58,7 @@ def login(browser, password):
     pass_input.send_keys(Keys.RETURN)
     time.sleep(3)
 
+
 def test_submit_isbn(browser):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
@@ -72,13 +73,16 @@ def test_submit_isbn(browser):
     id_input.send_keys("9781566199094")
     search_button = browser.find_element(By.NAME, "action")
     search_button.click()
-    display = browser.execute_script("return document.querySelector('body > div > div.text-container > div').style.display")
+    display = browser.execute_script(
+        "return document.querySelector('body > div > div.text-container > div').style.display")
     time.sleep(1)
     assert display == 'block'
-    cancel_button = browser.find_element(By.XPATH, "//button[@onclick='cancel_submit()']")
+    cancel_button = browser.find_element(
+        By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
     time.sleep(5)
-  
+
+
 def test_submit_lccn(browser):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
@@ -93,12 +97,15 @@ def test_submit_lccn(browser):
     id_input.send_keys("75619195")
     search_button = browser.find_element(By.NAME, "action")
     search_button.click()
-    display = browser.execute_script("return document.querySelector('body > div > div.text-container > div').style.display")
+    display = browser.execute_script(
+        "return document.querySelector('body > div > div.text-container > div').style.display")
     time.sleep(1)
     assert display == 'block'
-    cancel_button = browser.find_element(By.XPATH, "//button[@onclick='cancel_submit()']")
+    cancel_button = browser.find_element(
+        By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
     time.sleep(5)
+
 
 def test_submit_olid(browser):
     from app import EDITOR_PASSWORD
@@ -114,11 +121,11 @@ def test_submit_olid(browser):
     id_input.send_keys("OL47195647M")
     search_button = browser.find_element(By.NAME, "action")
     search_button.click()
-    display = browser.execute_script("return document.querySelector('body > div > div.text-container > div').style.display")
+    display = browser.execute_script(
+        "return document.querySelector('body > div > div.text-container > div').style.display")
     time.sleep(1)
     assert display == 'block'
-    cancel_button = browser.find_element(By.XPATH, "//button[@onclick='cancel_submit()']")
+    cancel_button = browser.find_element(
+        By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
     time.sleep(5)
-      
-    
