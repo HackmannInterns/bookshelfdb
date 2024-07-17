@@ -10,6 +10,7 @@ from app import run_flask
 from selenium.common.exceptions import NoSuchDriverException
 import shutil
 from admin import update_yaml
+from db import delete_db, init_db
 
 
 @pytest.fixture(scope='session')
@@ -19,6 +20,10 @@ def flask_init():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.join(script_dir, "../../../data")
     backup_path = os.path.join(script_dir, "../../../data-BAK")
+
+    if os.path.exists(backup_path):
+        if not os.path.exists(data_path):
+            os.rename(backup_path, data_path)
 
     if os.path.exists(data_path):
         os.rename(data_path, backup_path)
@@ -58,7 +63,7 @@ def browser():
 
     except NoSuchDriverException:
         options = Options()
-        # options.add_argument("-headless")
+        options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         yield driver
         driver.quit()
@@ -74,6 +79,8 @@ def login(browser, password):
 
 
 def test_editor_recent(browser, flask_init):
+    delete_db()
+    init_db()
     update_yaml(editor_can_remove=False)
 
     browser.get("localhost:5000/")
@@ -93,6 +100,8 @@ def test_editor_recent(browser, flask_init):
 
 
 def test_editor_can_delete(browser, flask_init):
+    delete_db()
+    init_db()
     update_yaml(editor_can_remove=True)
     browser.get("localhost:5000/")
     from app import EDITOR_PASSWORD
@@ -111,6 +120,8 @@ def test_editor_can_delete(browser, flask_init):
 
 
 def test_editor_recent_can_delete(browser, flask_init):
+    delete_db()
+    init_db()
     update_yaml(editor_can_remove=True)
     browser.get("localhost:5000/")
     from app import EDITOR_PASSWORD
