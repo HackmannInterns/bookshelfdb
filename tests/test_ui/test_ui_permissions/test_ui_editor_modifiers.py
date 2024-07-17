@@ -90,3 +90,36 @@ def test_editor_recent(browser, flask_init):
 
     assert browser.title == "Library"
     assert browser.title != "Login Required"
+
+
+def test_editor_can_delete(browser, flask_init):
+    update_yaml(editor_can_remove=True)
+    browser.get("localhost:5000/")
+    from app import EDITOR_PASSWORD
+    login(browser, EDITOR_PASSWORD)
+    browser.get("localhost:5000/add-book?isbn=9781566199094")
+    browser.find_element(
+        By.XPATH, "/html/body/div/div[1]/form/div[2]/input[1]").click()
+
+    browser.get("localhost:5000/logout")
+    login(browser, EDITOR_PASSWORD)
+
+    browser.get("localhost:5000/delete?q=1")
+
+    assert browser.title == "Library"
+    assert browser.title != "Login Required"
+
+
+def test_editor_recent_can_delete(browser, flask_init):
+    update_yaml(editor_can_remove=True)
+    browser.get("localhost:5000/")
+    from app import EDITOR_PASSWORD
+    login(browser, EDITOR_PASSWORD)
+    browser.get("localhost:5000/add-book?isbn=9781566199094")
+    browser.find_element(
+        By.XPATH, "/html/body/div/div[1]/form/div[2]/input[1]").click()
+
+    browser.get("localhost:5000/delete?q=1")
+
+    assert browser.title == "Library"
+    assert browser.title != "Login Required"
