@@ -49,3 +49,4 @@ jobs:
           pytest tests/test_ui/test_home.py --junitxml=junit/test-results.xml
           pytest tests/test_ui/test_with_admin.py --junitxml=junit/test-results.xml
           pytest tests/test_ui/test_ui_permissions --junitxml=junit/test-results.xml
+          pytest tests/test_ui/test_ui_version.py --junitxml=junit/test-results.xml

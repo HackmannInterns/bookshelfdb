@@ -18,8 +18,8 @@
             <div class="perm-block" style="margin: 5%;">
                 <h1>Admin Property Changes:</h1>
                 <label for="viewer">Viewers have add permissions</label>
-                <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.viewer_can_add %}checked{%
-                    endif %}><br>
+                <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.viewer_can_add %}checked{% endif
+                    %}><br>
 
                 <label for="editor">Editors have remove permissions</label>
                 <input type="checkbox" id="editor" name="editor" value=true {% if Admin.editor_can_remove %}checked{%
@@ -165,6 +165,31 @@
             });
         });
 
+
+        function fix_update_info(response) {
+            console.log(response)
+            if (response.newest == null) {
+                $('#update-failed').css('display', 'block');
+                $('#update-info').css('display', 'none');
+                $('#current-version').css('color', '');
+                $('#newest-version').css('display', 'none');
+            } else if (response.newest != $('#current-version').text().trim()) {
+                $('#current-version').css('color', 'red');
+                $('#update-info').css('display', 'block');
+                $('#update-failed').css('display', 'none');
+                $('#newest-version').css('display', 'block');
+                $('#version-link').attr('href', response.newest_link);
+                $('#version-link').text(response.newest);
+            } else if (response.newest == $('#current-version').text().trim()) {
+                $('#version-link').attr('href', response.newest_link);
+                $('#version-link').text(response.newest);
+                $('#current-version').css('color', 'green');
+                $('#update-info').css('display', 'none');
+                $('#update-failed').css('display', 'none');
+                $('#newest-version').css('display', 'block');
+            }
+        }
+
         $(document).ready(function () {
             $('#refresh-button').click(function () {
                 var $button = $(this);
@@ -172,32 +197,13 @@
                 // Add the spinning class to the button
                 $button.addClass('spinning');
 
+
                 $.ajax({
                     url: '/update',
                     method: 'GET',
                     success: function (response) {
-                        if (response.newest == null) {
-                            $('#update-failed').css('display', 'block');
-                            $('#update-info').css('display', 'none');
-                            $('#current-version').css('color', '');
-                            $('#newest-version').css('display', 'none');
-                        } else if (response.newest != $('#current-version').text().trim()) {
-                            $('#current-version').css('color', 'red');
-                            $('#update-info').css('display', 'block');
-                            $('#update-failed').css('display', 'none');
-                            $('#newest-version').css('display', 'block');
-                            $('#version-link').attr('href', response.newest_link);
-                            $('#version-link').text(response.newest);
-                        } else if (response.newest == $('#current-version').text().trim()) {
-                            $('#version-link').attr('href', response.newest_link);
-                            $('#version-link').text(response.newest);
-                            $('#current-version').css('color', 'green');
-                            $('#update-info').css('display', 'none');
-                            $('#update-failed').css('display', 'none');
-                            $('#newest-version').css('display', 'block');
-                        }
-                    },
-                    complete: function () {
+                        fix_update_info(response);
+                    }, complete: function () {
                         $button.removeClass('spinning');
                     }
                 });
