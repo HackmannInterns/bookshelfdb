@@ -21,9 +21,8 @@ def flask_init():
     data_path = os.path.join(script_dir, "../../../data")
     backup_path = os.path.join(script_dir, "../../../data-BAK")
 
-    if os.path.exists(backup_path):
-        if not os.path.exists(data_path):
-            os.rename(backup_path, data_path)
+    while os.path.exists(backup_path):
+        time.sleep(1)
 
     if os.path.exists(data_path):
         os.rename(data_path, backup_path)

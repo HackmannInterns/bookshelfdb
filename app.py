@@ -321,6 +321,7 @@ def index():
 def init_all():
     version.version_check()
     db.init_db()
+    admin_settings.init_yaml()
 
 
 def run_flask(p=5000):
