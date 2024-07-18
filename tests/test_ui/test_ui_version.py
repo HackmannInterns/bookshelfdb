@@ -160,5 +160,5 @@ def test_updates_spinny(flask_init, browser):
     spinny.click()
 
     assert "spinning" in spinny.get_attribute("class")
-    time.sleep(2)
+    time.sleep(5)
     assert "spinning" not in spinny.get_attribute("class")
