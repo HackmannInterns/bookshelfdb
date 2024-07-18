@@ -17,8 +17,8 @@ def flask_init():
     # Move data
     import os
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    data_path = os.path.join(script_dir, "../../../data")
-    backup_path = os.path.join(script_dir, "../../../data-BAK")
+    data_path = os.path.join(script_dir, "../../data")
+    backup_path = os.path.join(script_dir, "../../data-BAK")
 
     while os.path.exists(backup_path):
         time.sleep(1)
