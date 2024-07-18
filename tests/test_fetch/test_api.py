@@ -16,7 +16,7 @@ def test_fetch_book_metadata_success_isbn():
 
     assert result is not None
     assert result != ""
-    assert result is not {}
+    assert result != {}
     assert f"{id_type}:{book_id}" in result
     book_data = result[f"{id_type}:{book_id}"]
     assert book_data['title'] == "Plague of Models"
@@ -35,7 +35,7 @@ def test_fetch_book_metadata_success_lccn():
 
     assert result is not None
     assert result != ""
-    assert result is not {}
+    assert result != {}
     assert f"{id_type}:{book_id}" in result
     book_data = result[f"{id_type}:{book_id}"]
     assert book_data['title'] == "The Chinese-kosher cookbook"
