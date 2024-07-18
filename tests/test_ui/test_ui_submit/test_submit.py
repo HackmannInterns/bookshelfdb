@@ -27,6 +27,8 @@ def flask_init():
 
     if os.path.exists(data_path):
         os.rename(data_path, backup_path)
+    else:
+        raise FileNotFoundError(f"{data_path} not found")
 
     # Start the Flask app in a separate process
     port = 5000  # Change the port number here if needed
@@ -63,7 +65,7 @@ def browser():
 
     except NoSuchDriverException:
         options = Options()
-        # options.add_argument("-headless")
+        options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         yield driver
         driver.quit()
