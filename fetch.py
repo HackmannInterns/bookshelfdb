@@ -132,14 +132,3 @@ def search_by_author_title(author, title, use_cache=True):
         book['subjects'] = subjects
         master_list.append(book)
     return (master_list)
-
-
-# if __name__ == '__main__':
-#     data = lookup_book_info('9781778041303', 'isbn', False)
-#     for i in data:
-#         print(i)
-#     data = lookup_book_info('63-19392', 'lccn')  # has no ISBN
-#     for i in data:
-#         print(i)
-#     search_by_author_title(author="",
-#                            title="Alice in Wonderland")

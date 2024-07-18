@@ -34,7 +34,7 @@ def init_yaml(yml_location=ADMIN_YAML_LOCATION):
         yaml.safe_dump(data, file)
 
 
-def update_yaml(viewer_can_add=None, editor_can_remove=None, default_address=None, header_name=None,yml_location=ADMIN_YAML_LOCATION):
+def update_yaml(viewer_can_add=None, editor_can_remove=None, default_address=None, header_name=None, yml_location=ADMIN_YAML_LOCATION):
     init_yaml()
     with open(yml_location, 'r') as file:
         data = yaml.safe_load(file)
@@ -87,12 +87,3 @@ def clear_cache_db(c_db=CACHE_DB_LOCATION):
 def delete_main_db(db_to_kill=db.DB_LOCATION):
     db.delete_db(db=db_to_kill)
     db.init_db(db=db_to_kill)
-
-
-# if __name__ == '__main__':
-    # pass
-    # update_yaml(viewer_can_add=True, editor_can_remove=True, default_address="Hackmann House")
-    # export_to_json()
-    # clear_cache()
-    # delete_main_db()
-    # init_yaml()

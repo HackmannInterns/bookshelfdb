@@ -8,8 +8,8 @@ from requests.exceptions import ConnectionError
 version_info = {}
 version_thread = None
 # TODO: Change with our link && change the version to the right date (not just Jellyfin copied stuff) :)
-ATOM_LINK = "https://github.com/jellyfin/jellyfin/releases.atom"
-APP_VERSION = "10.9.7"
+ATOM_LINK = "https://github.com/HackmannInterns/bookshelfdb/releases.atom"
+APP_VERSION = "2024.07.19"
 
 
 def update_version_info():

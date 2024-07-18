@@ -184,7 +184,6 @@ def update():
     time.sleep(0.5)
     version.update_version_info()
     return jsonify({'newest': version.version_info.get('newest'), 'newest_link': version.version_info.get('newest_link')})
-    # return jsonify({'newest': '10.9.8', 'newest_link': 'https://github.com/jellyfin/jellyfin/releases/tag/v10.9.8'})
 
 
 @app.route('/library-recent')
