@@ -20,7 +20,10 @@ Tests include:
 - Testing API connection with the OpenLibrary
 - Testing the caching we do for the OpenLibrary API
 - Testing parsing for the OpenLibrary API
-- Testing the in-app settings
+- Testing the in-app admin settings
+- Testing the in-app versioning system
+- Testing the permissions system for our 3 types of users
+- Testing our database operations
 
 We plan to include more tests as we build out the application.
 
@@ -35,5 +38,9 @@ Before PRing into main, these tests should be run against the dev branch.
 Tests include:
 - Testing each page loads and works
 - Testing admin functionality
+- Testing setting and getting settings
+- Testing the permissions and authenticating on the web app
+- Testing the versions on the web app
+- Testing submitting, editing, and removing entries
 
-We plan to include more tests as we build out the application, especially functionality tests.
+We plan to include more tests as we build out the application.
