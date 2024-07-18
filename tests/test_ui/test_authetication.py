@@ -54,11 +54,22 @@ def login(browser, password):
     pass_input.send_keys(Keys.RETURN)
     time.sleep(3)
 
+def test_add_perm(flask_init, browser):
+    browser.get("http://localhost:5000/logout")
+    browser.get("http://localhost:5000/add-book")
+    title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
+    assert title_text.text == "You cannot add with your current authentication level; Editor or greater required"
+    login(browser, "editor")
+    assert browser.title == "Add Book"
+
 def test_remove_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
     browser.get("http://localhost:5000/delete?q=-1")
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
-    assert title_text.text == "You cannot remove with your current authentication level; Editor or greater required"
+    if get_settings().editor_can_remove:
+        assert title_text.text == "You cannot remove with your current authentication level; Editor or greater required"
+    else:
+        assert title_text.text == "You cannot remove with your current authentication level; Admin or greater required"
     login(browser, "editor")
     assert browser.title == "Library"
 
