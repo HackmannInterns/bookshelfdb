@@ -299,7 +299,8 @@ def add_book():
         title, author, publish_date, publisher, subjects = fetch.lookup_book_info(
             book_id, id_type)
         if title == "":
-            raise NoResultsFound(f"No Results Found; invalid {id_type.upper()}")
+            raise NoResultsFound(
+                f"No Results Found; invalid {id_type.upper()}")
         return render_template('form.html', address=admin_settings.get_settings().default_address,
                                title=title, author=author, book_id=book_id, id_type=id_type, year=publish_date, publisher=publisher, subjects=subjects)
 

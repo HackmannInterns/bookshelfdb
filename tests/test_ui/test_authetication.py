@@ -8,7 +8,7 @@ import time
 from multiprocessing import Process
 from app import run_flask
 import shutil
-from admin import get_settings, update_yaml
+from admin import update_yaml
 from selenium.common.exceptions import NoSuchDriverException
 
 
