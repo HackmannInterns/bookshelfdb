@@ -73,7 +73,7 @@ def test_admin_state(browser):
     editor_checkbox = browser.find_element(By.ID, "editor")
     viewer_checkbox = browser.find_element(By.ID, "viewer")
     assert editor_checkbox.is_selected() == get_settings().editor_can_remove
-    assert viewer_checkbox.is_selected() == get_settings().visitor_can_add
+    assert viewer_checkbox.is_selected() == get_settings().viewer_can_add
     address_box = browser.find_element(By.ID, "address")
     header_box = browser.find_element(By.ID, "header_name")
     assert address_box.get_attribute('value') == get_settings().default_address
