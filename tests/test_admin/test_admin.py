@@ -8,7 +8,7 @@ from admin import init_yaml, update_yaml, get_settings, export_to_json, import_f
 import admin
 import db
 import fetch
-from unittest.mock import mock_open, patch, MagicMock
+from unittest.mock import mock_open, patch
 
 fake_db = "data/fakeadmin.db"
 fake_yml = "data/dummy.yml"
