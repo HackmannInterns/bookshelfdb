@@ -10,6 +10,9 @@ from multiprocessing import Process
 from app import run_flask
 from admin import get_settings
 from selenium.common.exceptions import NoSuchDriverException
+import os
+import fetch
+import db
 
 
 @pytest.fixture(scope='session')
@@ -63,7 +66,7 @@ def browser():
 
     except NoSuchDriverException:
         options = Options()
-        # options.add_argument("-headless")
+        options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         yield driver
         driver.quit()
@@ -177,3 +180,41 @@ def test_admin_title_textbox(flask_init, browser):
     value = title_box.get_attribute("value")
     assert title.text == value
     assert value == get_settings().header_name
+
+
+def test_database_cache_deletion(flask_init, browser):
+    from app import ADMIN_PASSWORD
+    login(browser, ADMIN_PASSWORD)
+    browser.get('localhost:5000/admin')
+    time.sleep(3)
+
+    fetch.save_to_cache("key", "value")
+    delete_cache = browser.find_element(
+        By.XPATH, "/html/body/div[1]/div/div/div[2]/button")
+    delete_cache_2 = browser.find_element(
+        By.XPATH, "/html/body/div[4]/div/button")
+    delete_cache.click()
+    delete_cache_2.click()
+    assert not os.path.exists(fetch.CACHE_DB_LOCATION)
+
+
+def test_database_deletion(flask_init, browser):
+    from app import ADMIN_PASSWORD
+    login(browser, ADMIN_PASSWORD)
+    browser.get('localhost:5000/admin')
+    time.sleep(3)
+
+    db.init_db()
+    db.create_book(None, None, None, None, None,
+                   None, None, None, None, None, None)
+    rows = db.read_books()
+    assert len(rows) == 1
+
+    delete_db = browser.find_element(
+        By.XPATH, "/html/body/div[1]/div/div/div[4]/button")
+    delete_db_2 = browser.find_element(
+        By.XPATH, "/html/body/div[4]/div/button")
+    delete_db.click()
+    delete_db_2.click()
+    rows = db.read_books()
+    assert len(rows) == 0
