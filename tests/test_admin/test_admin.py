@@ -2,7 +2,6 @@ import os
 import yaml
 import json
 import sqlite3
-import shelve
 
 from admin import init_yaml, update_yaml, get_settings, export_to_json, import_from_json, clear_cache_db, delete_main_db
 import admin
@@ -44,7 +43,6 @@ def set_up():
     fetch.CACHE_DB_LOCATION = fake_cache
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
-    shelve.open(fake_cache)
     init_yaml(fake_yml)
 
 
