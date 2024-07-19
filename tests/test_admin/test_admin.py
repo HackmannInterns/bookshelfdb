@@ -8,9 +8,10 @@ from admin import init_yaml, update_yaml, get_settings, export_to_json, import_f
 import admin
 import db
 import fetch
+from unittest.mock import mock_open, patch, MagicMock
 
 fake_db = "data/fakeadmin.db"
-yml = "data/dummy.yml"
+fake_yml = "data/dummy.yml"
 fake_cache = "data/fake_cache.db"
 
 
@@ -34,7 +35,7 @@ def clear_table(table_name, db):
 
 
 def clear_data():
-    os.remove(yml)
+    os.remove(fake_yml)
     os.remove(fake_db)
     clear_cache_db(fake_cache)
 
@@ -44,55 +45,95 @@ def set_up():
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
     shelve.open(fake_cache)
-    init_yaml(yml)
+    init_yaml(fake_yml)
 
 
 def test_init_yaml():
-    set_up()
-    init_yaml(yml)
-    # print(admin.ADMIN_YAML_LOCATION)
-    with open(yml, 'r') as file:
-        data = yaml.safe_load(file)
-
-    assert data['viewer_can_add'] is False
-    assert data['editor_can_remove'] is True
-    assert data['default_address'] == ""
-    assert data['header_name'] == "My Library"
-
-    clear_data()
-
-
-def test_update_yaml():
-    set_up()
     test_visitor = True
     test_editor = False
     test_address = "233 Ember"
-    test_title = "Not my library"
+    test_header = "Not my library"
 
-    update_yaml(test_visitor, test_editor, test_address, test_title,yml)
+    data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
 
-    with open(yml, 'r') as file:
-        data = yaml.safe_load(file)
+    m = mock_open(read_data=yaml.safe_dump(data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=data), \
+            patch('admin.init_yaml'):
 
-    assert data['viewer_can_add'] == test_visitor
-    assert data['editor_can_remove'] == test_editor
-    assert data['default_address'] == test_address
-    assert data['header_name'] == test_title
+        init_yaml()
 
-    clear_data()
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
+
+
+def test_update_yaml():
+    old_data = {
+        'viewer_can_add': False,
+        'editor_can_remove': True,
+        'default_address': "",
+        'header_name': "My Library"
+    }
+
+    test_visitor = True
+    test_editor = False
+    test_address = "233 Ember"
+    test_header = "Not my library"
+
+    new_data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
+
+    m = mock_open(read_data=yaml.safe_dump(old_data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=old_data), \
+            patch('yaml.safe_load', return_value=new_data), \
+            patch('admin.init_yaml'):
+
+        update_yaml(editor_can_remove=test_editor, viewer_can_add=test_visitor,
+                    default_address=test_address, header_name=test_header)
+
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
 
 
 def test_get_settings():
-    set_up()
-    update_yaml(False, True, "")
-    settings = get_settings(yml)
+    test_visitor = True
+    test_editor = False
+    test_address = "233 Ember"
+    test_header = "Not my library"
 
-    assert settings.viewer_can_add is False
-    assert settings.editor_can_remove is True
-    assert settings.default_address == ""
-    assert settings.header_name == "My Library"
+    data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
 
-    clear_data()
+    m = mock_open(read_data=yaml.safe_dump(data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=data), \
+            patch('admin.init_yaml'):
+
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
 
 
 def test_export_to_json():
