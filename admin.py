@@ -54,10 +54,10 @@ def get_settings(yml_location=ADMIN_YAML_LOCATION):
         data = yaml.safe_load(file)
 
     class Yaml_Settings():
-        viewer_can_add = data['viewer_can_add']
-        editor_can_remove = data['editor_can_remove']
-        default_address = data['default_address']
-        header_name = data['header_name']
+        viewer_can_add = (data or {})['viewer_can_add']
+        editor_can_remove = (data or {})['editor_can_remove']
+        default_address = (data or {})['default_address']
+        header_name = (data or {})['header_name']
     return Yaml_Settings()
 
 
