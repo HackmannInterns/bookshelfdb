@@ -1,13 +1,13 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application
+name: Python Tests
 
 on:
   push:
-    branches: ["main"]
+    branches: ["*"]
   pull_request:
-    branches: ["main"]
+    branches: ["*"]
 
 permissions:
   contents: read
@@ -30,13 +30,22 @@ jobs:
       - name: Lint with Ruff
         run: |
           pip install ruff
-          ruff --output-format=github .
+          ruff check --output-format=github .
         continue-on-error: true
       - name: Test with pytest
         run: |
           pip install -r requirements-dev.txt;
+          
+          pytest tests/test_admin/test_admin.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_db/test_crud.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_api.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_cache.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_id_correction.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_fetch/test_lookup.py --doctest-modules --junitxml=junit/test-results.xml
           pytest tests/test_fetch/test_parse_data.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_admin.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_editor.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_get_permission.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_session.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_permissions/test_viewer.py --doctest-modules --junitxml=junit/test-results.xml
+          pytest tests/test_version/test_version.py --doctest-modules --junitxml=junit/test-results.xml

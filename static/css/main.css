@@ -101,6 +101,25 @@ form {
     z-index: 1;
 }
 
+.refresh-button {
+    display: inline-block;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.refresh-button.spinning {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .popup {
     width: 60%;
     @media (min-width: 40em) {

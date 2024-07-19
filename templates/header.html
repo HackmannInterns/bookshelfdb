@@ -6,7 +6,7 @@
 </head>
 <header class="header">
     <h1>
-        <a href="/">{{ header_name|default("My Library") }}</a>
+        <a href="{{ url_for('index') }}">{{ header_name|default("My Library") }}</a>
     </h1>
     {% include "tabs.html" %}
 </header>

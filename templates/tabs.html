@@ -11,22 +11,22 @@
     <div class="tabs" id="tabs">
         <nav>
             {% if 'authenticated' in session and session['authenticated'] %}
-            <div class="account">Logged in as {{ session['authenticated'] }} <a href="/logout">Logout</a></div>
+            <div class="account">Logged in as {{ session['authenticated'] }} <a href="{{ url_for('logout') }}">Logout</a></div>
             {% else %}
-            <div class="account"><a href="/login">Login</a></div>
+            <div class="account"><a href="{{ url_for('login') }}">Login</a></div>
             {% endif %}
-            <a id="library" href="/library">Library</a>
-            <a id="add-book" href="/add-book">Add Book</a>
+            <a id="library" href="{{ url_for('view') }}">Library</a>
+            <a id="add-book" href="{{ url_for('add_book') }}">Add Book</a>
             {% if 'recent' in session and session['recent'] %}
-            <a id="recent" href="/library-recent">Recent Additions</a>
+            <a id="recent" href="{{ url_for('view2') }}">Recent Additions</a>
             {% endif %}
-            <a id="about" href="/about">About</a>
+            <a id="about" href="{{ url_for('about') }}">About</a>
             {% if Permission.can_add %}
             <!-- <a id="scan" href="/scan">Scan</a> -->
             <a href="https://scanapp.org/">Scan</a>
             {% endif %}
             {% if 'authenticated' in session and session['authenticated'] == "Admin" %}
-            <a id="admin" href="/admin">Settings</a>
+            <a id="admin" href="{{ url_for('admin') }}">Settings</a>
             {% endif %}
 
         </nav>

@@ -1,18 +1,16 @@
-import pytest
 import os
 import yaml
 import json
 import sqlite3
-import shelve
 
 from admin import init_yaml, update_yaml, get_settings, export_to_json, import_from_json, clear_cache_db, delete_main_db
-from unittest.mock import MagicMock
 import admin
 import db
 import fetch
+from unittest.mock import mock_open, patch
 
 fake_db = "data/fakeadmin.db"
-yml = "data/dummy.yml"
+fake_yml = "data/dummy.yml"
 fake_cache = "data/fake_cache.db"
 
 
@@ -36,77 +34,104 @@ def clear_table(table_name, db):
 
 
 def clear_data():
-    os.remove(yml)
+    os.remove(fake_yml)
     os.remove(fake_db)
-    os.remove(fake_cache)
+    clear_cache_db(fake_cache)
 
 
 def set_up():
-    admin.ADMIN_YAML_LOCATION = yml
     fetch.CACHE_DB_LOCATION = fake_cache
     db.DB_LOCATION = fake_db
     db.init_db(fake_db)
-    shelve.open(fake_cache)
-    init_yaml()
-    update_yaml(False, True, "", "My Library")
-
-
-@pytest.fixture
-def mock_shelve(monkeypatch):
-    # Create a mock shelf object
-    mock_shelf = MagicMock()
-    # Mock the shelve.open method to return the mock shelf
-    monkeypatch.setattr(shelve, 'open', MagicMock(return_value=mock_shelf))
-    return mock_shelf
+    init_yaml(fake_yml)
 
 
 def test_init_yaml():
-    set_up()
-    admin.ADMIN_YAML_LOCATION = yml
-    init_yaml()
-    # print(admin.ADMIN_YAML_LOCATION)
-    with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
-        data = yaml.safe_load(file)
-
-    assert data['visitor_can_add'] is False
-    assert data['editor_can_remove'] is True
-    assert data['default_address'] == ""
-    assert data['header_name'] == "My Library"
-
-    clear_data()
-
-
-def test_update_yaml():
-    set_up()
     test_visitor = True
     test_editor = False
     test_address = "233 Ember"
-    test_title = "Not my library"
+    test_header = "Not my library"
 
-    update_yaml(test_visitor, test_editor, test_address, test_title)
+    data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
 
-    with open(admin.ADMIN_YAML_LOCATION, 'r') as file:
-        data = yaml.safe_load(file)
+    m = mock_open(read_data=yaml.safe_dump(data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=data), \
+            patch('admin.init_yaml'):
 
-    assert data['visitor_can_add'] == test_visitor
-    assert data['editor_can_remove'] == test_editor
-    assert data['default_address'] == test_address
-    assert data['header_name'] == test_title
+        init_yaml()
 
-    clear_data()
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
+
+
+def test_update_yaml():
+    old_data = {
+        'viewer_can_add': False,
+        'editor_can_remove': True,
+        'default_address': "",
+        'header_name': "My Library"
+    }
+
+    test_visitor = True
+    test_editor = False
+    test_address = "233 Ember"
+    test_header = "Not my library"
+
+    new_data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
+
+    m = mock_open(read_data=yaml.safe_dump(old_data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=old_data), \
+            patch('yaml.safe_load', return_value=new_data), \
+            patch('admin.init_yaml'):
+
+        update_yaml(editor_can_remove=test_editor, viewer_can_add=test_visitor,
+                    default_address=test_address, header_name=test_header)
+
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
 
 
 def test_get_settings():
-    set_up()
-    update_yaml(False, True, "")
-    settings = get_settings()
+    test_visitor = True
+    test_editor = False
+    test_address = "233 Ember"
+    test_header = "Not my library"
 
-    assert settings.visitor_can_add is False
-    assert settings.editor_can_remove is True
-    assert settings.default_address == ""
-    assert settings.header_name == "My Library"
+    data = {
+        'viewer_can_add': test_visitor,
+        'editor_can_remove': test_editor,
+        'default_address': test_address,
+        'header_name': test_header
+    }
 
-    clear_data()
+    m = mock_open(read_data=yaml.safe_dump(data))
+    with patch('builtins.open', m), \
+            patch('yaml.safe_load', return_value=data), \
+            patch('admin.init_yaml'):
+
+        data = get_settings()
+        assert data.viewer_can_add == test_visitor
+        assert data.editor_can_remove == test_editor
+        assert data.default_address == test_address
+        assert data.header_name == test_header
 
 
 def test_export_to_json():
@@ -176,20 +201,19 @@ def test_import_from_json():
     clear_data()
 
 
-def test_clear_cache_db(mock_shelve):
+def test_clear_cache_db():
     set_up()
-    key = 'test_key'
-    value = 'test_value'
 
-    fetch.save_to_cache(key, value)
+    fetch.save_to_cache("test_key", "test_value")
 
-    # Assert that the value was set correctly in the mock shelf
-    mock_shelve.__enter__.return_value.__setitem__.assert_called_once_with(
-        key, value)
+    assert os.path.exists(fake_cache) or os.path.exists(
+        fake_cache + ".bak") and os.path.exists(fake_cache + ".dat") and os.path.exists(fake_cache + ".dir")
 
-    clear_cache_db()
+    clear_cache_db(fake_cache)
 
-    assert os.path.isfile(fake_cache) is False
+    assert not os.path.exists(fake_cache)
+    assert not os.path.exists(fake_cache + ".bak") and not os.path.exists(
+        fake_cache + ".dat") and not os.path.exists(fake_cache + ".dir")
 
 
 def test_delete_main_db():

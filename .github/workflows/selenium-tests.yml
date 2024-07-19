@@ -1,6 +1,6 @@
 # This workflow will set up Python, install dependencies, and run Selenium tests with Firefox in headless mode
 
-name: Selenium tests
+name: Selenium Tests
 
 on: workflow_dispatch
 # on:
@@ -45,6 +45,5 @@ jobs:
 
       - name: Run Selenium tests
         run: |
-          pytest tests/test_ui/test_pages.py --junitxml=junit/test-results.xml
-          pytest tests/test_ui/test_home.py --junitxml=junit/test-results.xml
-          pytest tests/test_ui/test_with_admin.py --junitxml=junit/test-results.xml
+
+          pytest tests/test_ui --junitxml=junit/test-results.xml

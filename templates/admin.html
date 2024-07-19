@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
     <link rel="stylesheet" href='static\css\main.css'>
+    <script src="static/scripts/jquery-3.7.1.min.js.js"></script>
     <link rel="icon" type="image/png" sizes="16x16" href="static\images\favicon.png">
 </head>
 {% include "header.html" %}
@@ -17,8 +18,8 @@
             <div class="perm-block" style="margin: 5%;">
                 <h1>Admin Property Changes:</h1>
                 <label for="viewer">Viewers have add permissions</label>
-                <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.visitor_can_add %}checked{%
-                    endif %}><br>
+                <input type="checkbox" id="viewer" name="viewer" value=true {% if Admin.viewer_can_add %}checked{% endif
+                    %}><br>
 
                 <label for="editor">Editors have remove permissions</label>
                 <input type="checkbox" id="editor" name="editor" value=true {% if Admin.editor_can_remove %}checked{%
@@ -61,22 +62,23 @@
     </div>
     <div class="versioning">
         <p>Current Version:
-            <span
-                style="color: {% if Version.newest and Version.newest != Version.current %}red{% else %}green{% endif %};">
+            <span id="current-version"
+                style="color: {% if Version.newest and Version.newest != Version.current %}red{% elif Version.newest %}green{% else %}{% endif %};">
                 {{ Version.current }}
             </span>
         </p>
-        {% if Version.newest %}
-        <p>Newest Version: <a style="text-decoration:none;" href="{{ Version.newest_link }}"
-                title="View Release Notes">{{ Version.newest }}</a></p>
-        {% if Version.newest and Version.newest != Version.current %}
-        <p>To update, if you're using Docker, run <code>docker compose pull && docker compose up -d</code>.<br>If you're
-            running with gunicorn or python directly, pull the project's update and restart.</p>
-        {% endif %}
-        {% else %}
-        <p>Unable to check for current version, check our <a
-                href="https://github.com/HackmannInterns/bookshelfdb">GitHub</a> for status.</p>
-        {% endif %}
+        <p id="newest-version" style="display: {% if Version.newest %}block{% else %}none{% endif %};">Newest Version:
+            <a id="version-link" style="text-decoration:none;" href="{{ Version.newest_link }}"
+                title="View Release Notes">{{ Version.newest }}</a>
+        </p>
+
+        <p id="update-info"
+            style="display: {% if Version.newest and Version.newest != Version.current %}block{% else %}none{% endif %};">
+            To update, if you're using Docker, run <code>docker compose pull && docker compose up -d</code>.<br>If
+            you're running with gunicorn or python directly, pull the project's update and restart.</p>
+        <p id="update-failed" style="display: {% if Version.newest %}none{% else %}block{% endif %};">Unable to check
+            for current version, check our <a href="https://github.com/HackmannInterns/bookshelfdb">GitHub</a> for
+            status.</p> <button id="refresh-button" class="refresh-button">↻</button>
     </div>
 
     <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
@@ -162,5 +164,52 @@
                 reminder.style.display = "block";
             });
         });
+
+
+        function fix_update_info(response) {
+            console.log(response)
+            if (response.newest == null) {
+                $('#update-failed').css('display', 'block');
+                $('#update-info').css('display', 'none');
+                $('#current-version').css('color', '');
+                $('#newest-version').css('display', 'none');
+            } else if (response.newest != $('#current-version').text().trim()) {
+                $('#current-version').css('color', 'red');
+                $('#update-info').css('display', 'block');
+                $('#update-failed').css('display', 'none');
+                $('#newest-version').css('display', 'block');
+                $('#version-link').attr('href', response.newest_link);
+                $('#version-link').text(response.newest);
+            } else if (response.newest == $('#current-version').text().trim()) {
+                $('#version-link').attr('href', response.newest_link);
+                $('#version-link').text(response.newest);
+                $('#current-version').css('color', 'green');
+                $('#update-info').css('display', 'none');
+                $('#update-failed').css('display', 'none');
+                $('#newest-version').css('display', 'block');
+            }
+        }
+
+        $(document).ready(function () {
+            $('#refresh-button').click(function () {
+                var $button = $(this);
+
+                // Add the spinning class to the button
+                $button.addClass('spinning');
+
+
+                $.ajax({
+                    url: '/update',
+                    method: 'GET',
+                    success: function (response) {
+                        fix_update_info(response);
+                    }, complete: function () {
+                        $button.removeClass('spinning');
+                    }
+                });
+            });
+        });
+
+
     </script>
 </body>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Book</title>
+    <title>{{ edit_str|default("Add Book") }}</title>
     <link rel="stylesheet" href='static\css\main.css'>
     <link rel="icon" type="image/png" sizes="16x16" href="static\images\favicon.png">
 </head>
@@ -15,7 +15,7 @@
     <div class="form1">
         <div class="text-container">
             <form method="post" style="margin: 5%;">
-                <h1>Add Book to Library</h1>
+                <h1>{{ edit_str|default("Add Book to Library") }}</h1>
                 <div class="grid-overall">
                     <div class="empty_space">
                     </div>
@@ -91,8 +91,8 @@
             <div class="text-container">
                 <form method="post" style="margin: 5%;">
                     <h1>Search for Book by ID</h1>
-                    <p class="search_note" style="display: none;">Note: Dashes required in LCCNs, but not in other
-                        search types</p>
+                    <p class="search_note" style="display: none;">Note: Dashes are required in LCCNs, but not in other
+                        search types.</p>
                     <select onchange="show_warning()" required name="id_type" id="id_type">
                         <option {% if session['id'] not in ["isbn", "lccn" , "olid" ] %}selected{% endif %} disabled
                             value="">
@@ -120,7 +120,7 @@
         </div>
         <div class="mass_search">
             <div class="text-container">
-                <form method="post" style="margin: 5%;">
+                <form method="post" action="/search" style="margin: 5%;">
                     <h1>Search for Book by Information</h1>
                     <p class="search_note">Note: Searching via Title and/or Author may take time depending on how
                         popular the title is</p>
@@ -148,13 +148,6 @@
     </div>
     <script>
         var cancel = false;
-        window.onload = function () {
-            var urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('edit')) {
-                var searchDiv = document.querySelector('.search');
-                searchDiv.style.display = 'none';
-            }
-        };
 
         function clearID() {
             history.pushState({}, document.title, window.location.pathname);
