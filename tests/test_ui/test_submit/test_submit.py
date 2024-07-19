@@ -78,13 +78,12 @@ def login(browser, password):
     pass_input.clear()
     pass_input.send_keys(password)
     pass_input.send_keys(Keys.RETURN)
-    time.sleep(3)
+    time.sleep(1)
 
 
 def test_submit_isbn(browser, flask_init):
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
-    time.sleep(1)
     browser.get("localhost:5000/add-book")
     id_type = browser.find_element(By.ID, "id_type")
     type_select = Select(id_type)
@@ -97,12 +96,11 @@ def test_submit_isbn(browser, flask_init):
     search_button.click()
     display = browser.execute_script(
         "return document.querySelector('body > div > div.text-container > div').style.display")
-    time.sleep(1)
+    time.sleep(.1)
     assert display == 'block'
     cancel_button = browser.find_element(
         By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
-    time.sleep(5)
 
 
 def test_submit_lccn(browser, flask_init):
@@ -121,12 +119,11 @@ def test_submit_lccn(browser, flask_init):
     search_button.click()
     display = browser.execute_script(
         "return document.querySelector('body > div > div.text-container > div').style.display")
-    time.sleep(1)
+    time.sleep(.1)
     assert display == 'block'
     cancel_button = browser.find_element(
         By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
-    time.sleep(5)
 
 
 def test_submit_olid(browser, flask_init):
@@ -145,12 +142,11 @@ def test_submit_olid(browser, flask_init):
     search_button.click()
     display = browser.execute_script(
         "return document.querySelector('body > div > div.text-container > div').style.display")
-    time.sleep(1)
+    time.sleep(.1)
     assert display == 'block'
     cancel_button = browser.find_element(
         By.XPATH, "//button[@onclick='cancel_submit()']")
     cancel_button.click()
-    time.sleep(5)
 
 
 def test_edit_book_for_pk(browser, flask_init):
@@ -173,15 +169,14 @@ def test_edit_book_for_pk(browser, flask_init):
 
     from app import EDITOR_PASSWORD
     login(browser, EDITOR_PASSWORD)
-    time.sleep(1)
     browser.get("localhost:5000/library")
     kebab_icon = browser.find_element(By.CLASS_NAME, "kebab-menu-icon")
     kebab_icon.click()
-    time.sleep(1)
+    time.sleep(.1)
     edit_button = browser.find_element(
         By.XPATH, "//a[contains(text(), 'Edit')]")
     edit_button.click()
-    time.sleep(1)
+    time.sleep(.1)
     current_url = browser.current_url
     assert current_url == "http://localhost:5000/edit?q=1"
 
@@ -192,6 +187,7 @@ def test_edit_book_for_pk(browser, flask_init):
         pass
     try:
         browser.find_element(By.CLASS_NAME, "mass_search")
-        raise AssertionError("Element with class 'mass_search' should not exist")
+        raise AssertionError(
+            "Element with class 'mass_search' should not exist")
     except NoSuchElementException:
         pass
