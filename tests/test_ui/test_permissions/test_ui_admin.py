@@ -42,7 +42,7 @@ def browser():
 
     except NoSuchDriverException:
         options = Options()
-        options.add_argument("-headless")
+#        options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         yield driver
         driver.quit()
@@ -71,6 +71,7 @@ def test_admin_can_view(flask_init, browser):
 def test_admin_can_add(flask_init, browser):
     from app import ADMIN_PASSWORD
     browser.get("localhost:5000/logout")
+    time.sleep(.5)
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/add-book")
     assert browser.title == "Add Book"
