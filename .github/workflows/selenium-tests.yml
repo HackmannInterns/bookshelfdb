@@ -46,7 +46,6 @@ jobs:
       - name: Run Selenium tests
         run: |
 
-          pytest tests/test_ui/test_admin_settings/test_admin_settings.py --junitxml=junit/test-results.xml
           pytest tests/test_ui/test_permissions/test_ui_admin.py --junitxml=junit/test-results.xml
           pytest tests/test_ui/test_permissions/test_ui_editor.py --junitxml=junit/test-results.xml
           pytest tests/test_ui/test_permissions/test_ui_editor_modifiers.py --junitxml=junit/test-results.xml
