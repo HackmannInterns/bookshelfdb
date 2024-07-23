@@ -49,13 +49,11 @@ def browser():
 
 def test_viewer_can_view(flask_init, browser):
     browser.get("localhost:5000/")
-    time.sleep(1)
     assert browser.title != "Login Required"
 
 
 def test_viewer_can_add(flask_init, browser):
     browser.get("localhost:5000/add-book")
-    time.sleep(1)
     if get_settings().viewer_can_add:
         assert browser.title != "Login Required"
     else:
@@ -64,17 +62,14 @@ def test_viewer_can_add(flask_init, browser):
 
 def test_viewer_can_edit(flask_init, browser):
     browser.get("http://localhost:5000/edit?q=-1")
-    time.sleep(1)
     assert browser.title == "Login Required"
 
 
 def test_viewer_can_delete(flask_init, browser):
     browser.get("http://localhost:5000/delete?q=-1")
-    time.sleep(1)
     assert browser.title == "Login Required"
 
 
 def test_viewer_can_view_admin(flask_init, browser):
     browser.get("http://localhost:5000/admin")
-    time.sleep(1)
     assert browser.title == "Login Required"
