@@ -54,7 +54,7 @@ def login(browser, password):
     pass_input.clear()
     pass_input.send_keys(password)
     pass_input.send_keys(Keys.RETURN)
-    time.sleep(3)
+    time.sleep(1)
 
 
 def test_update_elements_page(flask_init, browser):
