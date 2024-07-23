@@ -142,14 +142,18 @@ def test_admin_perm(flask_init, browser):
 
 def test_edit_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
-
+    time.sleep(1)
     add_book(browser)
+    time.sleep(1)
     browser.get("http://localhost:5000/edit?q=1")
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
+    time.sleep(1)
     assert title_text.text == "You cannot edit with your current authentication level; Editor or greater required"
 
     from app import EDITOR_PASSWORD
+    time.sleep(1)
     login_wihtout_moving(browser, EDITOR_PASSWORD)
+    time.sleep(1)
     assert browser.title == "Edit Book"
     title = browser.find_element(By.XPATH, "/html/body/div/div[1]/form/div[1]/div[4]/div[2]/input[3]")
     assert title.get_attribute('value') == "9781566199094"
