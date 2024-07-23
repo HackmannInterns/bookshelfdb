@@ -42,7 +42,7 @@ def browser():
 
     except NoSuchDriverException:
         options = Options()
-#        options.add_argument("-headless")
+        options.add_argument("-headless")
         driver = webdriver.Firefox(options=options)
         yield driver
         driver.quit()

@@ -127,17 +127,22 @@ def test_remove_perm(flask_init, browser):
 
 def test_admin_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
+    time.sleep(1)
     browser.get("http://localhost:5000/admin")
+    time.sleep(1)
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
     assert title_text.text == "You cannot view admin with your current authentication level; Admin or greater required"
-
+    time.sleep(1)
     from app import ADMIN_PASSWORD
+    time.sleep(1)
     login_wihtout_moving(browser, ADMIN_PASSWORD)
+    time.sleep(1)
     assert browser.title == "Settings"
 
 
 def test_edit_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
+
     add_book(browser)
     browser.get("http://localhost:5000/edit?q=1")
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
