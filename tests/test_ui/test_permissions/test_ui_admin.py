@@ -49,6 +49,7 @@ def browser():
 
 
 def login(browser, password):
+    browser.get("localhost:5000/logout")
     browser.get("localhost:5000/")
     browser.get("localhost:5000/login")
     pass_input = browser.find_element(By.NAME, "password")
@@ -60,6 +61,7 @@ def login(browser, password):
 
 def test_admin_can_view(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/")
     assert browser.title == "Library"
@@ -68,6 +70,7 @@ def test_admin_can_view(flask_init, browser):
 
 def test_admin_can_add(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/add-book")
     assert browser.title == "Add Book"
@@ -76,6 +79,7 @@ def test_admin_can_add(flask_init, browser):
 
 def test_admin_can_edit(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/edit?q=-1")
     assert browser.title == "Library"
@@ -84,6 +88,7 @@ def test_admin_can_edit(flask_init, browser):
 
 def test_admin_can_delete(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/delete?q=-1")
     assert browser.title == "Library"
@@ -92,6 +97,7 @@ def test_admin_can_delete(flask_init, browser):
 
 def test_admin_can_view_admin(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/admin")
     assert browser.title == "Settings"

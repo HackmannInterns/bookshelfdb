@@ -49,6 +49,7 @@ def browser():
 
 
 def login(browser, password):
+    browser.get("localhost:5000/logout")
     browser.get("localhost:5000/login")
     pass_input = browser.find_element(By.NAME, "password")
     pass_input.clear()
@@ -59,6 +60,7 @@ def login(browser, password):
 
 def test_update_elements_page(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
 
@@ -73,6 +75,7 @@ def test_update_elements_page(flask_init, browser):
 
 def test_updates_current(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
     from version import APP_VERSION
@@ -99,6 +102,7 @@ def test_updates_current(flask_init, browser):
 
 def test_updates_newer(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
     from version import APP_VERSION
@@ -127,6 +131,7 @@ def test_updates_newer(flask_init, browser):
 
 def test_updates_failed(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
     from version import APP_VERSION
@@ -153,6 +158,7 @@ def test_updates_failed(flask_init, browser):
 
 def test_updates_spinny(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/admin")
 

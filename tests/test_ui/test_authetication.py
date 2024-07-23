@@ -79,6 +79,7 @@ def login_wihtout_moving(browser, password):
 
 
 def add_book(browser):
+    browser.get("localhost:5000/logout")
     browser.get("localhost:5000/login")
     pass_input = browser.find_element(By.NAME, "password")
     pass_input.clear()

@@ -72,6 +72,7 @@ def browser():
 
 
 def login(browser, password):
+    browser.get("localhost:5000/logout")
     browser.get("localhost:5000/")
     browser.get("localhost:5000/login")
     pass_input = browser.find_element(By.NAME, "password")

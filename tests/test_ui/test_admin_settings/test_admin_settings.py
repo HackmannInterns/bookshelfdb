@@ -73,6 +73,7 @@ def browser():
 
 
 def login(browser, password):
+    browser.get("localhost:5000/logout")
     browser.get("localhost:5000/")
     browser.get("localhost:5000/login")
     pass_input = browser.find_element(By.NAME, "password")
@@ -84,6 +85,7 @@ def login(browser, password):
 
 def test_admin_viewer_checkbox(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
@@ -107,6 +109,7 @@ def test_admin_viewer_checkbox(flask_init, browser):
 
 def test_admin_editor_checkbox(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
@@ -128,6 +131,7 @@ def test_admin_editor_checkbox(flask_init, browser):
 
 def test_admin_address_textbox(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
@@ -155,6 +159,7 @@ def test_admin_address_textbox(flask_init, browser):
 
 def test_admin_title_textbox(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
@@ -184,6 +189,7 @@ def test_admin_title_textbox(flask_init, browser):
 
 def test_database_cache_deletion(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
@@ -200,6 +206,7 @@ def test_database_cache_deletion(flask_init, browser):
 
 def test_database_deletion(flask_init, browser):
     from app import ADMIN_PASSWORD
+    browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get('localhost:5000/admin')
     time.sleep(3)
