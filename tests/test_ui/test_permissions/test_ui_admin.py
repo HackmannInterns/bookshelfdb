@@ -93,7 +93,9 @@ def test_admin_can_edit(flask_init, browser):
 def test_admin_can_delete(flask_init, browser):
     from app import ADMIN_PASSWORD
     browser.get("localhost:5000/logout")
+    time.sleep(1)
     login(browser, ADMIN_PASSWORD)
+    time.sleep(1)
     browser.get("http://localhost:5000/delete?q=-1")
     time.sleep(.5)
     assert browser.title == "Library"
