@@ -64,6 +64,7 @@ def test_admin_can_view(flask_init, browser):
     browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/")
+    time.sleep(.5)
     assert browser.title == "Library"
     assert browser.title != "Login Required"
 
@@ -74,6 +75,7 @@ def test_admin_can_add(flask_init, browser):
     time.sleep(.5)
     login(browser, ADMIN_PASSWORD)
     browser.get("localhost:5000/add-book")
+    time.sleep(.5)
     assert browser.title == "Add Book"
     assert browser.title != "Login Required"
 
@@ -83,6 +85,7 @@ def test_admin_can_edit(flask_init, browser):
     browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/edit?q=-1")
+    time.sleep(.5)
     assert browser.title == "Library"
     assert browser.title != "Login Required"
 
@@ -92,6 +95,7 @@ def test_admin_can_delete(flask_init, browser):
     browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/delete?q=-1")
+    time.sleep(.5)
     assert browser.title == "Library"
     assert browser.title != "Login Required"
 
@@ -101,5 +105,6 @@ def test_admin_can_view_admin(flask_init, browser):
     browser.get("localhost:5000/logout")
     login(browser, ADMIN_PASSWORD)
     browser.get("http://localhost:5000/admin")
+    time.sleep(.5)
     assert browser.title == "Settings"
     assert browser.title != "Login Required"
