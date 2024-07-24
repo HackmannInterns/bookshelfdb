@@ -86,7 +86,9 @@ def login(browser, password):
 def test_admin_viewer_checkbox(flask_init, browser):
     from app import ADMIN_PASSWORD
     browser.get("localhost:5000/logout")
+    time.sleep(1)
     login(browser, ADMIN_PASSWORD)
+    time.sleep(1)
     browser.get('localhost:5000/admin')
     time.sleep(3)
 
@@ -110,7 +112,9 @@ def test_admin_viewer_checkbox(flask_init, browser):
 def test_admin_editor_checkbox(flask_init, browser):
     from app import ADMIN_PASSWORD
     browser.get("localhost:5000/logout")
+    time.sleep(1)
     login(browser, ADMIN_PASSWORD)
+    time.sleep(1)
     browser.get('localhost:5000/admin')
     time.sleep(3)
 
