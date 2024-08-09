@@ -70,7 +70,7 @@ def browser():
         driver.quit()
 
 
-def login_wihtout_moving(browser, password):
+def login_without_moving(browser, password):
     pass_input = browser.find_element(By.NAME, "password")
     pass_input.clear()
     pass_input.send_keys(password)
@@ -79,7 +79,10 @@ def login_wihtout_moving(browser, password):
 
 
 def add_book(browser):
+    browser.get("localhost:5000/logout")
+    time.sleep(1)
     browser.get("localhost:5000/login")
+    time.sleep(1)
     pass_input = browser.find_element(By.NAME, "password")
     pass_input.clear()
     from app import ADMIN_PASSWORD
@@ -99,12 +102,15 @@ def test_add_perm(flask_init, browser):
     update_yaml(viewer_can_add=False)
 
     browser.get("http://localhost:5000/logout")
+    time.sleep(1)
     browser.get("http://localhost:5000/add-book")
+    time.sleep(1)
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
     assert title_text.text == "You cannot add with your current authentication level; Editor or greater required"
 
     from app import EDITOR_PASSWORD
-    login_wihtout_moving(browser, EDITOR_PASSWORD)
+    login_without_moving(browser, EDITOR_PASSWORD)
+    time.sleep(1)
     assert browser.title == "Add Book"
 
 
@@ -113,37 +119,50 @@ def test_remove_perm(flask_init, browser):
     add_book(browser)
     assert read_book(1) is not None
 
+    time.sleep(1)
     browser.get("http://localhost:5000/logout")
+    time.sleep(1)
     browser.get("http://localhost:5000/delete?q=1")
+    time.sleep(1)
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
     assert title_text.text == "You cannot remove with your current authentication level; Admin or greater required"
 
     from app import ADMIN_PASSWORD
-    login_wihtout_moving(browser, ADMIN_PASSWORD)
+    time.sleep(1)
+    login_without_moving(browser, ADMIN_PASSWORD)
     assert browser.title == "Library"
     assert read_book(1) is None
 
 
 def test_admin_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
+    time.sleep(1)
     browser.get("http://localhost:5000/admin")
+    time.sleep(1)
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
     assert title_text.text == "You cannot view admin with your current authentication level; Admin or greater required"
-
+    time.sleep(1)
     from app import ADMIN_PASSWORD
-    login_wihtout_moving(browser, ADMIN_PASSWORD)
+    time.sleep(1)
+    login_without_moving(browser, ADMIN_PASSWORD)
+    time.sleep(1)
     assert browser.title == "Settings"
 
 
 def test_edit_perm(flask_init, browser):
     browser.get("http://localhost:5000/logout")
+    time.sleep(1)
     add_book(browser)
+    time.sleep(1)
     browser.get("http://localhost:5000/edit?q=1")
     title_text = browser.find_element(By.XPATH, "/html/body/div/h3")
+    time.sleep(1)
     assert title_text.text == "You cannot edit with your current authentication level; Editor or greater required"
 
     from app import EDITOR_PASSWORD
-    login_wihtout_moving(browser, EDITOR_PASSWORD)
+    time.sleep(1)
+    login_without_moving(browser, EDITOR_PASSWORD)
+    time.sleep(1)
     assert browser.title == "Edit Book"
     title = browser.find_element(By.XPATH, "/html/body/div/div[1]/form/div[1]/div[4]/div[2]/input[3]")
     assert title.get_attribute('value') == "9781566199094"

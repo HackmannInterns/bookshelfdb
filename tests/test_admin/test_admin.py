@@ -12,9 +12,11 @@ from unittest.mock import mock_open, patch
 fake_db = "data/fakeadmin.db"
 fake_yml = "data/dummy.yml"
 fake_cache = "data/fake_cache.db"
-
+os.mkdir("data")
 
 def clear_table(table_name, db):
+
+
     # Connect to the SQLite database
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
